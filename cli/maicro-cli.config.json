@@ -1,0 +1,172 @@
+{
+  "$about": "Initial CLI config. Refer to mAIcroverse repo for more help.",
+  "baseUrl": "http://localhost:4321",
+  "repoBaseUrl": "https://github.com/bloxez/maicroverse/tree/main/project",
+  "defaultProject": "maicro",
+  "defaultProjectKey": "your_default_project_key",
+  "projects": {
+    "maicro": ""
+  },
+  "defaultProjectConfig": {
+    "apiKeys": [
+      {
+        "key": "OPENROUTER_API_KEY",
+        "service": "OpenRouter",
+        "description": "AI models",
+        "value": "",
+        "source": "custom"
+      }
+    ],
+    "configOptions": [
+      {
+        "key": "AsyncJobConcurrency",
+        "value": "10"
+      },
+      {
+        "key": "AsyncJobTriggers",
+        "value": [
+          {
+            "event": "FILE_UPLOADED",
+            "chainName": "default_file_analysis",
+            "description": "Automatically process new uploads via the default analysis chain.",
+            "enabled": true,
+            "source": "event"
+          }
+        ]
+      },
+      {
+        "key": "CTX",
+        "value": {}
+      },
+      {
+        "key": "Features",
+        "value": {
+          "fetchAllowedHosts": ["marketindex.com.au"],
+          "analysis": {
+            "_description": "Configuration for AI file analysis features (summarise, observations)",
+            "_version": "1.0",
+            "summarization": {
+              "small_doc_threshold": 2000,
+              "medium_doc_threshold": 10000,
+              "chunk_size": 3000,
+              "target_summary_length": 500,
+              "prompts": {
+                "small": "Summarize the following document in 3-5 key points. Be concise and focus on the most important information:\n\n{content}",
+                "chunk": "Summarize this section of a larger document. Extract the key points:\n\n{content}",
+                "combine": "Combine these section summaries into a coherent overall summary of 3-5 key points:\n\n{summaries}",
+                "final": "Create a final concise summary from these points. Use numbered points:\n\n{content}"
+              }
+            },
+            "json_content": {
+              "drivers_license": "fullname, DOB, address, post_code, expires, citizen_status"
+            },
+            "observations": {
+              "prompts": {
+                "text_analysis": "You are a content analyst specializing in document classification and PII detection.\nRespond with valid JSON only. No markdown, no explanation.\n\nReturn JSON with exactly these fields:\n- content_classification: one of \"general\", \"adult\", \"hateful\", \"violence\", \"medical\", \"legal\", \"financial\", \"technical\"\n- pii_detected: boolean\n- pii_types: array of detected PII types like \"name\", \"email\", \"phone\", \"address\", \"ssn\", \"credit_card\", \"bank_account\", \"dob\", \"medical_id\"\n- document_types: array of document types like \"invoice\", \"contract\", \"letter\", \"form\", \"receipt\", \"report\", \"medical_record\", \"identification\"\n- confidence: number 0.0-1.0\n- flags: array of content flags like \"profanity\", \"adult_content\", \"violence\", \"hate_speech\"\n\nAnalyze this text:\n\n{content}",
+                "image_ocr": "Extract and transcribe all text visible in this image. Return only the extracted text, preserving the original formatting and structure as much as possible. If no text is visible, return an empty string.",
+                "image_classify": "Classify this document image. Return a single word or short phrase describing the document type (e.g., 'invoice', 'passport', 'drivers license', 'receipt', 'contract', 'letter', 'form', 'report', 'photograph', 'screenshot'). If it's not a document, describe what type of image it is.",
+                "image_analysis": "You are a content analyst specializing in document classification and PII detection.\nRespond with valid JSON only. No markdown, no explanation.\n\nReturn JSON with exactly these fields:\n- content_classification: one of \"general\", \"adult\", \"hateful\", \"violence\", \"medical\", \"legal\", \"financial\", \"technical\"\n- pii_detected: boolean\n- pii_types: array of detected PII types\n- document_types: array of document types\n- confidence: number 0.0-1.0\n- flags: array of content flags\n\nAnalyze this image for content classification, PII, and document type detection.\n\nReturn JSON only:\n{\n  \"content_classification\": \"...\",\n  \"pii_detected\": true/false,\n  \"pii_types\": [...],\n  \"document_types\": [...],\n  \"confidence\": 0.0-1.0,\n  \"flags\": [...]\n}"
+              },
+              "content_classifications": [
+                "general",
+                "adult",
+                "hateful",
+                "violence",
+                "medical",
+                "legal",
+                "financial",
+                "technical"
+              ],
+              "pii_types": [
+                "name",
+                "email",
+                "phone",
+                "address",
+                "ssn",
+                "passport_number",
+                "drivers_license_number",
+                "credit_card",
+                "bank_account",
+                "dob",
+                "medical_id",
+                "tax_id"
+              ],
+              "document_types": [
+                "invoice",
+                "receipt",
+                "contract",
+                "letter",
+                "form",
+                "report",
+                "medical_record",
+                "identification",
+                "passport",
+                "drivers_license",
+                "id_card",
+                "bank_statement",
+                "tax_form",
+                "resume",
+                "photograph",
+                "screenshot"
+              ],
+              "content_flags": [
+                "profanity",
+                "adult_content",
+                "nudity",
+                "violence",
+                "hate_speech",
+                "self_harm",
+                "illegal_content"
+              ]
+            },
+            "models": {
+              "_note": "Model selection is configured in maiql.models",
+              "prefer_local": false,
+              "fallback_enabled": false
+            }
+          }
+        }
+      },
+      {
+        "key": "maiql",
+        "value": {
+          "providers": {
+            "openrouter": {
+              "baseUrl": "https://openrouter.ai/api/v1",
+              "enabled": true,
+              "apiKeySecretName": "OPENROUTER_API_KEY"
+            },
+            "ollama": {
+              "enabled": true,
+              "baseUrl": "http://host.docker.internal:11434"
+            }
+          },
+          "models": {
+            "simple": {
+              "provider": "openrouter",
+              "model": "nvidia/nemotron-nano-12b-v2-vl:free"
+            },
+            "embedding": {
+              "provider": "openrouter",
+              "model": "text-embedding-3-small",
+              "dimensions": 1536
+            },
+            "file_analysis": {
+              "provider": "openrouter",
+              "model": "nvidia/nemotron-nano-12b-v2-vl:free"
+            },
+            "image_analysis": {
+              "provider": "openrouter",
+              "model": "nvidia/nemotron-nano-12b-v2-vl:free"
+            }
+          },
+          "executors": {
+            "axllm": {
+              "enabled": true
+            }
+          }
+        }
+      }
+    ]
+  }
+}
