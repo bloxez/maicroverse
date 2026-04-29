@@ -91,7 +91,7 @@ mutation {
 
 # Query employment history for a specific employee
 query {
-  CypherQuery(
+  GraphQuery(
     query: """
     MATCH (e:Employee {name: $employee})-[emp:EmployedBy]-(employer:Employer)
     RETURN e, emp, employer
@@ -205,7 +205,7 @@ Try these modifications:
 
 ```graphql
 query {
-  CypherQuery(
+  GraphQuery(
     query: """
     MATCH (e:Employee {name: $name})-[emp:EmployedBy|ContractedBy]-(employer:Employer)
     RETURN 
@@ -225,7 +225,7 @@ query {
 
 ```graphql
 query {
-  CypherQuery(
+  GraphQuery(
     query: """
     MATCH (employer:Employer {name: $company})-[emp:EmployedBy]-(e:Employee)
     WHERE emp.valid_to IS NULL
