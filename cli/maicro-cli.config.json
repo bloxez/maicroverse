@@ -27,7 +27,7 @@
         "value": [
           {
             "event": "FILE_UPLOADED",
-            "chainName": "default_file_analysis",
+            "chainName": "DEFAULT_FILE_ANALYSIS",
             "description": "Automatically process new uploads via the default analysis chain.",
             "enabled": true,
             "source": "event"
