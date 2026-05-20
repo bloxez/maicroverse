@@ -42,6 +42,22 @@
         "key": "Features",
         "value": {
           "fetchAllowedHosts": ["marketindex.com.au"],
+          "document_types": {
+            "drivers_license": {
+              "key": "drivers_license",
+              "label": "Driver's License",
+              "description": "Driver's license documentation",
+              "tags": ["id", "drivers_license", "government"],
+              "customFields": []
+            },
+            "medicare_card": {
+              "key": "medicare_card",
+              "label": "Medicare Card",
+              "description": "Medicare health insurance card",
+              "tags": ["medical", "healthcare", "government"],
+              "customFields": []
+            }
+          },
           "analysis": {
             "_description": "Configuration for AI file analysis features (summarise, observations)",
             "_version": "1.0",
@@ -90,24 +106,6 @@
                 "dob",
                 "medical_id",
                 "tax_id"
-              ],
-              "document_types": [
-                "invoice",
-                "receipt",
-                "contract",
-                "letter",
-                "form",
-                "report",
-                "medical_record",
-                "identification",
-                "passport",
-                "drivers_license",
-                "id_card",
-                "bank_statement",
-                "tax_form",
-                "resume",
-                "photograph",
-                "screenshot"
               ],
               "content_flags": [
                 "profanity",
