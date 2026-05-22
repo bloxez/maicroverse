@@ -1,0 +1,6 @@
+id,first_name,last_name,email,phone,company,city,state,zip_code,country,created_at,is_active
+21,Tom,Baker,tom.baker@email.com,555-0121,Nexus Systems,Seattle,WA,98102,USA,2024-03-05,true
+22,Angela,Chen,angela.chen@email.com,555-0122,Silicon Valley Co,San Jose,CA,95101,USA,2024-03-06,true
+23,Marcus,Rivera,m.rivera@email.com,555-0123,Midwest Tech,Chicago,IL,60602,USA,2024-03-07,true
+24,Nina,Patel,nina.patel@email.com,555-0124,Southern Labs,Dallas,TX,75202,USA,2024-03-08,false
+25,Owen,Stewart,o.stewart@email.com,555-0125,North Star LLC,Minneapolis,MN,55401,USA,2024-03-09,true

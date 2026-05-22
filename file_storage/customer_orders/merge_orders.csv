@@ -1,0 +1,6 @@
+id,customer_id,order_date,status,total_amount,tax,shipping,notes
+1021,16,2024-03-10,shipped,489.97,39.19,12.00,Express delivery
+1022,21,2024-03-11,processing,739.96,59.19,15.00,New customer first order
+1023,22,2024-03-12,pending,259.98,20.79,8.00,
+1024,17,2024-03-13,delivered,924.95,73.99,18.00,Corporate account
+1025,23,2024-03-14,shipped,349.97,27.99,10.00,Standard delivery

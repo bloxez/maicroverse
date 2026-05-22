@@ -1,0 +1,21 @@
+id,first_name,last_name,email,phone,company,city,state,zip_code,country,created_at,is_active
+1,John,Smith,john.smith@email.com,555-0101,Tech Solutions,San Francisco,CA,94105,USA,2024-01-15,true
+2,Jane,Doe,jane.doe@email.com,555-0102,Digital Innovations,New York,NY,10001,USA,2024-01-16,true
+3,Robert,Johnson,robert.j@email.com,555-0103,Global Enterprises,Los Angeles,CA,90001,USA,2024-01-17,true
+4,Emily,Williams,emily.w@email.com,555-0104,Creative Studios,Chicago,IL,60601,USA,2024-01-18,true
+5,Michael,Brown,m.brown@email.com,555-0105,Finance Corp,Boston,MA,02101,USA,2024-01-19,true
+6,Sarah,Davis,sarah.davis@email.com,555-0106,Marketing Plus,Seattle,WA,98101,USA,2024-01-20,false
+7,David,Miller,d.miller@email.com,555-0107,Tech Innovations,Denver,CO,80202,USA,2024-01-21,true
+8,Lisa,Wilson,lisa.w@email.com,555-0108,Cloud Services,Austin,TX,78701,USA,2024-01-22,true
+9,James,Moore,james.moore@email.com,555-0109,Data Analytics,Miami,FL,33101,USA,2024-01-23,true
+10,Patricia,Taylor,p.taylor@email.com,555-0110,Web Solutions,Portland,OR,97201,USA,2024-01-24,true
+11,Christopher,Anderson,c.anderson@email.com,555-0111,Software House,Philadelphia,PA,19101,USA,2024-01-25,true
+12,Jennifer,Thomas,jen.thomas@email.com,555-0112,IT Consulting,Atlanta,GA,30301,USA,2024-01-26,true
+13,Daniel,Jackson,d.jackson@email.com,555-0113,Cloud Computing,Houston,TX,77001,USA,2024-02-01,true
+14,Jessica,White,jessica.w@email.com,555-0114,Enterprise Solutions,Phoenix,AZ,85001,USA,2024-02-02,false
+15,Matthew,Harris,m.harris@email.com,555-0115,Tech Support,Dallas,TX,75201,USA,2024-02-03,true
+16,Lauren,Martin,l.martin@email.com,555-0116,Design Studio,San Diego,CA,92101,USA,2024-02-04,true
+17,Joseph,Lee,j.lee@email.com,555-0117,Development Team,Washington,DC,20001,USA,2024-02-05,true
+18,Amanda,Perez,amanda.p@email.com,555-0118,Marketing Group,Boston,MA,02102,USA,2024-02-06,true
+19,Ryan,Thompson,ryan.t@email.com,555-0119,Analytics Plus,San Francisco,CA,94106,USA,2024-02-07,true
+20,Melissa,Garcia,melissa.g@email.com,555-0120,Consulting Firm,New York,NY,10002,USA,2024-02-08,false

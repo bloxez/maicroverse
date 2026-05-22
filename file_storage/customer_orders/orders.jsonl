@@ -1,0 +1,20 @@
+{"id": 1001, "customer_id": 1, "order_date": "2024-02-10", "status": "shipped", "total_amount": 1349.97, "tax": 107.99, "shipping": 25.00, "notes": "Express delivery requested"}
+{"id": 1002, "customer_id": 2, "order_date": "2024-02-11", "status": "pending", "total_amount": 849.96, "tax": 67.99, "shipping": 15.00, "notes": ""}
+{"id": 1003, "customer_id": 3, "order_date": "2024-02-12", "status": "shipped", "total_amount": 449.97, "tax": 35.99, "shipping": 10.00, "notes": "Standard delivery"}
+{"id": 1004, "customer_id": 4, "order_date": "2024-02-13", "status": "delivered", "total_amount": 579.96, "tax": 46.39, "shipping": 12.00, "notes": "Delivered on time"}
+{"id": 1005, "customer_id": 5, "order_date": "2024-02-14", "status": "shipped", "total_amount": 299.97, "tax": 23.99, "shipping": 8.00, "notes": ""}
+{"id": 1006, "customer_id": 6, "order_date": "2024-02-15", "status": "cancelled", "total_amount": 1249.95, "tax": 99.99, "shipping": 20.00, "notes": "Customer requested cancellation"}
+{"id": 1007, "customer_id": 7, "order_date": "2024-02-16", "status": "processing", "total_amount": 709.97, "tax": 56.79, "shipping": 18.00, "notes": "Large order being prepared"}
+{"id": 1008, "customer_id": 8, "order_date": "2024-02-17", "status": "delivered", "total_amount": 629.96, "tax": 50.39, "shipping": 12.00, "notes": ""}
+{"id": 1009, "customer_id": 9, "order_date": "2024-02-18", "status": "shipped", "total_amount": 479.97, "tax": 38.39, "shipping": 12.00, "notes": "International order"}
+{"id": 1010, "customer_id": 10, "order_date": "2024-02-19", "status": "delivered", "total_amount": 869.95, "tax": 69.59, "shipping": 15.00, "notes": ""}
+{"id": 1011, "customer_id": 1, "order_date": "2024-02-20", "status": "processing", "total_amount": 549.97, "tax": 43.99, "shipping": 12.00, "notes": ""}
+{"id": 1012, "customer_id": 2, "order_date": "2024-02-21", "status": "shipped", "total_amount": 399.96, "tax": 31.99, "shipping": 10.00, "notes": "Express shipping"}
+{"id": 1013, "customer_id": 3, "order_date": "2024-02-22", "status": "delivered", "total_amount": 799.97, "tax": 63.99, "shipping": 15.00, "notes": ""}
+{"id": 1014, "customer_id": 4, "order_date": "2024-02-23", "status": "shipped", "total_amount": 649.96, "tax": 51.99, "shipping": 12.00, "notes": ""}
+{"id": 1015, "customer_id": 5, "order_date": "2024-02-24", "status": "processing", "total_amount": 1299.93, "tax": 103.99, "shipping": 20.00, "notes": "Large bulk order"}
+{"id": 1016, "customer_id": 11, "order_date": "2024-02-25", "status": "delivered", "total_amount": 269.97, "tax": 21.59, "shipping": 8.00, "notes": ""}
+{"id": 1017, "customer_id": 12, "order_date": "2024-02-26", "status": "shipped", "total_amount": 449.95, "tax": 35.99, "shipping": 10.00, "notes": ""}
+{"id": 1018, "customer_id": 13, "order_date": "2024-02-27", "status": "delivered", "total_amount": 539.97, "tax": 43.19, "shipping": 12.00, "notes": ""}
+{"id": 1019, "customer_id": 14, "order_date": "2024-02-28", "status": "shipped", "total_amount": 679.98, "tax": 54.39, "shipping": 15.00, "notes": ""}
+{"id": 1020, "customer_id": 15, "order_date": "2024-03-01", "status": "processing", "total_amount": 369.97, "tax": 29.59, "shipping": 10.00, "notes": ""}

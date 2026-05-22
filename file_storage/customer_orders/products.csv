@@ -1,0 +1,26 @@
+id,name,description,category,price,cost,stock_quantity,sku,supplier_id,is_active,created_at
+1,Laptop Pro 15,High-performance laptop with 16GB RAM,Electronics,1299.99,650.00,45,LP-PRO-15-001,101,true,2024-01-01
+2,USB-C Cable,Premium 2m USB-C charging cable,Accessories,29.99,8.00,500,USB-C-002,102,true,2024-01-02
+3,Wireless Mouse,Ergonomic wireless mouse with USB receiver,Accessories,49.99,15.00,250,MOUSE-W-001,103,true,2024-01-03
+4,Mechanical Keyboard,RGB mechanical keyboard with Cherry MX switches,Accessories,189.99,75.00,120,KB-MECH-001,104,true,2024-01-04
+5,Monitor 27" 4K,Ultra HD 27-inch display with USB-C,Electronics,599.99,300.00,80,MON-27-4K-001,105,true,2024-01-05
+6,Desk Lamp LED,Modern LED desk lamp with adjustable brightness,Office,79.99,25.00,200,LAMP-LED-001,106,true,2024-01-06
+7,Laptop Stand,Aluminum laptop stand for ergonomic setup,Accessories,39.99,12.00,350,STAND-ALU-001,102,true,2024-01-07
+8,Headphones Pro,Noise-cancelling wireless headphones,Electronics,299.99,120.00,100,HP-NC-PRO-001,107,true,2024-01-08
+9,External SSD 1TB,Portable SSD with 1TB storage capacity,Storage,159.99,70.00,180,SSD-1TB-001,108,true,2024-01-09
+10,USB Hub 7-Port,Multi-port USB 3.0 hub,Accessories,59.99,20.00,400,HUB-7PORT-001,103,true,2024-01-10
+11,Webcam 4K,Ultra HD webcam with auto-focus,Electronics,199.99,80.00,90,CAM-4K-001,109,true,2024-01-11
+12,Mouse Pad XL,Large mousepad with non-slip base,Accessories,24.99,6.00,600,MPAD-XL-001,102,true,2024-01-12
+13,Docking Station,USB-C docking station with 13 ports,Electronics,249.99,100.00,75,DOCK-13P-001,110,true,2024-01-13
+14,Phone Stand,Adjustable phone stand for desk,Office,19.99,5.00,800,STAND-PH-001,106,true,2024-01-14
+15,HDMI Cable 2m,High-speed HDMI 2.1 cable,Accessories,34.99,10.00,450,HDMI-2M-001,111,true,2024-01-15
+16,Power Bank 20000mAh,Portable battery pack with fast charging,Electronics,49.99,18.00,220,PWR-20K-001,112,true,2024-01-16
+17,Office Chair Ergonomic,Ergonomic office chair with lumbar support,Furniture,399.99,150.00,40,CHAIR-ERG-001,113,true,2024-01-17
+18,Desk Organizer,Bamboo desk organizer with 5 compartments,Office,34.99,12.00,300,ORG-BAM-5-001,114,true,2024-01-18
+19,Document Holder,Adjustable document holder for desk,Office,22.99,8.00,350,DOC-HOLD-001,115,true,2024-01-19
+20,Portable Projector,Compact LED projector with 1080p support,Electronics,449.99,180.00,55,PROJ-LED-1080-001,116,true,2024-01-20
+21,Tablet Stand,Universal tablet stand for 7-13 inches,Office,29.99,10.00,400,STAND-TAB-001,114,true,2024-01-21
+22,Laptop Cooling Pad,Active cooling pad for laptops,Accessories,49.99,18.00,180,COOL-PAD-001,117,true,2024-01-22
+23,Cable Management Kit,Comprehensive cable management system,Accessories,39.99,14.00,280,CABLE-KIT-001,102,true,2024-01-23
+24,Monitor Light Bar,Monitor-mounted light bar for better illumination,Office,99.99,35.00,120,LIGHT-BAR-001,118,true,2024-01-24
+25,Portable SSD 500GB,Compact SSD with 500GB storage,Storage,89.99,35.00,250,SSD-500GB-001,108,true,2024-01-25
