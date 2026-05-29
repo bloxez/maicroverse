@@ -1,0 +1,26 @@
+id,customer_id,segment,lifetime_value,risk_score,churn_probability,preferred_channel,region,last_engagement_date
+1,1,Enterprise,182500.75,22,0.08,email,North America,2026-04-29
+2,2,Mid-Market,74500.10,37,0.19,sms,Europe,2026-05-08
+3,3,SMB,12890.35,61,0.42,email,North America,2026-04-17
+4,4,Enterprise,223900.00,18,0.06,phone,APAC,2026-05-12
+5,5,SMB,9750.20,66,0.48,sms,Europe,2026-03-30
+6,6,Mid-Market,53400.80,44,0.24,email,North America,2026-05-05
+7,7,Enterprise,311240.25,15,0.04,phone,North America,2026-05-13
+8,8,Mid-Market,68420.00,39,0.21,email,APAC,2026-04-26
+9,9,SMB,8430.45,72,0.55,sms,Europe,2026-03-22
+10,10,Enterprise,196700.90,20,0.09,email,North America,2026-05-10
+11,11,Mid-Market,60210.15,48,0.28,email,North America,2026-04-15
+12,12,SMB,11040.70,63,0.45,sms,APAC,2026-04-02
+13,13,Enterprise,278990.40,17,0.05,phone,Europe,2026-05-11
+14,14,Mid-Market,49760.05,51,0.31,email,North America,2026-04-08
+15,15,SMB,13450.00,59,0.38,sms,Europe,2026-04-20
+16,16,Mid-Market,55820.60,47,0.27,email,APAC,2026-05-02
+17,17,Enterprise,189450.35,24,0.11,phone,North America,2026-04-30
+18,18,SMB,9020.95,70,0.52,sms,Europe,2026-03-28
+19,19,Mid-Market,71340.55,36,0.18,email,North America,2026-05-07
+20,20,Enterprise,205880.25,19,0.07,phone,APAC,2026-05-14
+21,21,SMB,14560.00,57,0.36,email,Europe,2026-05-04
+22,22,Mid-Market,65520.80,40,0.23,sms,North America,2026-04-27
+23,23,Enterprise,248200.10,16,0.05,phone,Europe,2026-05-09
+24,24,SMB,11870.35,62,0.44,email,APAC,2026-04-05
+25,25,Mid-Market,58940.20,45,0.26,sms,North America,2026-05-01

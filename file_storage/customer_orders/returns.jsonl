@@ -1,0 +1,12 @@
+{"id":1,"order_item_id":5002,"order_id":1002,"reason":"Damaged","refund_amount":49.99,"status":"approved","processed_date":"2026-02-10"}
+{"id":2,"order_item_id":5005,"order_id":1004,"reason":"Not as described","refund_amount":89.50,"status":"approved","processed_date":"2026-02-14"}
+{"id":3,"order_item_id":5007,"order_id":1005,"reason":"Wrong size","refund_amount":24.75,"status":"pending","processed_date":"2026-02-15"}
+{"id":4,"order_item_id":5010,"order_id":1007,"reason":"Late delivery","refund_amount":18.00,"status":"approved","processed_date":"2026-02-18"}
+{"id":5,"order_item_id":5014,"order_id":1009,"reason":"Damaged","refund_amount":52.40,"status":"approved","processed_date":"2026-02-20"}
+{"id":6,"order_item_id":5018,"order_id":1011,"reason":"Incorrect item","refund_amount":67.10,"status":"rejected","processed_date":"2026-02-24"}
+{"id":7,"order_item_id":5021,"order_id":1012,"reason":"Changed mind","refund_amount":35.00,"status":"approved","processed_date":"2026-02-25"}
+{"id":8,"order_item_id":5026,"order_id":1014,"reason":"Damaged","refund_amount":42.90,"status":"approved","processed_date":"2026-02-28"}
+{"id":9,"order_item_id":5030,"order_id":1016,"reason":"Wrong color","refund_amount":27.80,"status":"pending","processed_date":"2026-03-02"}
+{"id":10,"order_item_id":5034,"order_id":1018,"reason":"Late delivery","refund_amount":16.50,"status":"approved","processed_date":"2026-03-05"}
+{"id":11,"order_item_id":5038,"order_id":1020,"reason":"Damaged","refund_amount":58.30,"status":"approved","processed_date":"2026-03-08"}
+{"id":12,"order_item_id":5041,"order_id":1021,"reason":"Incorrect item","refund_amount":73.25,"status":"pending","processed_date":"2026-03-10"}
