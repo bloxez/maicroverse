@@ -3,7 +3,7 @@ id,name,description,category,price,cost,stock_quantity,sku,supplier_id,is_active
 2,USB-C Cable,Premium 2m USB-C charging cable,Accessories,29.99,8.00,500,USB-C-002,102,true,2024-01-02
 3,Wireless Mouse,Ergonomic wireless mouse with USB receiver,Accessories,49.99,15.00,250,MOUSE-W-001,103,true,2024-01-03
 4,Mechanical Keyboard,RGB mechanical keyboard with Cherry MX switches,Accessories,189.99,75.00,120,KB-MECH-001,104,true,2024-01-04
-5,Monitor 27" 4K,Ultra HD 27-inch display with USB-C,Electronics,599.99,300.00,80,MON-27-4K-001,105,true,2024-01-05
+5,"Monitor 27"" 4K",Ultra HD 27-inch display with USB-C,Electronics,599.99,300.00,80,MON-27-4K-001,105,true,2024-01-05
 6,Desk Lamp LED,Modern LED desk lamp with adjustable brightness,Office,79.99,25.00,200,LAMP-LED-001,106,true,2024-01-06
 7,Laptop Stand,Aluminum laptop stand for ergonomic setup,Accessories,39.99,12.00,350,STAND-ALU-001,102,true,2024-01-07
 8,Headphones Pro,Noise-cancelling wireless headphones,Electronics,299.99,120.00,100,HP-NC-PRO-001,107,true,2024-01-08
