@@ -133,10 +133,6 @@
               "baseUrl": "https://openrouter.ai/api/v1",
               "enabled": true,
               "apiKeySecretName": "OPENROUTER_API_KEY"
-            },
-            "ollama": {
-              "enabled": true,
-              "baseUrl": "http://host.docker.internal:11434"
             }
           },
           "models": {
