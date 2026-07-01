@@ -1,0 +1,42 @@
+#!maicro
+# Test Pexels API resolvers
+
+###> Test 1: Search for nature photos
+query PexelsNatureSearch {
+  PexelsPhotoSearch(query: "mountain sunset", per_page: 5, orientation: "landscape") {
+    total_results
+    photographer
+    photo_url
+    large
+    medium
+    width
+    height
+  }
+}
+
+###> Test 2: Search for portrait photography
+query PexelsPortraitSearch {
+  PexelsPhotoSearch(query: "business professional", per_page: 3, orientation: "portrait") {
+    photographer
+    photo_url
+    original
+    width
+    height
+  }
+}
+
+###> Test 3: Get curated photos
+query PexelsCurated {
+  PexelsCuratedPhotos(per_page: 5) {
+    photographer
+    photo_url
+    large
+  }
+}
+
+###> Test 4: Get all photo data as JSON
+query PexelsAllPhotos {
+  PexelsPhotosAll(query: "technology", per_page: 3) {
+    photos
+  }
+}

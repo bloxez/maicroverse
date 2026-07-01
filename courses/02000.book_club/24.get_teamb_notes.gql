@@ -1,0 +1,87 @@
+#!maicro
+#---
+# title: Team B Visibility Check (24)
+# description: Run as Team B user (maicro2@maicro.ai) to verify only Team B notes are visible.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - security
+#   - team-isolation
+#---
+
+###> STEP 1 - TEAM B NOTE VIEW
+#{
+# Purpose:
+# Demonstrate row-level isolation for Team B in an interactive user session.
+#
+# Required execution context:
+# - Sign in as maicro2@maicro.ai in IDE settings before running.
+#
+# What this step does:
+# - Queries all visible team_notes for the current user.
+# - Attempts a filtered query for Team A notes.
+#
+# Expected outcome:
+# - visible_notes contains only rows where team_label = teamb.
+# - visible_notes should return 1 row (Team B intentionally has a smaller operations queue).
+# - attempted_other_team returns an empty list.
+#}
+query TeamB_View {
+  visible_count: team_notesCount
+  attempted_other_team_count: team_notesCount(where: { team_label: { eq: "teama" } })
+
+  visible_notes: team_notes(page: { page: 1, items: 100 }, sort: [{ key: "title", asc: true }]) {
+    id
+    title
+    content
+    priority
+    created_by
+    team_label
+  }
+
+  attempted_other_team: team_notes(
+    where: { team_label: { eq: "teama" } }
+    page: { page: 1, items: 100 }
+  ) {
+    id
+    title
+    team_label
+  }
+}
+
+###> STEP 2 - ASSERT TEAM B SEGREGATION
+#{
+# Purpose:
+# Fail fast if Team B visibility is incorrect.
+#
+# What this step does:
+# - Asserts Team B sees exactly 1 note.
+# - Asserts Team B sees 0 Team A notes.
+#
+# Expected outcome:
+# - Both assertions pass.
+# - Script errors immediately if either assertion fails.
+#}
+query TeamB_Assert {
+  assert_visible_count: AssertOrThrow(
+    actual: "{{@@.visible_count.count}}"
+    op: "eq"
+    expected: "1"
+    message: "Team B visibility mismatch: expected 1 visible note"
+  ) {
+    success
+    assertion
+    message
+  }
+
+  assert_other_team_empty: AssertOrThrow(
+    actual: "{{@@.attempted_other_team_count.count}}"
+    op: "eq"
+    expected: "0"
+    message: "Team isolation failure: Team B can see Team A notes"
+  ) {
+    success
+    assertion
+    message
+  }
+}

@@ -1,0 +1,47 @@
+#!maicro
+# API Wrap Tests - Verify all API resolvers work correctly
+# These tests call the wrapped APIs created in DB_WRAP_API_SETUP.gql
+# All tests use JSONPlaceholder - a free fake REST API for testing
+
+###> Test 1: JSONPlaceholder Posts
+query TestJSONPlaceholderPosts {
+  JSONPlaceholderPosts {
+    id
+    userId
+    title
+    body
+  }
+}
+
+###> Test 2: JSONPlaceholder Single Post
+query TestJSONPlaceholderPost {
+  JSONPlaceholderPost(id: 1) {
+    id
+    userId
+    title
+    body
+  }
+}
+
+###> Test 3: JSONPlaceholder Users (with response mapping)
+query TestJSONPlaceholderUsers {
+  JSONPlaceholderUsers {
+    id
+    name
+    username
+    email
+    city
+    company
+  }
+}
+
+###> Test 4: JSONPlaceholder Comments (with custom headers)
+query TestJSONPlaceholderComments {
+  JSONPlaceholderComments(postId: 1) {
+    id
+    postId
+    name
+    email
+    body
+  }
+}

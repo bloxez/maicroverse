@@ -1,0 +1,80 @@
+#!maicro
+#---
+# title: Set and validate root path for data import
+# description: Stores the data import root path in memory, retrieves it, and asserts both value and type.
+# difficulty: beginner
+# estimated_time: 10s
+# tags:
+#   - memory
+#   - setup
+#   - assertions
+# intent: Initialize shared import_root memory for all data import scripts.
+#---
+
+###> STORE IN MEMORY
+#{
+# ## Store Import Root
+# Writes the shared import root path into memory at:
+#   id: import_root
+#   path: path
+#
+# Downstream scripts use this value to build file-storage paths.
+#}
+mutation SetRootPath {
+  SetRoot: Remember(
+    id: "import_root"
+    path: "path"
+    value: "maicroverse"
+  )
+}
+
+###> RETRIEVE VALUE
+#{
+# ## Read Back Stored Value
+# Retrieves the memory value just written so the script can verify
+# the path is available in execution context.
+#}
+query GetRootPath {
+  rootPath: Recall(
+    id: "import_root"
+    path: "path"
+  )
+}
+
+###> ASSERT VALUE
+#{
+# ## Validate Exact Path
+# Confirms the retrieved value equals the expected root path.
+#}
+query AssertRootPathValue {
+  AssertValue: Assert(
+    actual: "{{rootPath}}"
+    op: "eq"
+    expected: "maicroverse"
+  ) {
+    success
+    message
+    assertion
+    actual
+    expected
+  }
+}
+
+###> ASSERT TYPE
+#{
+# ## Validate Value Type
+# Confirms the root path is stored as a string.
+#}
+query AssertRootPathType {
+  AssertType: Assert(
+    actual: "{{rootPath}}"
+    op: "type"
+    expected: "string"
+  ) {
+    success
+    message
+    assertion
+    actual
+    expected
+  }
+}

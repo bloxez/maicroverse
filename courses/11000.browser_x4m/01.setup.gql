@@ -1,0 +1,181 @@
+#!maicro
+#---
+# title: Browser X4m - Full Course Setup Orchestrator
+# description: Executes all Browser X4m lessons in sequence for repeatable training.
+# difficulty: beginner
+# estimated_time: 8m
+# tags:
+#   - browser
+#   - x4m
+#   - setup
+#   - orchestrator
+# intent: Run the complete course with one command and verify each lesson executes.
+#---
+
+###> STEP 0 - PRE-CLEANUP BROWSER STATE
+#{
+# Ensures no leftover sessions interfere with the run.
+# stepinto: scripts/courses/11000.browser_x4m/11.close_all.gql
+#}
+mutation Step0_PreCleanup {
+  cleanup: DbExecute(path: "scripts/courses/11000.browser_x4m/11.close_all.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 1 - OPEN LIST CLOSE
+#{
+# Core lifecycle: open a session, list sessions, close the active session.
+# stepinto: scripts/courses/11000.browser_x4m/02.open_list_close.gql
+#}
+mutation Step1_OpenListClose {
+  step02: DbExecute(path: "scripts/courses/11000.browser_x4m/02.open_list_close.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 2 - GOTO EXTRACT
+#{
+# Navigation + extraction of text/html/attribute examples.
+# stepinto: scripts/courses/11000.browser_x4m/03.goto_extract.gql
+#}
+mutation Step2_GotoExtract {
+  step03: DbExecute(path: "scripts/courses/11000.browser_x4m/03.goto_extract.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 3 - WAIT CLICK KEYBOARD MOUSE
+#{
+# Interaction primitives and timing controls.
+# stepinto: scripts/courses/11000.browser_x4m/04.wait_click_keyboard_mouse.gql
+#}
+mutation Step3_Interactions {
+  step04: DbExecute(path: "scripts/courses/11000.browser_x4m/04.wait_click_keyboard_mouse.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 4 - FORM FILL
+#{
+# Form completion and control interaction on a live page.
+# stepinto: scripts/courses/11000.browser_x4m/05.form_fill_httpbin.gql
+#}
+mutation Step4_FormFill {
+  step05: DbExecute(path: "scripts/courses/11000.browser_x4m/05.form_fill_httpbin.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 5 - SELECT DROPDOWN
+#{
+# Deterministic dropdown select demonstration.
+# stepinto: scripts/courses/11000.browser_x4m/06.select_dropdown.gql
+#}
+mutation Step5_SelectDropdown {
+  step06: DbExecute(path: "scripts/courses/11000.browser_x4m/06.select_dropdown.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 6 - EVALUATE DOM
+#{
+# Structured page analysis via JavaScript evaluation.
+# stepinto: scripts/courses/11000.browser_x4m/07.evaluate_dom.gql
+#}
+mutation Step6_EvaluateDom {
+  step07: DbExecute(path: "scripts/courses/11000.browser_x4m/07.evaluate_dom.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 7 - UPLOAD FILE
+#{
+# Uploads `/etc/hosts` to avoid environment-specific prerequisites.
+# stepinto: scripts/courses/11000.browser_x4m/08.upload_file.gql
+#}
+mutation Step7_UploadFile {
+  step08: DbExecute(path: "scripts/courses/11000.browser_x4m/08.upload_file.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 8 - SCREENSHOT
+#{
+# Captures a screenshot artifact to prove visual capture capability.
+# stepinto: scripts/courses/11000.browser_x4m/09.screenshot_capture.gql
+#}
+mutation Step8_Screenshot {
+  step09: DbExecute(path: "scripts/courses/11000.browser_x4m/09.screenshot_capture.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 9 - IMPLICIT SESSION CHAIN
+#{
+# Shows chained actions without manual session ID handling.
+# stepinto: scripts/courses/11000.browser_x4m/10.implicit_session_chain.gql
+#}
+mutation Step9_ImplicitSessionChain {
+  step10: DbExecute(path: "scripts/courses/11000.browser_x4m/10.implicit_session_chain.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 10 - END-TO-END JOURNEY
+#{
+# Final integrated exercise combining multiple browser behaviors.
+# stepinto: scripts/courses/11000.browser_x4m/12.end_to_end_browser_journey.gql
+#}
+mutation Step10_EndToEndJourney {
+  step12: DbExecute(path: "scripts/courses/11000.browser_x4m/12.end_to_end_browser_journey.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}
+
+###> STEP 11 - POST-CLEANUP BROWSER STATE
+#{
+# Leaves environment clean and ready for immediate rerun.
+# stepinto: scripts/courses/11000.browser_x4m/11.close_all.gql
+#}
+mutation Step11_PostCleanup {
+  cleanup: DbExecute(path: "scripts/courses/11000.browser_x4m/11.close_all.gql") {
+    success
+    status
+    message
+    executionTime
+  }
+}

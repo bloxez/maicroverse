@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Upload File
+# description: Uploads a stable local file using an injected file input on an allowed page.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - upload
+#   - x4m
+# intent: Demonstrate reliable file upload without external upload-page dependency.
+#---
+
+###> STEP 1 - PREPARE FILE INPUT AND UPLOAD
+#{
+# Injects a file input, uploads /etc/hosts, then returns selected filename.
+#}
+mutation Step1_UploadFile {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_EVALUATE(expression:'(() => { const input = document.createElement(\"input\"); input.type = \"file\"; input.id = \"file\"; document.body.appendChild(input); return true; })()') | BROWSER_WAIT_FOR_SELECTOR(selector:'#file', timeout:5000) | BROWSER_UPLOAD_FILE(selector:'#file', filePath:'/etc/hosts') | BROWSER_EVALUATE(expression:'(() => document.querySelector(\"#file\")?.files?.[0]?.name || null)()')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

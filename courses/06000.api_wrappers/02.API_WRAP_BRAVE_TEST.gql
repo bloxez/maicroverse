@@ -1,0 +1,30 @@
+#!maicro
+# Test Brave Search API resolvers
+
+###> Test 1: Search for latest AI developments
+query BraveAISearch {
+  BraveWebSearch(q: "artificial intelligence breakthroughs 2025", count: 5) {
+    query
+    title
+    url
+    description
+    age
+  }
+}
+
+###> Test 2: Search for technical documentation
+query BraveDocSearch {
+  BraveWebSearch(q: "GraphQL best practices", count: 3) {
+    query
+    title
+    url
+    description
+  }
+}
+
+###> Test 3: Get all results as JSON
+query BraveSearchAllResults {
+  BraveWebSearchAll(q: "Deno TypeScript features", count: 5) {
+    results
+  }
+}

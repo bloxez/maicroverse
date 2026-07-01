@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Close All Sessions
+# description: Safety cleanup script to close all open browser sessions.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - browser
+#   - cleanup
+#   - x4m
+# intent: Provide a deterministic reset point for repeated course runs.
+#---
+
+###> STEP 1 - CLOSE ALL
+#{
+# Closes every active browser session in the current runtime.
+#}
+mutation Step1_CloseAll {
+  demo: X4m(
+    pipeline: "BROWSER_CLOSE_ALL"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

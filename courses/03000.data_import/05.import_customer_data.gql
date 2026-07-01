@@ -1,0 +1,136 @@
+#!maicro
+#---
+# title: Customer & Order Dataset Import
+# description: Imports core customer/order tables from customer_orders source files.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - database
+#   - import
+#   - csv
+#   - jsonl
+# intent: setup
+#---
+
+###> LOAD IMPORT ROOT
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> DropAll
+mutation DropAll {
+  d1: DbDropTable(name: "invoices")
+  d2: DbDropTable(name: "order_items")
+  d3: DbDropTable(name: "orders")
+  d4: DbDropTable(name: "products")
+  d5: DbDropTable(name: "customers")
+}
+
+###> ImportCustomers
+mutation ImportCustomers {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/customers.csv"
+    table: "customers"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "first_name", type: "String" }
+      { file_column: "last_name", type: "String" }
+      { file_column: "email", type: "String" }
+      { file_column: "phone", type: "String" }
+      { file_column: "company", type: "String" }
+      { file_column: "city", type: "String" }
+      { file_column: "state", type: "String" }
+      { file_column: "zip_code", type: "Int" }
+      { file_column: "country", type: "String" }
+      { file_column: "is_active", type: "Boolean" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportProducts
+mutation ImportProducts {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/products.csv"
+    table: "products"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "name", type: "String" }
+      { file_column: "description", type: "String" }
+      { file_column: "category", type: "String" }
+      { file_column: "price", type: "Float" }
+      { file_column: "cost", type: "Float" }
+      { file_column: "stock_quantity", type: "Int" }
+      { file_column: "sku", type: "String" }
+      { file_column: "supplier_id", type: "Int", is_foreign_key: false }
+      { file_column: "is_active", type: "Boolean" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportOrders
+mutation ImportOrders {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/orders.jsonl"
+    table: "orders"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "customer_id", type: "ID" }
+      { file_column: "order_date", type: "String" }
+      { file_column: "status", type: "String" }
+      { file_column: "total_amount", type: "Float" }
+      { file_column: "tax", type: "Float" }
+      { file_column: "shipping", type: "Float" }
+      { file_column: "notes", type: "String" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportOrderItems
+mutation ImportOrderItems {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/order_items.jsonl"
+    table: "order_items"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "order_id", type: "ID" }
+      { file_column: "product_id", type: "ID" }
+      { file_column: "quantity", type: "Int" }
+      { file_column: "unit_price", type: "Float" }
+      { file_column: "line_total", type: "Float" }
+      { file_column: "discount_percent", type: "Int" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportInvoices
+mutation ImportInvoices {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/invoices.jsonl"
+    table: "invoices"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "order_id", type: "ID" }
+      { file_column: "customer_id", type: "ID" }
+      { file_column: "invoice_date", type: "String" }
+      { file_column: "due_date", type: "String" }
+      { file_column: "status", type: "String" }
+      { file_column: "amount", type: "Float" }
+      { file_column: "paid_date", type: "String" }
+      { file_column: "payment_method", type: "String" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ReloadSchema
+mutation ReloadSchema {
+  DbReload
+}
+
+###> CustomerOrderSummary
+query CustomerOrderSummary {
+  customersCount
+  productsCount
+  ordersCount
+  order_itemsCount
+  invoicesCount
+}

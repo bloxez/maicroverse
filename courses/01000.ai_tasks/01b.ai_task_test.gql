@@ -1,0 +1,88 @@
+#!maicro
+#---
+# title: AI Task Test
+# intent: Test the setup and teardown of AI Tasks and related GraphQL types.
+# description: Create, query, update and delete the AI task to provide an end to end test scenario.
+# difficulty: beginner
+# estimated_time: 3m
+# tags:
+#   - ai
+#   - config
+#   - tasks
+#   - graphql
+#---
+
+###> STEP 1 — REGISTER GRAPHQL TYPE
+#{
+# ## Create DriversLicense Type
+# Creates the user-defined GraphQL type that the AI task references.
+#
+# stepinto: 03.setup_drivers_license_type.gql
+#}
+mutation Step1_RegisterType {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/03.setup_drivers_license_type.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 2 — ADD AI TASK
+#{
+# ## Create test_drivers_license Task
+# Adds the AI task into maiql.ai_tasks using the new AiTaskAdd resolver.
+#
+# stepinto: 04.add_drivers_license_task.gql
+#}
+mutation Step2_AddTask {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/04.add_drivers_license_task.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 3 — LIST AND FETCH TASK
+#{
+# ## Read Back Task State
+# Lists tasks and fetches the specific task to confirm persisted config.
+#
+# stepinto: 05.list_get_drivers_license_task.gql
+#}
+mutation ListAndGet {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/05.list_get_drivers_license_task.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 4 — UPDATE TASK
+#{
+# ## Modify Task Definition
+# Updates the task description and missing_value token.
+#
+# stepinto: 06.update_drivers_license_task.gql
+#}
+mutation UpdateTask {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/06.update_drivers_license_task.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 5 — DELETE TASK
+#{
+# ## Cleanup
+# Deletes the demo task from maiql.ai_tasks.
+#
+# stepinto: 07.delete_drivers_license_task.gql
+#}
+mutation DeleteTask {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/07.delete_drivers_license_task.gql") {
+    success
+    message
+    result
+  }
+}

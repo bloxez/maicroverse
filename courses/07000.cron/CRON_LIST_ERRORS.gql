@@ -1,0 +1,47 @@
+#!maicro
+#---
+# title: CRON Utility - List Errors
+# description: Fetches error logs for the first available cron job.
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - cron
+#   - logs
+#   - troubleshooting
+#---
+
+###> STEP 1 - RESOLVE TARGET JOB
+#{
+# Selects the first cron job from the list.
+#
+# If no jobs exist, run `01.CRON_SETUP_WEATHER_DEMO.gql` first.
+#}
+query Step1_ResolveCronJob {
+  weatherDemoJobs: CronJobs(limit: 10) {
+    id
+    name
+    status
+    last_error
+  }
+}
+
+###> STEP 2 - LIST ERROR LOGS
+#{
+# Retrieves failed execution logs for the selected job.
+#}
+query Step2_ListErrorLogs {
+  CronJobLogs(
+    cronJobId: "{{@@.weatherDemoJobs.0.id}}"
+    limit: 50
+    errorsOnly: true
+  ) {
+    id
+    cron_job_id
+    status
+    error
+    result
+    started_at
+    completed_at
+    duration_ms
+  }
+}

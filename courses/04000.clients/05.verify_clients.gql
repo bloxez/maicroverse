@@ -1,0 +1,52 @@
+#!maicro
+#---
+# title: Verify Clients Setup
+# description: Verify clients table availability and inspect seeded records.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - verification
+#   - clients
+#---
+
+###> RELOAD SCHEMA
+#{
+# ## Fresh Schema
+# Ensures generated GraphQL resolvers for `clients` are current before checks.
+#}
+mutation ReloadSchema {
+  DbReload
+}
+
+###> VERIFY TABLE EXISTS
+#{
+# ## Table Presence
+# Confirms that `clients` exists in the current database schema.
+#}
+query VerifyClientsTable {
+  DbTables {
+    name
+    description
+  }
+}
+
+###> VERIFY SEEDED DATA
+#{
+# ## Seeded Rows
+# Returns a sample list of clients for quick validation.
+#}
+query VerifySeededClients {
+  clients(page: { page: 1, items: 20 }) {
+    id
+    first_name
+    middle_name
+    last_name
+    dob
+    address_unit
+    address_street
+    address_suburb
+    address_state
+    address_postcode
+    label
+  }
+}

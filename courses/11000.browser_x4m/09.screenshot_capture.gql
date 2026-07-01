@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Visual State Capture
+# description: Captures structured visual-state metadata for diagnostics.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - diagnostics
+#   - x4m
+# intent: Provide a repeatable visual-state checkpoint in environments where screenshot persistence is unavailable.
+#---
+
+###> STEP 1 - CAPTURE VISUAL METADATA
+#{
+# Returns title and viewport dimensions as a visual state checkpoint.
+#}
+mutation Step1_VisualStateCapture {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_EVALUATE(expression:'(() => ({ title: document.title, width: window.innerWidth, height: window.innerHeight }))()')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

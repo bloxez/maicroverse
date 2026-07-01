@@ -1,0 +1,20 @@
+#!maicro
+#---
+# title: CRON Utility - Delete All Jobs
+# description: Administrative utility to remove all cron jobs in the active project.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - cron
+#   - cleanup
+#---
+
+###> STEP 1 - DELETE ALL CRON JOBS
+#{
+# Removes all cron jobs visible to the caller.
+#
+# For admins, this deletes all jobs in the project.
+#}
+mutation Step1_DeleteAllCronJobs {
+  CronJobDeleteAll
+}

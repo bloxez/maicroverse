@@ -1,0 +1,229 @@
+#!maicro
+#---
+# title: Create Teams, Roles, and Users (21)
+# description: Admin setup for Team A/Team B users used in team_notes isolation checks.
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - auth
+#   - teams
+#   - rbac
+#---
+
+###> STEP 1 - CREATE ROLES
+#{
+# Purpose:
+# Create demo-specific roles used by book club team members.
+#
+# What this step does:
+# - Creates book_club_member role for baseline access.
+# - Creates book_club_moderator role for elevated moderation actions.
+#
+# Expected outcome:
+# - both role IDs are available for assignment in later steps.
+#}
+mutation Step1_CreateRoles {
+  memberRole: AuthCreateRole(
+    input: {
+      name: "book_club_member"
+      description: "Book club team member"
+      permissions: [
+        "auth:profile:read"
+        "user:access"
+        "table:team_note:read"
+        "table:team_notes:read"
+        "team_note:read"
+        "team_notes:read"
+      ]
+    }
+  ) {
+    id
+    name
+    description
+  }
+
+  moderatorRole: AuthCreateRole(
+    input: {
+      name: "book_club_moderator"
+      description: "Book club team moderator"
+      permissions: [
+        "auth:profile:read"
+        "user:access"
+        "admin:users"
+        "table:team_note:read"
+        "table:team_notes:read"
+        "team_note:read"
+        "team_notes:read"
+      ]
+    }
+  ) {
+    id
+    name
+    description
+  }
+}
+
+###> STEP 2 - CREATE TEAMS
+#{
+# Purpose:
+# Create the two demo teams used for row-level isolation.
+#
+# What this step does:
+# - Creates teama and teamb with clear operational descriptions.
+#
+# Expected outcome:
+# - two team IDs are available for membership assignment.
+#}
+mutation Step2_CreateTeams {
+  teamA: AuthCreateTeam(input: {
+    name: "teama"
+    description: "Book Club Team A - Fiction discussion and member support"
+  }) {
+    id
+    name
+    description
+  }
+
+  teamB: AuthCreateTeam(input: {
+    name: "teamb"
+    description: "Book Club Team B - Operations and weekly reading tasks"
+  }) {
+    id
+    name
+    description
+  }
+}
+
+###> STEP 3 - CREATE USERS
+#{
+# Purpose:
+# Provision fixed demo users aligned with IDE account switching.
+#
+# What this step does:
+# - Creates Team A user: maicro1@maicro.ai
+# - Creates Team B user: maicro2@maicro.ai
+# - Uses deterministic credentials for repeatable local demos.
+#
+# Expected outcome:
+# - both user IDs are available for team and role assignment.
+#}
+mutation Step3_CreateUsers {
+  userA: AuthCreateUser(input: {
+    email: "maicro1@maicro.ai"
+    name: "Book Club Team A User"
+    password: "maicrog2a"
+  }) {
+    user_id
+    email
+    name
+  }
+
+  userB: AuthCreateUser(input: {
+    email: "maicro2@maicro.ai"
+    name: "Book Club Team B User"
+    password: "maicrog2a"
+  }) {
+    user_id
+    email
+    name
+  }
+}
+
+###> STEP 4 - ASSIGN USERS TO TEAMS
+#{
+# Purpose:
+# Bind each demo user to exactly one team.
+#
+# What this step does:
+# - Assigns maicro1@maicro.ai to teama.
+# - Assigns maicro2@maicro.ai to teamb.
+#
+# Expected outcome:
+# - AuthUserTeams for each user contains only its team ID.
+#}
+mutation Step4_AssignTeams {
+  teamAssignA: AuthAssignTeamsToUser(
+    userId: "{{@@.userA.user_id}}"
+    teamIds: ["{{@@.teamA.id}}"]
+  ) {
+    user_id
+    team_ids
+  }
+
+  teamAssignB: AuthAssignTeamsToUser(
+    userId: "{{@@.userB.user_id}}"
+    teamIds: ["{{@@.teamB.id}}"]
+  ) {
+    user_id
+    team_ids
+  }
+}
+
+###> STEP 5 - ASSIGN ROLES TO USERS
+#{
+# Purpose:
+# Attach RBAC roles for realistic team operation.
+#
+# What this step does:
+# - Team A user receives member + moderator roles.
+# - Team B user receives member role.
+#
+# Expected outcome:
+# - role assignment payloads return expected role lists.
+#}
+mutation Step5_AssignRoles {
+  roleAssignA: AuthAssignRolesToUser(
+    userId: "{{@@.userA.user_id}}"
+    roleIds: ["{{@@.memberRole.id}}", "{{@@.moderatorRole.id}}"]
+  ) {
+    user_id
+    roles {
+      id
+      name
+    }
+  }
+
+  roleAssignB: AuthAssignRolesToUser(
+    userId: "{{@@.userB.user_id}}"
+    roleIds: ["{{@@.memberRole.id}}"]
+  ) {
+    user_id
+    roles {
+      id
+      name
+    }
+  }
+}
+
+###> STEP 6 - VERIFY USERS AND MEMBERSHIPS
+#{
+# Purpose:
+# Return a final identity snapshot that setup consumers can trust.
+#
+# What this step does:
+# - Looks up both users by email.
+# - Returns roles attached to each user.
+#
+# Expected outcome:
+# - both users resolved and role memberships visible.
+#}
+query Step6_Verify {
+  userA: AuthUserByEmail(email: "maicro1@maicro.ai") {
+    user_id
+    email
+    name
+    roles {
+      id
+      name
+    }
+  }
+  userB: AuthUserByEmail(email: "maicro2@maicro.ai") {
+    user_id
+    email
+    name
+    roles {
+      id
+      name
+    }
+  }
+}

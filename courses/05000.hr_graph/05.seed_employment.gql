@@ -1,0 +1,122 @@
+#!maicro
+#---
+# title: HR Graph — Seed Employment History
+# description: |
+#   Builds a realistic multi-year employment history using the registered wrappers.
+#   Employment rules enforced by the wrappers:
+#   - AddFullTimeEmployer: closes ALL open roles before opening the new full-time role
+#   - AddPartTimeEmployer: silently skipped if an active full-time role exists
+#   Employee profiles:
+#   - Alice, Bob, David, Femi: full-time only career tracks
+#   - Carmen, Emma: freelancers with multiple concurrent part-time roles
+# tags: [graph, cypher, hr, seed]
+#---
+
+###> Alice - Axiom Labs (past full-time)
+#{
+# ## Alice Chen at Axiom Labs
+# First full-time role. Closed automatically when Alice joins BluePeak Tech.
+#}
+mutation { AddFullTimeEmployer(employee: "Alice Chen", employer: "Axiom Labs", role: "Software Engineer", valid_from: "2020-03-01", valid_to: "2023-06-30") { data } }
+
+###> Alice - BluePeak Tech (current full-time, closes Axiom)
+#{
+# ## Alice Chen at BluePeak Tech
+# Current full-time role. `AddFullTimeEmployer` closed the Axiom role with `valid_to = 2023-07-01`
+# before creating this edge, ensuring Alice has exactly one active role.
+#}
+mutation { AddFullTimeEmployer(employee: "Alice Chen", employer: "BluePeak Tech", role: "Senior Engineer", valid_from: "2023-07-01") { data } }
+
+###> Bob - Cornerstone (past full-time)
+#{
+# ## Bob Okafor at Cornerstone
+# First full-time role. Closed automatically when Bob joins DeltaCore.
+#}
+mutation { AddFullTimeEmployer(employee: "Bob Okafor", employer: "Cornerstone", role: "Product Manager", valid_from: "2019-05-01", valid_to: "2022-04-30") { data } }
+
+###> Bob - DeltaCore (current full-time, closes Cornerstone)
+#{
+# ## Bob Okafor at DeltaCore
+# Current full-time role. Cornerstone edge was closed before this one was created.
+#}
+mutation { AddFullTimeEmployer(employee: "Bob Okafor", employer: "DeltaCore", role: "Head of Product", valid_from: "2022-05-01") { data } }
+
+###> David - BluePeak Tech (past full-time)
+#{
+# ## David Park at BluePeak Tech
+# First full-time role. Closed automatically when David joins Axiom Labs.
+#}
+mutation { AddFullTimeEmployer(employee: "David Park", employer: "BluePeak Tech", role: "DevOps Engineer", valid_from: "2018-09-01", valid_to: "2021-08-31") { data } }
+
+###> David - Axiom Labs (current full-time, closes BluePeak)
+#{
+# ## David Park at Axiom Labs
+# Current full-time role. BluePeak edge was closed before this one was created.
+#}
+mutation { AddFullTimeEmployer(employee: "David Park", employer: "Axiom Labs", role: "Platform Lead", valid_from: "2021-09-01") { data } }
+
+###> Femi - Axiom Labs (first full-time)
+#{
+# ## Femi Adeyemi at Axiom Labs
+# First stop in a three-company full-time career. Closed when Femi moves to Cornerstone.
+#}
+mutation { AddFullTimeEmployer(employee: "Femi Adeyemi", employer: "Axiom Labs", role: "QA Engineer", valid_from: "2017-01-01", valid_to: "2019-12-31") { data } }
+
+###> Femi - Cornerstone (second full-time, closes Axiom)
+#{
+# ## Femi Adeyemi at Cornerstone
+# Second full-time role. Axiom edge was closed before this one was created.
+#}
+mutation { AddFullTimeEmployer(employee: "Femi Adeyemi", employer: "Cornerstone", role: "Software Engineer", valid_from: "2020-01-01", valid_to: "2022-06-30") { data } }
+
+###> Femi - Ember Systems (current full-time, closes Cornerstone)
+#{
+# ## Femi Adeyemi at Ember Systems
+# Current (third) full-time role. Cornerstone edge was closed before this one was created.
+#}
+mutation { AddFullTimeEmployer(employee: "Femi Adeyemi", employer: "Ember Systems", role: "Engineering Manager", valid_from: "2022-07-01") { data } }
+
+###> Carmen - Axiom Labs (past part-time)
+#{
+# ## Carmen Silva at Axiom Labs (part-time)
+# First consulting engagement. Carmen has no full-time role so `AddPartTimeEmployer`
+# proceeds normally. This role has since closed.
+#}
+mutation { AddPartTimeEmployer(employee: "Carmen Silva", employer: "Axiom Labs", role: "ML Consultant", valid_from: "2021-06-01", valid_to: "2023-05-31") { data } }
+
+###> Carmen - Ember Systems (active part-time)
+#{
+# ## Carmen Silva at Ember Systems (part-time, active)
+# Ongoing advisory engagement. No full-time blocker — wrapper creates the edge.
+#}
+mutation { AddPartTimeEmployer(employee: "Carmen Silva", employer: "Ember Systems", role: "Data Science Advisor", valid_from: "2022-09-01") { data } }
+
+###> Carmen - BluePeak Tech (active part-time, concurrent with Ember)
+#{
+# ## Carmen Silva at BluePeak Tech (part-time, active)
+# Second concurrent active engagement. Demonstrates that multiple part-time roles
+# are allowed simultaneously when there is no active full-time role.
+#}
+mutation { AddPartTimeEmployer(employee: "Carmen Silva", employer: "BluePeak Tech", role: "Research Advisor", valid_from: "2024-01-01") { data } }
+
+###> Emma - Cornerstone (past part-time)
+#{
+# ## Emma Johansson at Cornerstone (part-time)
+# First consulting engagement. Closed in February 2024.
+#}
+mutation { AddPartTimeEmployer(employee: "Emma Johansson", employer: "Cornerstone", role: "UI Consultant", valid_from: "2022-03-01", valid_to: "2024-02-28") { data } }
+
+###> Emma - DeltaCore (active part-time)
+#{
+# ## Emma Johansson at DeltaCore (part-time, active)
+# Ongoing UX engagement. No full-time blocker — wrapper creates the edge.
+#}
+mutation { AddPartTimeEmployer(employee: "Emma Johansson", employer: "DeltaCore", role: "UX Designer", valid_from: "2023-01-01") { data } }
+
+###> Emma - Ember Systems (active part-time, concurrent with DeltaCore)
+#{
+# ## Emma Johansson at Ember Systems (part-time, active)
+# Second concurrent active engagement alongside DeltaCore.
+# Validates the multi-part-time model for freelancers.
+#}
+mutation { AddPartTimeEmployer(employee: "Emma Johansson", employer: "Ember Systems", role: "Design Lead", valid_from: "2024-06-01") { data } }

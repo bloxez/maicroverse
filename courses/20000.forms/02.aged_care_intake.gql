@@ -1,0 +1,2411 @@
+###> script_overview
+# Purpose: Define/upsert the aged care intake form schema used by demo and test flows.
+# Contract: Canonical model with responses[] and response payloads (no legacy fallback).
+# Run order: Execute this script before 03.aged_care_intake_submissions.gql.
+
+###> upsert_aged_care_form
+mutation {
+  upsertAgedCareForm: FormDefinitionUpsert(
+    id: "aged_care_intake_v1"
+    name: "aged_care_intake"
+    title: "FIND AGED CARE - RESIDENTIAL AGED CARE APPLICATION FORM"
+    description: "Aged care intake structure for integration tests"
+    definition: {
+      sections: [
+        {
+          id: "0"
+          sequence: 1
+          type: "markdown"
+          content: "# FIND AGED CARE\n## RESIDENTIAL AGED CARE APPLICATION FORM\nLegislative Reform and Admissions Version\nEffective for Aged Care Act Reforms from November 2025"
+        }
+        {
+          id: "1h"
+          sequence: 2
+          type: "markdown"
+          content: "## STEP 1 - ABOUT THE PERSON SEEKING CARE\nThis section helps aged care homes understand the person seeking care, their current situation, urgency, and support needs.\nEstimated completion time: 3 minutes"
+        }
+        {
+          id: "1.1h"
+          sequence: 3
+          type: "markdown"
+          content: "### 1.1 Person Seeking Care Profile"
+        }
+        {
+          id: "1.1"
+          sequence: 4
+          type: "fields"
+        }
+        {
+          id: "1.2h"
+          sequence: 5
+          type: "markdown"
+          content: "### 1.2 Current Living Situation"
+        }
+        {
+          id: "1.2"
+          sequence: 6
+          type: "fields"
+        }
+        {
+          id: "2h"
+          sequence: 7
+          type: "markdown"
+          content: "## STEP 2 - AGED CARE ASSESSMENT AND CURRENT SUPPORTS\nThis section captures current government-funded supports, assessments, and in-home services.\nEstimated completion time: 4 minutes"
+        }
+        {
+          id: "2.1h"
+          sequence: 8
+          type: "markdown"
+          content: "### 2.1 My Aged Care and Assessment Details"
+        }
+        {
+          id: "2.1"
+          sequence: 9
+          type: "fields"
+        }
+        {
+          id: "2.1i"
+          sequence: 10
+          type: "markdown"
+          content: "### Important Information About Aged Care Assessments\nAn approved Aged Care Assessment is required before admission to government-funded residential care can proceed."
+        }
+        {
+          id: "2.2h"
+          sequence: 11
+          type: "markdown"
+          content: "### 2.2 Current In-Home Supports"
+        }
+        {
+          id: "2.2"
+          sequence: 12
+          type: "fields"
+        }
+        {
+          id: "2.3h"
+          sequence: 13
+          type: "markdown"
+          content: "### 2.3 Current Supports Received"
+        }
+        {
+          id: "2.3"
+          sequence: 14
+          type: "fields"
+        }
+        {
+          id: "2.4h"
+          sequence: 15
+          type: "markdown"
+          content: "### 2.4 Moving into Care"
+        }
+        {
+          id: "2.4"
+          sequence: 16
+          type: "fields"
+        }
+        {
+          id: "3h"
+          sequence: 17
+          type: "markdown"
+          content: "## STEP 3 - DAILY CARE AND SUPPORT NEEDS\nThis section captures day-to-day care requirements such as meals, mobility, dressing, hygiene, and continence.\nEstimated completion time: 7 minutes"
+        }
+        {
+          id: "3.1h"
+          sequence: 18
+          type: "markdown"
+          content: "### 3.1 Dietary Requirements and Nutrition Supports"
+        }
+        {
+          id: "3.1"
+          sequence: 19
+          type: "fields"
+        }
+        {
+          id: "3.2h"
+          sequence: 20
+          type: "markdown"
+          content: "### 3.2 Mobility Requirements"
+        }
+        {
+          id: "3.2"
+          sequence: 21
+          type: "fields"
+        }
+        {
+          id: "3.3h"
+          sequence: 22
+          type: "markdown"
+          content: "### 3.3 Dressing Requirements"
+        }
+        {
+          id: "3.3"
+          sequence: 23
+          type: "fields"
+        }
+        {
+          id: "3.4h"
+          sequence: 24
+          type: "markdown"
+          content: "### 3.4 Grooming and Hygiene Requirements"
+        }
+        {
+          id: "3.4"
+          sequence: 25
+          type: "fields"
+        }
+        {
+          id: "3.5h"
+          sequence: 26
+          type: "markdown"
+          content: "### 3.5 Toileting Requirements"
+        }
+        {
+          id: "3.5"
+          sequence: 27
+          type: "fields"
+        }
+        {
+          id: "4h"
+          sequence: 28
+          type: "markdown"
+          content: "## STEP 4 - MEMORY, BEHAVIOUR AND HEALTHCARE NEEDS\nEstimated completion time: 5 minutes"
+        }
+        {
+          id: "4.1"
+          sequence: 29
+          type: "fields"
+        }
+        {
+          id: "4.2"
+          sequence: 30
+          type: "fields"
+        }
+        {
+          id: "4.3"
+          sequence: 31
+          type: "fields"
+        }
+        {
+          id: "4.4"
+          sequence: 32
+          type: "fields"
+        }
+        {
+          id: "5h"
+          sequence: 33
+          type: "markdown"
+          content: "## STEP 5 - MEDICATIONS AND HEALTHCARE TEAM\nEstimated completion time: 4 minutes"
+        }
+        {
+          id: "5.1"
+          sequence: 34
+          type: "fields"
+        }
+        {
+          id: "5.2"
+          sequence: 35
+          type: "fields"
+        }
+        {
+          id: "5.3"
+          sequence: 36
+          type: "fields"
+        }
+        {
+          id: "5.4"
+          sequence: 37
+          type: "fields"
+        }
+        {
+          id: "6h"
+          sequence: 38
+          type: "markdown"
+          content: "## STEP 6 - DECISION MAKING, LEGAL AND FINANCIAL INFORMATION\nEstimated completion time: 5 minutes"
+        }
+        {
+          id: "6.1"
+          sequence: 39
+          type: "fields"
+        }
+        {
+          id: "6.2"
+          sequence: 40
+          type: "fields"
+        }
+        {
+          id: "6.3"
+          sequence: 41
+          type: "fields"
+        }
+        {
+          id: "6.4"
+          sequence: 42
+          type: "fields"
+        }
+        {
+          id: "6.5"
+          sequence: 43
+          type: "fields"
+        }
+        {
+          id: "7h"
+          sequence: 44
+          type: "markdown"
+          content: "## STEP 7 - FAMILY, REPRESENTATIVES AND COMMUNICATION\nEstimated completion time: 3 minutes"
+        }
+        {
+          id: "7.1"
+          sequence: 45
+          type: "fields"
+        }
+        {
+          id: "7.2"
+          sequence: 46
+          type: "fields"
+        }
+        {
+          id: "7.3"
+          sequence: 47
+          type: "fields"
+        }
+        {
+          id: "9h"
+          sequence: 48
+          type: "markdown"
+          content: "## STEP 9 - DOCUMENTS AND UPLOADS\nUploading documents helps providers review applications efficiently.\nEstimated completion time: 2 minutes"
+        }
+        {
+          id: "9"
+          sequence: 49
+          type: "fields"
+        }
+        {
+          id: "10h"
+          sequence: 50
+          type: "markdown"
+          content: "## STEP 10 - CONSENT, PRIVACY AND DECLARATION\nEstimated completion time: 1 minute"
+        }
+        {
+          id: "10.1"
+          sequence: 51
+          type: "fields"
+        }
+        {
+          id: "10.2"
+          sequence: 52
+          type: "fields"
+        }
+        {
+          id: "10.3"
+          sequence: 53
+          type: "fields"
+        }
+        {
+          id: "10.4"
+          sequence: 54
+          type: "fields"
+        }
+        {
+          id: "pfh"
+          sequence: 55
+          type: "markdown"
+          content: "## PLACEMENT PREFERENCES AND LIFESTYLE - Search Options\nEstimated completion time: 2 minutes"
+        }
+        {
+          id: "8.1"
+          sequence: 56
+          type: "fields"
+        }
+        {
+          id: "8.2"
+          sequence: 57
+          type: "fields"
+        }
+      ]
+      field_definitions: [
+        {
+          section_id: "system"
+          id: "submission_status"
+          field_type: "Selection"
+          text: "Submission Status"
+          required: true
+          options: [
+            "new"
+            "submitted"
+            "in review"
+            "accepted"
+            "rejected"
+          ]
+          default: "new"
+          sequence: 0
+        }
+        {
+          section_id: "system"
+          id: "client_id"
+          field_type: "ID"
+          text: "Client ID"
+          required: true
+          sequence: 0
+        }
+        {
+          section_id: "1.1"
+          id: "title"
+          field_type: "Selection"
+          text: "Title"
+          required: true
+          options: [
+            "Mr"
+            "Mrs"
+            "Ms"
+            "Miss"
+            "Dr"
+            "Prof"
+            "Other"
+          ]
+          default: null
+          sequence: 1
+        }
+        {
+          section_id: "1.1"
+          id: "given_names"
+          field_type: "Text"
+          text: "Given Names"
+          index: 1
+          required: true
+          default: ""
+          sequence: 2
+        }
+        {
+          section_id: "1.1"
+          id: "preferred_name"
+          field_type: "Text"
+          text: "Preferred Name"
+          required: false
+          default: ""
+          sequence: 3
+        }
+        {
+          section_id: "1.1"
+          id: "last_name"
+          field_type: "Text"
+          text: "Last Name"
+          index: 2
+          required: true
+          default: ""
+          sequence: 4
+        }
+        {
+          section_id: "1.1"
+          id: "date_of_birth"
+          field_type: "Date"
+          text: "Date of Birth"
+          required: true
+          default: null
+          sequence: 5
+        }
+        {
+          section_id: "1.1"
+          id: "sex_at_birth"
+          field_type: "Selection"
+          text: "Sex at Birth"
+          required: true
+          options: [
+            "Male"
+            "Female"
+            "Intersex"
+            "Prefer not to say"
+          ]
+          default: null
+          sequence: 6
+        }
+        {
+          section_id: "1.1"
+          id: "gender_identity"
+          field_type: "Selection"
+          text: "Gender Identity"
+          required: true
+          options: [
+            "Male"
+            "Female"
+            "Non-binary"
+            "Prefer not to say"
+          ]
+          default: null
+          sequence: 7
+        }
+        {
+          section_id: "1.1"
+          id: "marital_status"
+          field_type: "Selection"
+          text: "Marital Status"
+          required: true
+          options: [
+            "Single"
+            "Married"
+            "Widowed"
+            "Divorced"
+            "Separated"
+            "De facto"
+          ]
+          default: null
+          sequence: 8
+        }
+        {
+          section_id: "1.1"
+          id: "nationality"
+          field_type: "Text"
+          text: "Nationality"
+          required: true
+          default: ""
+          sequence: 9
+        }
+        {
+          section_id: "1.1"
+          id: "country_of_birth"
+          field_type: "Text"
+          text: "Country of Birth"
+          required: true
+          default: ""
+          sequence: 10
+        }
+        {
+          section_id: "1.1"
+          id: "preferred_language"
+          field_type: "Selection"
+          text: "Preferred Language"
+          required: false
+          options: [
+            "English (English)"
+            "Greek (Ελληνικά)"
+            "Italian (Italiano)"
+            "Spanish (Español)"
+            "Mandarin Chinese (中文)"
+            "Cantonese Chinese (粵語)"
+            "Vietnamese (Tiếng Việt)"
+            "Arabic (العربية)"
+            "Hindi (हिन्दी)"
+            "Punjabi (ਪੰਜਾਬੀ)"
+            "Filipino (Filipino)"
+            "Persian (فارسی)"
+          ]
+          default: null
+          sequence: 11
+        }
+        {
+          section_id: "1.1"
+          id: "interpreter_required"
+          field_type: "Selection"
+          text: "Interpreter Required?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: "No"
+          sequence: 12
+        }
+        {
+          section_id: "1.1"
+          id: "religion_spiritual_preferences"
+          field_type: "Selection"
+          text: "Religion / Spiritual Preferences"
+          required: false
+          options: [
+            "Catholic"
+            "Anglican"
+            "Christian"
+            "Muslim"
+            "Jewish"
+            "Buddhist"
+            "Hindu"
+            "No Religion"
+            "Other"
+          ]
+          default: null
+          sequence: 13
+        }
+        {
+          section_id: "1.1"
+          id: "aboriginal_tsi"
+          field_type: "Selection"
+          text: "Aboriginal or Torres Strait Islander?"
+          required: false
+          options: [
+            "Aboriginal"
+            "Torres Strait Islander"
+            "Both"
+            "Neither"
+          ]
+          default: null
+          sequence: 14
+        }
+        {
+          section_id: "1.1"
+          id: "veteran_dva"
+          field_type: "Selection"
+          text: "Veteran / DVA Client?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 15
+        }
+        {
+          section_id: "1.1"
+          id: "lgbtqia_identification"
+          field_type: "Selection"
+          text: "LGBTQIA+ Identification"
+          required: false
+          options: [
+            "Yes"
+            "No"
+            "Prefer not to say"
+          ]
+          default: null
+          sequence: 16
+        }
+        {
+          section_id: "1.1"
+          id: "smoking_status"
+          field_type: "Selection"
+          text: "Smoking Status"
+          required: false
+          options: [
+            "Non-smoker"
+            "Independent smoker"
+            "Supervised smoker"
+          ]
+          default: null
+          sequence: 17
+        }
+        {
+          section_id: "1.2"
+          id: "current_living_arrangement"
+          field_type: "Selection"
+          text: "Current living arrangement"
+          required: true
+          options: [
+            "Own home"
+            "Social housing"
+            "Retirement village"
+            "Hospital"
+            "Residential aged care"
+            "Community care"
+            "Transitional care"
+            "Other"
+          ]
+          default: null
+          sequence: 18
+        }
+        {
+          section_id: "1.2"
+          id: "current_provider_or_hospital"
+          field_type: "Text"
+          text: "Current provider / hospital name"
+          required: false
+          default: ""
+          sequence: 19
+        }
+        {
+          section_id: "1.2"
+          id: "current_ward_unit"
+          field_type: "Text"
+          text: "Current ward / unit"
+          required: false
+          default: ""
+          notes: "Conditional if hospital"
+          sequence: 20
+        }
+        {
+          section_id: "1.2"
+          id: "hospital_admissions_12m"
+          field_type: "Selection"
+          text: "Number of hospital admissions in the past 12 months"
+          required: false
+          options: [
+            "0"
+            "1"
+            "2"
+            "3"
+            "4+"
+          ]
+          default: null
+          sequence: 21
+        }
+        {
+          section_id: "1.2"
+          id: "hospital_discharge"
+          field_type: "Selection"
+          text: "Is this a hospital discharge?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 22
+        }
+        {
+          section_id: "1.2"
+          id: "expected_discharge_date"
+          field_type: "Date"
+          text: "Expected discharge date"
+          required: false
+          default: null
+          sequence: 23
+        }
+        {
+          section_id: "1.2"
+          id: "care_needed_when"
+          field_type: "Selection"
+          text: "How soon is care needed?"
+          required: true
+          options: [
+            "Immediate"
+            "Within 7 days"
+            "Within 30 days"
+            "Future planning"
+          ]
+          default: null
+          sequence: 24
+        }
+        {
+          section_id: "2.1"
+          id: "my_aged_care_id"
+          field_type: "Text"
+          text: "My Aged Care ID"
+          required: true
+          default: ""
+          sequence: 25
+        }
+        {
+          section_id: "2.1"
+          id: "assessment_completed"
+          field_type: "Selection"
+          text: "Has the Person seeking care completed an Aged Care Assessment?"
+          required: true
+          options: [
+            "Yes"
+            "No"
+            "Pending"
+          ]
+          default: null
+          sequence: 26
+        }
+        {
+          section_id: "2.1"
+          id: "assessment_approval_type"
+          field_type: "MultiSelection"
+          text: "Assessment approval type"
+          required: true
+          options: [
+            "Permanent Residential Care"
+            "Residential Respite Care"
+            "Transitional Care"
+          ]
+          default: []
+          sequence: 27
+        }
+        {
+          section_id: "2.1"
+          id: "residential_permanent_code"
+          field_type: "Text"
+          text: "Residential Permanent Care Code"
+          required: false
+          default: ""
+          sequence: 28
+        }
+        {
+          section_id: "2.1"
+          id: "residential_respite_code"
+          field_type: "Text"
+          text: "Residential Respite Care Code"
+          required: false
+          default: ""
+          sequence: 29
+        }
+        {
+          section_id: "2.1"
+          id: "support_plan_issued"
+          field_type: "Selection"
+          text: "Has a support plan been issued?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 30
+        }
+        {
+          section_id: "2.1"
+          id: "upload_support_plan"
+          field_type: "File"
+          text: "Upload Aged Care Support Plan"
+          required: false
+          default: null
+          notes: "PDF preferred"
+          sequence: 31
+        }
+        {
+          section_id: "2.1"
+          id: "upload_assessment_outcome"
+          field_type: "File"
+          text: "Upload assessment outcome letter"
+          required: false
+          default: null
+          sequence: 32
+        }
+        {
+          section_id: "2.2"
+          id: "receiving_inhome_support"
+          field_type: "Selection"
+          text: "Is the person seeking care currently receiving government-funded in-home aged care services?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 33
+        }
+        {
+          section_id: "2.2"
+          id: "inhome_support_program"
+          field_type: "Selection"
+          text: "Current in-home support program"
+          required: false
+          options: [
+            "Support at Home"
+            "Commonwealth Home Support Program (CHSP)"
+            "Veterans Home Care"
+            "NDIS"
+            "Transitional Care"
+            "Private Services Only"
+            "None"
+          ]
+          default: null
+          sequence: 34
+        }
+        {
+          section_id: "2.2"
+          id: "current_provider_name"
+          field_type: "Text"
+          text: "Current provider name"
+          required: false
+          default: ""
+          sequence: 35
+        }
+        {
+          section_id: "2.2"
+          id: "support_classification"
+          field_type: "Selection"
+          text: "Current Support at Home Classification"
+          required: false
+          options: [
+            "Classification 1"
+            "Classification 2"
+            "Classification 3"
+            "Classification 4"
+            "Classification 5"
+            "Classification 6"
+            "Classification 7"
+            "Classification 8"
+            "Unsure"
+          ]
+          default: null
+          sequence: 36
+        }
+        {
+          section_id: "2.2"
+          id: "services_commenced_date"
+          field_type: "Date"
+          text: "Date current services commenced"
+          required: false
+          default: null
+          sequence: 37
+        }
+        {
+          section_id: "2.2"
+          id: "upload_care_plan_budget"
+          field_type: "File"
+          text: "Upload latest care plan or support budget"
+          required: false
+          default: null
+          sequence: 38
+        }
+        {
+          section_id: "2.3"
+          id: "current_supports_received"
+          field_type: "MultiSelection"
+          text: "What supports are currently being received from the home care provider?"
+          required: false
+          options: [
+            "Clinical supports"
+            "Independence supports"
+            "Everyday living supports"
+            "Nursing supports"
+            "Allied health supports"
+            "Domestic assistance"
+            "Social support"
+            "Personal care"
+            "Meal preparation"
+            "Transport services"
+            "Dementia supports"
+            "Respite supports"
+          ]
+          default: []
+          sequence: 39
+        }
+        {
+          section_id: "2.4"
+          id: "primary_reason_moving"
+          field_type: "MultiSelection"
+          text: "Primary reason for moving into care"
+          required: false
+          options: [
+            "Increased care needs"
+            "Increased frailty"
+            "Frequent falls"
+            "Reduced mobility"
+            "Unable to manage safely at home"
+            "Cognitive decline"
+            "Dementia progression"
+            "Wandering or safety concerns"
+            "Behavioural support needs"
+            "Carer burnout"
+            "Loss of primary carer"
+            "Social isolation"
+            "Medication management complexity"
+            "Continence decline"
+            "Increased overnight care needs"
+            "Clinical complexity"
+            "Palliative care needs"
+            "Recurrent hospital admissions"
+            "Hospital discharge"
+            "Unsafe living environment"
+            "Difficulty managing meals or nutrition"
+            "Personal care needs increasing"
+            "Pressure injury management"
+            "Increased supervision required"
+            "Recommendation by healthcare team"
+            "Transition from Support at Home services"
+            "Other"
+          ]
+          default: []
+          sequence: 40
+        }
+        {
+          section_id: "3.1"
+          id: "dietary_requirements"
+          field_type: "MultiSelection"
+          text: "Dietary Requirements"
+          required: false
+          options: [
+            "Normal diet"
+            "Vegetarian"
+            "Vegan"
+            "Diabetic"
+            "Kosher"
+            "Halal"
+            "Gluten free"
+            "Thickened fluids"
+            "Thickened fluids - mildly thick"
+            "Thickened fluids - moderately thick"
+            "Thickened fluids - extremely thick"
+            "Soft diet"
+            "Puree diet"
+            "Texture modified"
+            "Assistance with feeding"
+            "PEG feeding"
+            "Choking risk"
+            "Swallowing difficulties"
+            "High protein diet"
+            "Fortified diet"
+            "Fluid restriction"
+            "Food allergies"
+            "Cultural food preferences"
+            "Religious dietary requirements"
+            "Behavioural eating concerns"
+            "Requires meal supervision"
+            "Requires prompting to eat or drink"
+            "Unintentional weight loss"
+            "High nutritional risk"
+            "Low appetite"
+            "Other"
+          ]
+          default: []
+          sequence: 41
+        }
+        {
+          section_id: "3.1"
+          id: "speech_pathology_assessed"
+          field_type: "Selection"
+          text: "Has the person seeking care been assessed by a speech pathologist?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 42
+        }
+        {
+          section_id: "3.1"
+          id: "swallowing_disorder"
+          field_type: "Selection"
+          text: "Is there a diagnosed swallowing disorder?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 43
+        }
+        {
+          section_id: "3.1"
+          id: "malnutrition_risk"
+          field_type: "Selection"
+          text: "Is the person seeking care at risk of malnutrition?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 44
+        }
+        {
+          section_id: "3.1"
+          id: "eat_independently"
+          field_type: "Selection"
+          text: "Can the person seeking care eat independently?"
+          required: false
+          options: [
+            "Independent"
+            "Setup only"
+            "Supervision"
+            "Partial assistance"
+            "Full feeding assistance"
+          ]
+          default: null
+          sequence: 45
+        }
+        {
+          section_id: "3.1"
+          id: "meal_cultural_requirements"
+          field_type: "Text"
+          text: "Are there cultural or religious meal requirements?"
+          required: false
+          default: ""
+          sequence: 46
+        }
+        {
+          section_id: "3.2"
+          id: "mobility_supports"
+          field_type: "MultiSelection"
+          text: "Mobility Supports"
+          required: false
+          options: [
+            "Independent"
+            "Walking stick"
+            "Walking frame"
+            "4-wheel walker"
+            "Wheelchair"
+            "Scooter"
+            "Falls risk"
+            "Frequent falls"
+            "Poor balance"
+            "1-person assist"
+            "2-person assist"
+            "Full mechanical lifter"
+            "Standing hoist"
+            "Full hoist transfer"
+            "Sit-to-stand support"
+            "Slide sheet required"
+            "Bedbound"
+            "Non-weight bearing"
+            "Contractures"
+            "Bariatric equipment required"
+            "Pressure care mattress required"
+            "Requires repositioning"
+            "Night-time mobility support"
+            "Wandering risk"
+            "Requires sensor alarms"
+            "Requires low-low bed"
+            "Other"
+          ]
+          default: []
+          sequence: 47
+        }
+        {
+          section_id: "3.2"
+          id: "falls_last_6m"
+          field_type: "Selection"
+          text: "Has the Person seeking care fallen in the last 6 months?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 48
+        }
+        {
+          section_id: "3.2"
+          id: "falls_count_6m"
+          field_type: "Selection"
+          text: "Number of falls in past 6 months"
+          required: false
+          options: [
+            "0"
+            "1"
+            "2-3"
+            "4+"
+          ]
+          default: null
+          sequence: 49
+        }
+        {
+          section_id: "3.2"
+          id: "transfer_independence"
+          field_type: "Selection"
+          text: "Can the Person seeking care transfer independently?"
+          required: false
+          options: [
+            "Yes"
+            "Supervision only"
+            "1-person assist"
+            "2-person assist"
+            "Full mechanical transfer"
+          ]
+          default: null
+          sequence: 50
+        }
+        {
+          section_id: "3.2"
+          id: "mobility_aid_used"
+          field_type: "MultiSelection"
+          text: "Is a mobility aid used?"
+          required: false
+          options: [
+            "Walking stick"
+            "Walker"
+            "Wheelchair"
+            "Scooter"
+            "Hoist"
+          ]
+          default: []
+          sequence: 51
+        }
+        {
+          section_id: "3.3"
+          id: "dressing_supports"
+          field_type: "MultiSelection"
+          text: "Dressing Supports"
+          required: false
+          options: [
+            "Independent"
+            "Prompting required"
+            "Supervision only"
+            "Clothing setup required"
+            "Assistance with dressing"
+            "Full dressing support"
+            "Refuses dressing support at times"
+            "Behavioural resistance to care"
+            "Requires adaptive clothing"
+            "Compression garments"
+            "Prosthetics assistance"
+            "Culturally specific dress requirements"
+          ]
+          default: []
+          sequence: 52
+        }
+        {
+          section_id: "3.3"
+          id: "select_own_clothing"
+          field_type: "Selection"
+          text: "Can the Person seeking care select their own clothing?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 53
+        }
+        {
+          section_id: "3.3"
+          id: "prompts_for_dressing"
+          field_type: "Selection"
+          text: "Does the Person seeking care require prompts to dress appropriately?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 54
+        }
+        {
+          section_id: "3.3"
+          id: "behavioural_concerns_personal_care"
+          field_type: "Selection"
+          text: "Are there behavioural concerns during personal care?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 55
+        }
+        {
+          section_id: "3.3"
+          id: "dressing_preferences"
+          field_type: "Text"
+          text: "Are there cultural or personal dressing preferences?"
+          required: false
+          default: ""
+          sequence: 56
+        }
+        {
+          section_id: "3.4"
+          id: "hygiene_supports"
+          field_type: "MultiSelection"
+          text: "Grooming and Hygiene Supports"
+          required: false
+          options: [
+            "Independent grooming"
+            "Prompting required"
+            "Shower supervision"
+            "Partial shower assistance"
+            "Full shower assistance"
+            "Hair washing support"
+            "Toiletry setup"
+            "Visual prompting"
+            "Assistance with shaving"
+            "Oral care assistance"
+            "Denture management"
+            "Hair care assistance"
+            "Nail care assistance"
+            "Shower aversion"
+            "Behavioural resistance during hygiene care"
+            "Sensitive skin care"
+            "Requires skin monitoring"
+            "Fungal skin concerns"
+            "Continence-related skin management"
+            "Infection control precautions"
+          ]
+          default: []
+          sequence: 57
+        }
+        {
+          section_id: "3.4"
+          id: "resists_personal_care"
+          field_type: "Selection"
+          text: "Does the Person seeking care resist personal care?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 58
+        }
+        {
+          section_id: "3.4"
+          id: "oral_care_assistance"
+          field_type: "Selection"
+          text: "Does the Person seeking care require oral care assistance?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 59
+        }
+        {
+          section_id: "3.4"
+          id: "dentures_used"
+          field_type: "Selection"
+          text: "Are dentures used?"
+          required: false
+          options: [
+            "Full dentures"
+            "Partial dentures"
+            "No dentures"
+          ]
+          default: null
+          sequence: 60
+        }
+        {
+          section_id: "3.4"
+          id: "specialised_skin_care"
+          field_type: "Selection"
+          text: "Does the Person seeking care require specialised skin care?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 61
+        }
+        {
+          section_id: "3.4"
+          id: "skin_integrity_concerns"
+          field_type: "Selection"
+          text: "Are there current skin integrity concerns?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 62
+        }
+        {
+          section_id: "3.4"
+          id: "showering_assistance_level"
+          field_type: "Selection"
+          text: "Does the Person seeking care require assistance with showering?"
+          required: false
+          options: [
+            "Independent"
+            "Supervision"
+            "Partial assistance"
+            "Full assistance"
+          ]
+          default: null
+          sequence: 63
+        }
+        {
+          section_id: "3.5"
+          id: "toileting_supports"
+          field_type: "MultiSelection"
+          text: "Toileting Supports"
+          required: false
+          options: [
+            "Independent"
+            "Supervision"
+            "Physical assistance"
+            "Day continence support"
+            "Night continence support"
+            "Double incontinent"
+            "Uses continence aids"
+            "Constipation management"
+            "Diarrhoea management"
+            "Colostomy"
+            "Catheter"
+            "Suprapubic catheter"
+            "Stoma management"
+            "Commode"
+            "Toileting refusal behaviours"
+            "Requires overnight toileting assistance"
+          ]
+          default: []
+          sequence: 64
+        }
+        {
+          section_id: "3.5"
+          id: "continent_overnight"
+          field_type: "Selection"
+          text: "Is the Person seeking care continent overnight?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 65
+        }
+        {
+          section_id: "3.5"
+          id: "toileting_behaviour_impacts"
+          field_type: "Selection"
+          text: "Are there behaviours impacting toileting care?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 66
+        }
+        {
+          section_id: "4.1"
+          id: "cognitive_conditions"
+          field_type: "MultiSelection"
+          text: "4.1 Cognitive Conditions"
+          required: false
+          options: [
+            "No known impairment"
+            "Dementia diagnosis"
+            "Memory impairment"
+            "Delirium history"
+            "Cognitive decline"
+            "Acquired brain injury"
+            "Short term memory loss"
+            "Long term memory loss"
+          ]
+          default: []
+          sequence: 67
+        }
+        {
+          section_id: "4.2"
+          id: "behaviour_support_needs"
+          field_type: "MultiSelection"
+          text: "4.2 Behaviour and Support Needs"
+          required: false
+          options: [
+            "Wandering"
+            "Exit seeking"
+            "Verbal aggression"
+            "Physical aggression"
+            "Sundowning"
+            "Anxiety"
+            "Depression"
+            "Social withdrawal"
+            "Hallucinations"
+            "Hoarding"
+            "Nil known behaviours"
+          ]
+          default: []
+          sequence: 68
+        }
+        {
+          section_id: "4.3"
+          id: "behaviour_support_plan"
+          field_type: "Selection"
+          text: "Is there a behaviour support plan?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 69
+        }
+        {
+          section_id: "4.3"
+          id: "behaviour_triggers"
+          field_type: "Text"
+          text: "Are there known triggers for distress or behaviours?"
+          required: false
+          default: ""
+          sequence: 70
+        }
+        {
+          section_id: "4.4"
+          id: "medical_healthcare_needs"
+          field_type: "MultiSelection"
+          text: "4.4 Medical and Healthcare Needs"
+          required: false
+          options: [
+            "Diabetes"
+            "Insulin dependent diabetes"
+            "Oxygen therapy"
+            "Enteral feeding"
+            "PEG feeding"
+            "Catheter care"
+            "Stoma care"
+            "Pressure injuries"
+            "Wound management"
+            "Palliative care"
+            "Parkinson's disease"
+            "Bariatric care"
+            "Dialysis"
+            "CPAP"
+            "Infectious disease precautions"
+            "MRSA"
+            "VRE"
+            "Other"
+          ]
+          default: []
+          sequence: 71
+        }
+        {
+          section_id: "5.1"
+          id: "current_pharmacy"
+          field_type: "Text"
+          text: "Current pharmacy"
+          required: false
+          default: ""
+          sequence: 72
+        }
+        {
+          section_id: "5.1"
+          id: "webster_pack_used"
+          field_type: "Selection"
+          text: "Webster pack used?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 73
+        }
+        {
+          section_id: "5.1"
+          id: "self_medication_capable"
+          field_type: "Selection"
+          text: "Self-medication capable?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 74
+        }
+        {
+          section_id: "5.1"
+          id: "schedule8_medications"
+          field_type: "Selection"
+          text: "Schedule 8 medications?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 75
+        }
+        {
+          section_id: "5.1"
+          id: "insulin_admin_required"
+          field_type: "Selection"
+          text: "Insulin administration required?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 76
+        }
+        {
+          section_id: "5.1"
+          id: "oxygen_equipment_required"
+          field_type: "Selection"
+          text: "Oxygen equipment required?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 77
+        }
+        {
+          section_id: "5.2"
+          id: "upload_gp_health_summary"
+          field_type: "File"
+          text: "GP health summary"
+          required: true
+          default: null
+          sequence: 78
+        }
+        {
+          section_id: "5.2"
+          id: "upload_current_medications"
+          field_type: "File"
+          text: "List of current Medications"
+          required: true
+          default: null
+          sequence: 79
+        }
+        {
+          section_id: "5.2"
+          id: "upload_hospital_discharge_summary"
+          field_type: "File"
+          text: "Hospital discharge summary"
+          required: false
+          default: null
+          sequence: 80
+        }
+        {
+          section_id: "5.2"
+          id: "upload_allied_health_reports"
+          field_type: "File"
+          text: "Allied health reports"
+          required: false
+          default: null
+          sequence: 81
+        }
+        {
+          section_id: "5.3"
+          id: "gp_given_name"
+          field_type: "Text"
+          text: "GP given name"
+          required: true
+          default: ""
+          sequence: 82
+        }
+        {
+          section_id: "5.3"
+          id: "gp_last_name"
+          field_type: "Text"
+          text: "GP last name"
+          required: true
+          default: ""
+          sequence: 83
+        }
+        {
+          section_id: "5.3"
+          id: "gp_practice_name"
+          field_type: "Text"
+          text: "Practice name"
+          required: true
+          default: ""
+          sequence: 84
+        }
+        {
+          section_id: "5.3"
+          id: "gp_practice_address"
+          field_type: "Text"
+          text: "Practice address"
+          required: false
+          default: ""
+          sequence: 85
+        }
+        {
+          section_id: "5.3"
+          id: "gp_phone"
+          field_type: "Text"
+          text: "GP phone number"
+          required: false
+          default: ""
+          sequence: 86
+        }
+        {
+          section_id: "5.3"
+          id: "gp_email"
+          field_type: "Text"
+          text: "GP email address"
+          required: false
+          default: ""
+          sequence: 87
+        }
+        {
+          section_id: "5.4"
+          id: "gp_continue_after_admission"
+          field_type: "Selection"
+          text: "Will this GP continue attending after admission?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+            "Unsure"
+          ]
+          default: null
+          sequence: 88
+        }
+        {
+          section_id: "5.4"
+          id: "under_specialist_care"
+          field_type: "Selection"
+          text: "Is the Person seeking care currently under specialist care?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 89
+        }
+        {
+          section_id: "5.4"
+          id: "specialist_services"
+          field_type: "MultiSelection"
+          text: "Specialist services involved"
+          required: false
+          options: [
+            "Geriatrician"
+            "Neurologist"
+            "Psychiatrist"
+            "Cardiologist"
+            "Endocrinologist"
+            "Palliative Care Team"
+            "Wound Care Team"
+            "Pain Specialist"
+            "Other"
+          ]
+          default: []
+          sequence: 90
+        }
+        {
+          section_id: "5.4"
+          id: "palliative_team_involved"
+          field_type: "Selection"
+          text: "Is there a current palliative care team involved?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 91
+        }
+        {
+          section_id: "6.1"
+          id: "has_advance_care_directive"
+          field_type: "Selection"
+          text: "Does the Person seeking care have an Advance Care Directive?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 92
+        }
+        {
+          section_id: "6.1"
+          id: "upload_advance_care_directive"
+          field_type: "File"
+          text: "Upload Advance Care Directive"
+          required: false
+          default: null
+          sequence: 93
+        }
+        {
+          section_id: "6.1"
+          id: "has_funeral_plan"
+          field_type: "Selection"
+          text: "Does the Person seeking care have a Funeral Plan?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 94
+        }
+        {
+          section_id: "6.1"
+          id: "funeral_provider_name"
+          field_type: "Text"
+          text: "Funeral provider name"
+          required: false
+          default: ""
+          sequence: 95
+        }
+        {
+          section_id: "6.1"
+          id: "funeral_provider_phone"
+          field_type: "Text"
+          text: "Funeral provider phone number"
+          required: false
+          default: ""
+          sequence: 96
+        }
+        {
+          section_id: "6.2"
+          id: "enduring_power_attorney"
+          field_type: "Selection"
+          text: "Does someone hold Enduring Power of Attorney?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 97
+        }
+        {
+          section_id: "6.2"
+          id: "enduring_guardianship"
+          field_type: "Selection"
+          text: "Does someone hold Enduring Guardianship?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 98
+        }
+        {
+          section_id: "6.2"
+          id: "financial_administrator"
+          field_type: "Selection"
+          text: "Is there a Financial Administrator appointed?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 99
+        }
+        {
+          section_id: "6.2"
+          id: "guardianship_tribunal_order"
+          field_type: "Selection"
+          text: "Is there a Guardianship Tribunal Order?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 100
+        }
+        {
+          section_id: "6.2"
+          id: "decision_making_capacity"
+          field_type: "Selection"
+          text: "Is the Person seeking care able to make their own decisions?"
+          required: false
+          options: [
+            "Yes independently"
+            "With support"
+            "Limited capacity"
+            "No"
+          ]
+          default: null
+          sequence: 101
+        }
+        {
+          section_id: "6.2"
+          id: "upload_legal_authority_docs"
+          field_type: "File"
+          text: "Upload legal authority documents"
+          required: false
+          default: null
+          notes: "Multiple uploads allowed"
+          sequence: 102
+        }
+        {
+          section_id: "6.3"
+          id: "residential_means_assessment_completed"
+          field_type: "Selection"
+          text: "Has Services Australia completed a Residential Means Assessment?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+            "Pending"
+          ]
+          default: null
+          sequence: 103
+        }
+        {
+          section_id: "6.3"
+          id: "upload_means_assessment_letter"
+          field_type: "File"
+          text: "Upload means assessment outcome letter"
+          required: false
+          default: null
+          sequence: 104
+        }
+        {
+          section_id: "6.3"
+          id: "sa_forms_submitted"
+          field_type: "Selection"
+          text: "Has SA457 or SA485 been submitted?"
+          required: false
+          options: [
+            "SA457"
+            "SA485"
+            "Both"
+            "Neither"
+            "Unsure"
+          ]
+          default: null
+          sequence: 105
+        }
+        {
+          section_id: "6.3"
+          id: "consent_share_financial_info"
+          field_type: "Selection"
+          text: "Does the Person seeking care consent to sharing financial assessment information with providers?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 106
+        }
+        {
+          section_id: "6.4"
+          id: "government_supports_received"
+          field_type: "MultiSelection"
+          text: "Government Supports Received"
+          required: false
+          options: [
+            "Age Pension"
+            "DVA Pension"
+            "Disability Support Pension"
+            "Commonwealth Seniors Health Card"
+            "Income Support Payment"
+            "Veteran Gold Card"
+            "Veteran White Card"
+            "No government support"
+          ]
+          default: []
+          sequence: 107
+        }
+        {
+          section_id: "6.4"
+          id: "pension_number"
+          field_type: "Text"
+          text: "Pension number"
+          required: false
+          default: ""
+          sequence: 108
+        }
+        {
+          section_id: "6.4"
+          id: "pension_card_expiry"
+          field_type: "Date"
+          text: "Pension card expiry date"
+          required: false
+          default: null
+          sequence: 109
+        }
+        {
+          section_id: "6.4"
+          id: "upload_pension_card"
+          field_type: "File"
+          text: "Upload pension card"
+          required: false
+          default: null
+          sequence: 110
+        }
+        {
+          section_id: "6.5"
+          id: "preferred_accommodation_payment_method"
+          field_type: "Selection"
+          text: "Preferred accommodation payment method"
+          required: false
+          options: [
+            "Refundable Accommodation Deposit (RAD)"
+            "Daily Accommodation Payment (DAP)"
+            "Combination RAD + DAP"
+            "Unsure / Require advice"
+          ]
+          default: null
+          sequence: 111
+        }
+        {
+          section_id: "6.5"
+          id: "estimated_rad_contribution"
+          field_type: "Selection"
+          text: "Estimated RAD contribution amount"
+          required: false
+          options: [
+            "Less than $100,000"
+            "$100,000-$250,000"
+            "$250,001-$500,000"
+            "$500,001-$758,627"
+            "Greater than $758,627"
+          ]
+          default: null
+          sequence: 112
+        }
+        {
+          section_id: "6.5"
+          id: "financial_advice_required"
+          field_type: "Selection"
+          text: "Is financial advice required?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 113
+        }
+        {
+          section_id: "7.1"
+          id: "primary_rep_relationship"
+          field_type: "Selection"
+          text: "Relationship to resident"
+          required: false
+          options: [
+            "Spouse"
+            "Child"
+            "Sibling"
+            "Friend"
+            "Guardian"
+            "Solicitor"
+            "Other"
+          ]
+          default: null
+          sequence: 114
+        }
+        {
+          section_id: "7.1"
+          id: "primary_rep_is_emergency"
+          field_type: "Selection"
+          text: "Is this person the emergency contact?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 115
+        }
+        {
+          section_id: "7.1"
+          id: "primary_rep_accounts"
+          field_type: "Selection"
+          text: "Is this person responsible for accounts?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 116
+        }
+        {
+          section_id: "7.1"
+          id: "primary_rep_legal_authority"
+          field_type: "Selection"
+          text: "Does this person hold legal authority?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 117
+        }
+        {
+          section_id: "7.2"
+          id: "rep_title"
+          field_type: "Selection"
+          text: "Title"
+          required: false
+          options: [
+            "Mr"
+            "Mrs"
+            "Ms"
+            "Miss"
+            "Dr"
+            "Prof"
+            "Other"
+          ]
+          default: null
+          sequence: 118
+        }
+        {
+          section_id: "7.2"
+          id: "rep_given_name"
+          field_type: "Text"
+          text: "Given name"
+          required: false
+          default: ""
+          sequence: 119
+        }
+        {
+          section_id: "7.2"
+          id: "rep_last_name"
+          field_type: "Text"
+          text: "Last name"
+          required: false
+          default: ""
+          sequence: 120
+        }
+        {
+          section_id: "7.2"
+          id: "rep_mobile"
+          field_type: "Text"
+          text: "Mobile number"
+          required: false
+          default: ""
+          sequence: 121
+        }
+        {
+          section_id: "7.2"
+          id: "rep_phone"
+          field_type: "Text"
+          text: "Phone number"
+          required: false
+          default: ""
+          sequence: 122
+        }
+        {
+          section_id: "7.2"
+          id: "rep_email"
+          field_type: "Text"
+          text: "Email address"
+          required: false
+          default: ""
+          sequence: 123
+        }
+        {
+          section_id: "7.2"
+          id: "rep_residential_address"
+          field_type: "Text"
+          text: "Residential address"
+          required: false
+          default: ""
+          sequence: 124
+        }
+        {
+          section_id: "7.2"
+          id: "rep_postal_address"
+          field_type: "Text"
+          text: "Postal address"
+          required: false
+          default: ""
+          sequence: 125
+        }
+        {
+          section_id: "7.3"
+          id: "preferred_communication_method"
+          field_type: "Selection"
+          text: "Preferred communication method"
+          required: false
+          options: [
+            "Phone"
+            "Email"
+            "SMS"
+            "Postal mail"
+          ]
+          default: null
+          sequence: 126
+        }
+        {
+          section_id: "7.3"
+          id: "preferred_contact_time"
+          field_type: "Selection"
+          text: "Preferred contact time"
+          required: false
+          options: [
+            "Morning"
+            "Afternoon"
+            "Evening"
+            "Anytime"
+          ]
+          default: null
+          sequence: 127
+        }
+        {
+          section_id: "7.3"
+          id: "consent_electronic_communication"
+          field_type: "Selection"
+          text: "Consent to electronic communication"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 128
+        }
+        {
+          section_id: "9"
+          id: "upload_medicare_card"
+          field_type: "File"
+          text: "Medicare card"
+          required: true
+          default: null
+          sequence: 129
+        }
+        {
+          section_id: "9"
+          id: "upload_pension_card_step9"
+          field_type: "File"
+          text: "Pension card"
+          required: true
+          default: null
+          sequence: 130
+        }
+        {
+          section_id: "9"
+          id: "upload_dva_card"
+          field_type: "File"
+          text: "DVA card (if applicable)"
+          required: false
+          default: null
+          sequence: 131
+        }
+        {
+          section_id: "9"
+          id: "upload_photo_id"
+          field_type: "File"
+          text: "Photo identification"
+          required: true
+          default: null
+          sequence: 132
+        }
+        {
+          section_id: "9"
+          id: "upload_aged_care_support_plan_step9"
+          field_type: "File"
+          text: "Aged Care Support Plan"
+          required: true
+          default: null
+          sequence: 133
+        }
+        {
+          section_id: "9"
+          id: "upload_behaviour_support_plan"
+          field_type: "File"
+          text: "Behaviour support plan"
+          required: false
+          default: null
+          sequence: 134
+        }
+        {
+          section_id: "9"
+          id: "upload_financial_authority_docs"
+          field_type: "File"
+          text: "Financial authority documents"
+          required: false
+          default: null
+          sequence: 135
+        }
+        {
+          section_id: "10.1"
+          id: "consent_collect_store_info"
+          field_type: "Boolean"
+          text: "I consent to Find Aged Care collecting and storing personal information"
+          required: true
+          default: false
+          sequence: 136
+        }
+        {
+          section_id: "10.1"
+          id: "consent_share_with_providers"
+          field_type: "Boolean"
+          text: "I consent to Find Aged Care sharing my information with residential aged care providers"
+          required: true
+          default: false
+          sequence: 137
+        }
+        {
+          section_id: "10.1"
+          id: "consent_share_clinical_docs"
+          field_type: "Boolean"
+          text: "I consent to sharing clinical and medical documentation"
+          required: true
+          default: false
+          sequence: 138
+        }
+        {
+          section_id: "10.1"
+          id: "consent_electronic_comm_step10"
+          field_type: "Boolean"
+          text: "I consent to electronic communication"
+          required: true
+          default: false
+          sequence: 139
+        }
+        {
+          section_id: "10.1"
+          id: "consent_financial_info_step10"
+          field_type: "Boolean"
+          text: "I consent to sharing financial assessment information where relevant"
+          required: true
+          default: false
+          sequence: 140
+        }
+        {
+          section_id: "10.1"
+          id: "consent_understand_admission_decision"
+          field_type: "Boolean"
+          text: "I understand that Find Aged Care is not the final decision-maker regarding admissions"
+          required: true
+          default: false
+          sequence: 141
+        }
+        {
+          section_id: "10.1"
+          id: "consent_declaration_true_correct"
+          field_type: "Boolean"
+          text: "I declare the information provided is true and correct"
+          required: true
+          default: false
+          sequence: 142
+        }
+        {
+          section_id: "10.2"
+          id: "application_on_behalf"
+          field_type: "Selection"
+          text: "Is this application being completed on behalf of the resident?"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 143
+        }
+        {
+          section_id: "10.2"
+          id: "authority_type"
+          field_type: "Selection"
+          text: "Authority Type"
+          required: false
+          options: [
+            "Enduring Power of Attorney"
+            "Guardian"
+            "Administrator"
+            "Next of Kin"
+            "Solicitor"
+            "Other"
+          ]
+          default: null
+          sequence: 144
+        }
+        {
+          section_id: "10.2"
+          id: "upload_authority_documents"
+          field_type: "File"
+          text: "Upload Authority Documents"
+          required: false
+          default: null
+          sequence: 145
+        }
+        {
+          section_id: "10.3"
+          id: "consent_updates_about_placements"
+          field_type: "Selection"
+          text: "Consent to receiving updates about aged care placements"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 146
+        }
+        {
+          section_id: "10.3"
+          id: "consent_resources_support_info"
+          field_type: "Selection"
+          text: "Consent to receiving educational resources and support information"
+          required: false
+          options: [
+            "Yes"
+            "No"
+          ]
+          default: null
+          sequence: 147
+        }
+        {
+          section_id: "10.4"
+          id: "declarant_full_legal_name"
+          field_type: "Text"
+          text: "Full legal name"
+          required: true
+          default: ""
+          sequence: 148
+        }
+        {
+          section_id: "10.4"
+          id: "digital_signature"
+          field_type: "Signature"
+          text: "Digital signature"
+          required: true
+          default: null
+          sequence: 149
+        }
+        {
+          section_id: "10.4"
+          id: "date_signed"
+          field_type: "Date"
+          text: "Date signed"
+          required: true
+          default: null
+          sequence: 150
+        }
+        {
+          section_id: "8.1"
+          id: "preferred_room_type"
+          field_type: "Selection"
+          text: "Preferred room type"
+          required: false
+          options: [
+            "Shared room"
+            "Single room"
+            "Premium room"
+            "No preference"
+          ]
+          default: null
+          sequence: 151
+        }
+        {
+          section_id: "8.1"
+          id: "preferred_bathroom_arrangement"
+          field_type: "Selection"
+          text: "Preferred bathroom arrangement"
+          required: false
+          options: [
+            "Shared"
+            "Private"
+            "No preference"
+          ]
+          default: null
+          sequence: 152
+        }
+        {
+          section_id: "8.1"
+          id: "preferred_location_radius"
+          field_type: "Selection"
+          text: "Preferred location radius"
+          required: false
+          options: [
+            "5km"
+            "10km"
+            "25km"
+            "50km"
+            "No preference"
+          ]
+          default: null
+          sequence: 153
+        }
+        {
+          section_id: "8.1"
+          id: "preferred_suburb_region"
+          field_type: "Text"
+          text: "Preferred suburb or region"
+          required: false
+          default: ""
+          sequence: 154
+        }
+        {
+          section_id: "8.2"
+          id: "preferred_provider_features"
+          field_type: "MultiSelection"
+          text: "Preferred provider features"
+          required: false
+          options: [
+            "Dementia-specific"
+            "Behaviour support capable"
+            "Cultural-specific services"
+            "Religious affiliation"
+            "LGBTQIA+ inclusive"
+            "Secure memory support"
+            "Pet friendly"
+            "Outdoor access"
+            "Couples accommodation"
+            "Registered nurse onsite 24/7"
+            "Multilingual staff"
+            "Specialist palliative care"
+            "Bariatric support capability"
+          ]
+          default: []
+          sequence: 155
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    updated_at
+  }
+}

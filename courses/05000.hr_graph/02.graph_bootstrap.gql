@@ -1,0 +1,51 @@
+#!maicro
+#---
+# title: HR Graph — Bootstrap
+# description: Drop and recreate the hr_graph for a clean slate, then reload the schema.
+# tags: [graph, cypher, hr]
+#---
+
+###> ENABLE CYPHER
+#{
+# ## Enable Apache AGE
+# Ensures the Apache AGE graph extension is loaded in the database.
+# Safe to call multiple times — completely idempotent.
+#}
+mutation EnableCypher {
+  DbEnableGraph {
+    age_extension
+    status
+  }
+}
+
+###> DROP GRAPH
+#{
+# ## Drop Existing Graph
+# Drops the `hr_graph` graph (and all its nodes / edges) so the next create
+# starts from a completely clean slate.
+# `ifExists: true` makes this safe on first run when no graph exists yet.
+#}
+mutation DropGraph {
+  GraphDrop(name: "hr_graph", cascade: true, ifExists: true)
+}
+
+###> CREATE GRAPH
+#{
+# ## Create Fresh Graph
+# Creates a new empty `hr_graph`. Together with the drop step above, every
+# run of `01.hr_graph_setup.gql` starts with zero nodes and zero edges —
+# no stale data can accumulate across repeated runs.
+#}
+mutation CreateGraph {
+  GraphCreate(name: "hr_graph", ifNotExists: true)
+}
+
+###> RELOAD SCHEMA
+#{
+# ## Reload GraphQL Schema
+# Rebuilds the schema so any Cypher wrappers registered by a previous run are
+# cleared before the register step adds them back fresh.
+#}
+mutation ReloadSchema {
+  DbReload
+}

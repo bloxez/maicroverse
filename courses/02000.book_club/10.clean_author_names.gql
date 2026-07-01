@@ -1,0 +1,23 @@
+#!maicro
+#---
+# title: Clean Author Names With Login Date
+# description: When authors input their names they were inconsistent, so we need to clean the data and format it like "First Middle Last".
+# difficulty: intermmediate
+# estimated_time: 2m
+# tags:
+#   - x4m
+#   - data-cleansing
+#   - virtual-field
+#---
+
+###> FETCH AUTHOR NAMES WITH VIRTUAL LOGIN DATE
+#{
+# ## Query authors and reformat their names as title case with no erroneous spaces.
+# Fetch the formatted names of the authors and also add a virtual field with a login date for demonstration purposes.
+#}
+query CleanAuthorNames {
+  authors(page: { page: 1, items: 50 }, sort: [{ key: "id", asc: false }]) {
+      name(chain: "PACK | SPLIT | TRIM | TITLE | JOIN")
+      loginDate: _v(chain: "T({{D}}-{{MMM}}-{{YYYY}})")
+      }
+}

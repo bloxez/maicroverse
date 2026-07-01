@@ -1,0 +1,36 @@
+#!maicro
+#---
+# title: Create Clients Table
+# description: Create the clients table for form/document-aligned person profile data.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - database
+#   - schema
+#   - clients
+#---
+
+###> CREATE CLIENTS TABLE
+mutation CreateClientsTable {
+  clients: DbCreateTable(
+    name: "clients"
+    icon: "users"
+    metadata: { group_name: "people" }
+    description: "Client profile records for form and document workflows"
+    label: "label"
+    fields: [
+      { name: "first_name", type: String, is_required: true, description: "Client first name" }
+      { name: "last_name", type: String, is_required: true, description: "Client last name" }
+      { name: "middle_name", type: String, default_value: "", description: "Client middle name" }
+      { name: "dob", type: String, is_required: true, description: "Date of birth in YYYY-MM-DD format" }
+      { name: "address_unit", type: String, default_value: "", description: "Unit/apartment number" }
+      { name: "address_street", type: String, is_required: true, description: "Street address" }
+      { name: "address_suburb", type: String, is_required: true, description: "Suburb or locality" }
+      { name: "address_state", type: String, is_required: true, description: "State or territory" }
+      { name: "address_postcode", type: String, is_required: true, description: "Postal code" }
+      { name: "label", type: String, virtual: "T({{@.first_name}} {{@.last_name}})", description: "Lookup label" }
+    ]
+  )
+
+  DbReload
+}

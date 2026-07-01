@@ -1,0 +1,90 @@
+#!maicro
+#---
+# title: Team Notes Demo Setup (20)
+# description: Admin orchestrator for Team Notes isolation demo. Runs 21 (teams/users/roles) then 22 (seed notes).
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - auth
+#   - teams
+#   - security
+#   - seed
+#---
+
+###> STEP 1 - CREATE TEAMS, ROLES, USERS
+#{
+# Purpose:
+# Provision Team A / Team B identities for the demo.
+#
+# What this step does:
+# - Executes script 21 to create roles, teams, users, team memberships, and role assignments.
+# - Uses admin context because identity and RBAC management are admin-only operations.
+#
+# Expected outcome:
+# - maicro1@maicro.ai and maicro2@maicro.ai exist.
+# - teama and teamb exist.
+# - memberships/roles are assigned for both users.
+#
+# stepinto: 21.create_teams.gql
+#}
+mutation Step1_CreateTeamsAndUsers {
+  setup: DbExecute(path: "scripts/book_club/21.create_teams.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 2 - CREATE TEAM NOTES
+#{
+# Purpose:
+# Seed private notes/tasks for each team so isolation can be tested interactively.
+#
+# What this step does:
+# - Executes script 22 to reset team_notes and insert Team A + Team B note sets.
+# - Assigns team labels in a second pass (update) where required by enforced-field rules.
+#
+# Expected outcome:
+# - team_notes contains demo records for both teams.
+# - each note has an explicit team_label of teama or teamb.
+#
+# stepinto: 22.create_notes.gql
+#}
+mutation Step2_CreateNotes {
+  seed: DbExecute(path: "scripts/book_club/22.create_notes.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 3 - VERIFY SETUP OUTPUT
+#{
+# Purpose:
+# Provide admin-visible confirmation that setup completed correctly.
+#
+# What this step does:
+# - Lists teams created for this scenario.
+# - Returns the team_notes total and a sorted note list with team labels.
+#
+# Expected outcome:
+# - two teams (teama, teamb).
+# - notes visible for both teams under admin context.
+#}
+query Step3_Verify {
+  teams: AuthTeams {
+    id
+    name
+    description
+  }
+  team_notesCount
+  team_notes(page: { page: 1, items: 50 }, sort: [{ key: "title", asc: true }]) {
+    id
+    title
+    priority
+    created_by
+    team_label
+  }
+}

@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Select Dropdown
+# description: Injects a deterministic dropdown and selects an option.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - select
+#   - x4m
+# intent: Demonstrate reliable select-control interaction independent of external sites.
+#---
+
+###> STEP 1 - CREATE AND SELECT OPTION
+#{
+# Creates a select element in-page, chooses `beta`, and returns selected value.
+#}
+mutation Step1_SelectDropdown {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com', waitUntil:'domcontentloaded') | BROWSER_EVALUATE(expression:'(() => { const s=document.createElement(\"select\"); s.id=\"demo-select\"; const a=document.createElement(\"option\"); a.value=\"alpha\"; a.text=\"Alpha\"; const b=document.createElement(\"option\"); b.value=\"beta\"; b.text=\"Beta\"; s.appendChild(a); s.appendChild(b); document.body.appendChild(s); return true; })()') | BROWSER_WAIT_FOR_SELECTOR(selector:'#demo-select', timeout:5000) | BROWSER_SELECT(selector:'#demo-select', value:'beta') | BROWSER_EVALUATE(expression:'(() => document.querySelector(\"#demo-select\")?.value)()')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

@@ -1,0 +1,80 @@
+#
+# Feedback Loop - Self-Improving AI Through User Corrections
+#
+# This script demonstrates how to build a feedback loop for continuous improvement.
+# Key concepts:
+# - Execute signatures and collect outputs
+# - Submit corrections when outputs are wrong
+# - Feedback is stored per-signature for future optimization
+# - After 100+ samples, prompts can be auto-optimized (future feature)
+# Note: All returns are JSON type containing the full response object
+#
+
+###> Step 1: Execute signature to get an output
+# First, run the extraction to get baseline output.
+# Note the executionId from the response - you'll need it for corrections.
+# Returns: { executionId, output, metadata: { model, durationMs, ... } }
+mutation ExecuteForFeedback {
+  ExecuteSignature(
+    signatureId: "extractInvoice"
+    input: {
+      invoice_text: "Invoice from Beta Corp for $2,500.00 dated 2026-01-15"
+    }
+  )
+}
+
+###> Step 2: Submit corrections for mistakes
+# When output is wrong, provide the corrected values.
+# IMPORTANT: Use the actual executionId from Step 1.
+# Each field correction is recorded separately for training.
+# Returns: { success, feedbackRecorded }
+mutation CorrectInvoiceExtraction {
+  CorrectExecution(
+    executionId: "REPLACE_WITH_EXECUTION_ID_FROM_STEP_1"
+    corrections: {
+      vendor: "Beta Corporation"
+      total: 2500.00
+      invoice_date: "2026-01-15"
+      currency: "USD"
+    }
+  )
+}
+
+###> Step 3: View signature with execution stats
+# Check signature definition and metadata.
+query ViewSignatureStats {
+  GetSignature(id: "extractInvoice")
+}
+
+###> Step 4: List all executions to see history
+# View recent executions to understand model performance over time.
+# Returns: { executions: [{ id, timestamp, output, model, durationMs }] }
+query ListRecentExecutions {
+  ListExecutions(signatureId: "extractInvoice", limit: 20)
+}
+
+###> Step 5: Run another execution for more feedback data
+# Accumulate more samples for training. Different inputs help diversity.
+mutation ExecuteAnotherSample {
+  ExecuteSignature(
+    signatureId: "extractInvoice"
+    input: {
+      invoice_text: """
+      Invoice #98765
+      Vendor: TechSupplies Inc
+      Amount: $3,200.50
+      Date: 2026-01-20
+      """
+    }
+  )
+}
+
+# ========================================
+# FUTURE: Optimization (Coming Soon)
+# ========================================
+# When feedbackCount >= 100, automatic prompt optimization can be triggered.
+# This uses techniques like MiPRO to refine prompts based on corrections.
+#
+# mutation OptimizeSignature {
+#   OptimizeSignature(signatureId: "extractInvoice")
+# }

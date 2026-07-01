@@ -1,0 +1,146 @@
+#!maicro
+#---
+# title: Configure Drivers License Type + Relationship
+# description: Creates DriversLicense type with canonical AI output structure and wires clients->drivers_license relationship.
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - clients
+#   - documents
+#   - relationships
+#   - graphql
+#---
+
+###> CLEAR TYPE-DEPENDENT RELATIONSHIP (SAFE RESET)
+mutation Step01_ClearRelationship {
+  DbSetTableMetadata(
+    name: "clients"
+    metadata: {
+      custom_properties: {
+        file_relationships: []
+      }
+    }
+  )
+}
+
+###> RELOAD SCHEMA AFTER CLEAR
+mutation Step02_ReloadAfterClear {
+  DbReload
+}
+
+###> DELETE DRIVERSLICENSE TYPE IF IT EXISTS
+mutation Step04_DeleteDriversLicenseType {
+  DeleteType(name: "DriversLicense") {
+    success
+    message
+  }
+}
+
+###> DELETE AI TASK
+mutation DeleteAitask {
+  AiTaskDelete(key:"drivers_license") {
+    success
+  }
+}
+
+###> RELOAD SCHEMA AFTER DELETE
+mutation Step05_ReloadAfterDelete {
+  DbReload
+}
+
+###> CREATE DRIVERSLICENSE TYPE (CANONICAL TARGET STRUCTURE)
+mutation Step07_RegisterDriversLicenseType {
+  RegisterType(
+    name: "DriversLicense"
+    description: "Structured extraction payload for Australian drivers license records."
+    fields: [
+      { name: "DOB", type: "String", description: "Date of birth shown on the license." }
+      { name: "document_type", type: "String", description: "Detected document label from the card (for example DRIVER'S LICENCE)." }
+      { name: "license_number", type: "String", description: "Primary driver license number." }
+      { name: "issued_by", type: "String", description: "Issuing authority or department." }
+      { name: "class", type: "String", description: "License class or entitlement class." }
+      { name: "expires", type: "String", description: "License expiry date." }
+      { name: "fullname", type: "String", description: "Full legal name as displayed on the document." }
+      { name: "firstname", type: "String", description: "Given name component." }
+      { name: "lastname", type: "String", description: "Family name or surname component." }
+      { name: "middlename", type: "String", description: "Middle name component when present." }
+      { name: "citizen_status", type: "String", description: "Citizenship or residency status if explicitly present." }
+      { name: "addr_unit", type: "String", description: "Unit, apartment, or suite identifier if present." }
+      { name: "addr_street", type: "String", description: "Street number and street name portion of the address." }
+      { name: "addr_suburb", type: "String", description: "Suburb or locality from the address." }
+      { name: "addr_state", type: "String", description: "State or region from the address." }
+      { name: "addr_postcode", type: "String", description: "Postal code from the address." }
+    ]
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> SET CLIENTS RELATIONSHIP TO DRIVERSLICENSE
+mutation Step08_SetRelationship {
+  DbSetTableMetadata(
+    name: "clients"
+    metadata: {
+      custom_properties: {
+        file_relationships: [
+          {
+            field_name: "drivers_license"
+            metadata_custom_field_key: "client_id"
+            parent_key_field: "id"
+            cardinality: "one_to_one"
+            graphql_type: "DriversLicense"
+            ai_results_key: "drivers_license"
+          }
+        ]
+      }
+    }
+  )
+}
+
+###> RELOAD SCHEMA
+mutation Step09_Reload {
+  DbReload
+}
+
+###> CREATE AI TASK
+mutation AddDriversLicenseTask {
+  AiTaskAdd(
+    key: "drivers_license"
+    task: {
+      label: "Drivers License"
+      description: "Extract structured data from a driver's license"
+      model: "vision"
+      sources: ["image"]
+      prompt: """
+You are a precise data extraction engine.
+Return ONLY one valid JSON object.
+Do not return markdown, code fences, or explanations.
+Use this output template exactly:
+{output_template}
+If a value is missing, use an empty string.
+
+Content to extract from:
+{content}
+"""
+      output_mode: "graphql_type"
+      graphql_type: "DriversLicense"
+    }
+  ) {
+    success
+    key
+    message
+    task {
+      key
+      label
+      description
+      model
+      sources
+      prompt
+      output_mode
+      graphql_type
+      missing_value
+    }
+  }
+}

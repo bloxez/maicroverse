@@ -1,0 +1,41 @@
+###> UPDATE AI TASK
+mutation UpdateDriversLicenseTask {
+  AiTaskUpdate(
+    key: "drivers_license"
+    task: {
+      label: "Drivers License"
+      description: "Extract structured data from an Australian driver's license"
+      model: "vision"
+      sources: ["image"]
+      prompt: """
+You are a precise data extraction engine.
+Return ONLY one valid JSON object.
+Do not return markdown, code fences, or explanations.
+Use this output template exactly:
+{output_template}
+If a value is missing, use an empty string.
+
+Content to extract from:
+{content}
+"""
+      output_mode: "graphql_type"
+      graphql_type: "DriversLicense"
+      missing_value: "UNKNOWN"
+    }
+  ) {
+    success
+    key
+    message
+    task {
+      key
+      label
+      description
+      model
+      sources
+      prompt
+      output_mode
+      graphql_type
+      missing_value
+    }
+  }
+}

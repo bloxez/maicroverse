@@ -1,0 +1,36 @@
+#!maicro
+#---
+# title: ASX Watcher - Multi Stock Raw Fetch
+# description: Fetches raw JSON market payloads for DRO and TLX from Yahoo Finance.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - asx
+#   - fetch-url
+#   - yahoo-finance
+#   - json
+# intent: Establish baseline API retrieval before formatting or browser automation.
+#---
+
+###> STEP 1 - FETCH DRO RAW PAYLOAD
+#{
+# Fetches DRO.AX chart data from Yahoo Finance and returns raw JSON.
+# Expected effect: `dro.result` contains a parseable payload with market metadata.
+#}
+mutation Step1_FetchDRO {
+  dro: X4m(pipeline: "FETCH_URL(url:'https://query1.finance.yahoo.com/v8/finance/chart/DRO.AX')") {
+    result
+  }
+}
+
+###> STEP 2 - FETCH TLX RAW PAYLOAD
+#{
+# Fetches TLX.AX chart data from the same endpoint for comparison.
+# Expected effect: `tlx.result` contains similar structure, enabling side-by-side checks.
+# stepinto: scripts/courses/10000.asx_watcher/03.single_stock_md.gql
+#}
+mutation Step2_FetchTLX {
+  tlx: X4m(pipeline: "FETCH_URL(url:'https://query1.finance.yahoo.com/v8/finance/chart/TLX.AX')") {
+    result
+  }
+}

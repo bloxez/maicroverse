@@ -1,0 +1,148 @@
+#!maicro
+#---
+# title: Weather Station Dataset Import
+# description: >
+#   CRITICAL: Download the the demonstration data from: https://github.com/bloxez/maicroverse/tree/main/file_storage
+#
+#   Imports weather readings from 13 global monitoring stations
+#   stored in <import_root>/weather/weather_readings.jsonl.
+#
+#   The dataset contains 3 readings per station per day (06:00, 12:00,
+#   and 18:00 UTC), giving 39 total rows across the following stations:
+#
+#     WS001  London, GB          WS008  Mumbai, IN
+#     WS002  Paris, FR           WS009  Dubai, AE
+#     WS003  Berlin, DE          WS010  Reykjavik, IS
+#     WS004  New York, US        WS011  Rio de Janeiro, BR
+#     WS005  Tokyo, JP           WS012  Singapore, SG
+#     WS006  Sydney, AU          WS013  Nairobi, KE
+#     WS007  Moscow, RU
+#
+#   Each row captures scalar sensor values plus four JSON sub-objects:
+#
+#     location      - lat, lon, elevation_m, city, country
+#     wind          - speed_kmh, gust_kmh, direction_deg,
+#                     direction_label, beaufort
+#     solar         - irradiance_wm2, uv_index, sunshine_hours,
+#                     cloud_cover_pct
+#     precipitation - rain_mm, snow_mm, hail (bool), type
+#     conditions    - JSON array of weather condition labels
+#                     e.g. ["storm", "heavy_rain", "strong_wind"]
+#
+#   Uses DbImportFile which auto-creates the table from the column
+#   definitions and loads all rows in one step. The table is dropped
+#   before re-import so the script is safe to re-run at any time.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - database
+#   - import
+#   - jsonl
+#   - weather
+#   - iot
+#   - time-series
+# intent: setup
+# resources:
+#   - type: docs
+#     url: /reference/database
+#     title: Database Reference
+#---
+
+###> LOAD IMPORT ROOT
+#{
+# ## Load Shared Import Root
+# Reads the import root from memory (`import_root.path`) so weather
+# source file paths resolve from one shared base location.
+#}
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> DropWeather
+#{
+# ## Drop Existing Table
+# Removes the weather_readings table if it exists. DbDropTable is a
+# no-op when the table does not exist, making this step safe on the
+# very first run.
+#}
+mutation DropWeather {
+  DbDropTable(name: "weather_readings")
+}
+
+###> ImportWeatherReadings
+#{
+# ## Import Weather Readings
+# Creates the weather_readings table and loads weather_readings.jsonl
+# (39 rows - 13 stations x 3 timestamps per day).
+#
+# Scalar fields:
+#   station         - station code, e.g. WS001 (plain String, not a FK)
+#   timestamp       - ISO-8601 UTC timestamp, e.g. 2026-05-20T06:00:00Z
+#   temperature_c   - air temperature in degrees Celsius
+#   feels_like_c    - apparent (feels-like) temperature in degrees Celsius
+#   humidity_pct    - relative humidity as a percentage (0-100)
+#   pressure_hpa    - barometric pressure in hectopascals
+#   dew_point_c     - dew point temperature in degrees Celsius
+#   visibility_km   - horizontal visibility in kilometres
+#
+# JSON sub-object fields (stored as JSON, queryable via mAIcro JSON paths):
+#   location        - {lat, lon, elevation_m, city, country}
+#   wind            - {speed_kmh, gust_kmh, direction_deg, direction_label, beaufort}
+#   solar           - {irradiance_wm2, uv_index, sunshine_hours, cloud_cover_pct}
+#   precipitation   - {rain_mm, snow_mm, hail, type}
+#   conditions      - array of condition label strings
+#}
+mutation ImportWeatherReadings {
+  DbImportFile(
+    path: "{{importRoot}}/weather/weather_readings.jsonl"
+    table: "weather_readings"
+    columns: [
+      { file_column: "station",       type: "String" }
+      { file_column: "timestamp",     type: "String" }
+      { file_column: "temperature_c", type: "Float"  }
+      { file_column: "feels_like_c",  type: "Float"  }
+      { file_column: "humidity_pct",  type: "Float"  }
+      { file_column: "pressure_hpa",  type: "Float"  }
+      { file_column: "dew_point_c",   type: "Float"  }
+      { file_column: "visibility_km", type: "Float"  }
+      { file_column: "location",      type: "JSON"   }
+      { file_column: "wind",          type: "JSON"   }
+      { file_column: "solar",         type: "JSON"   }
+      { file_column: "precipitation", type: "JSON"   }
+      { file_column: "conditions",    type: "JSON"   }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ReloadSchema
+#{
+# ## Rebuild the GraphQL Schema
+# Tells mAIcro to regenerate its GraphQL schema so all auto-generated
+# queries, mutations, and aggregate fields for the weather_readings
+# table are immediately available in the IDE and API.
+#}
+mutation ReloadSchema {
+  DbReload
+}
+
+###> WeatherSummary
+#{
+# ## Verify: Weather Station Summary
+# Reads the latest readings sorted by station then timestamp (newest
+# first). Shows all scalar fields plus the JSON location and conditions
+# sub-objects to confirm the import was successful.
+#
+# To filter by a specific station use the filter argument:
+#   weather_readings(filter: [{ key: "station", value: "WS001" }])
+#}
+query WeatherSummary {
+  weather_readings(
+    sort: [{ key: "station", asc: true }, { key: "timestamp", asc: false }]
+    page: { page: 1, items: 20 }
+  ) {
+    station timestamp
+    temperature_c feels_like_c humidity_pct
+    pressure_hpa dew_point_c visibility_km
+    conditions location wind solar precipitation
+  }
+}

@@ -1,0 +1,43 @@
+#!maicro
+#---
+# title: AI Task Setup
+# intent: Configure the Drivers License processing task and related Drivers License GraphQL type.
+# description: This script uses the required steps to configure the AI task and type and leave them in place, whereas the test version would cleanup and delete these components.
+# difficulty: beginner
+# estimated_time: 3m
+# tags:
+#   - ai
+#   - config
+#   - tasks
+#   - graphql
+#---
+
+###> STEP 1 — REGISTER GRAPHQL TYPE
+#{
+# ## Create DriversLicense Type
+# Creates the user-defined GraphQL type that the AI task references.
+#
+# stepinto: 03.setup_drivers_license_type.gql
+#}
+mutation RegisterDriversLicenseType {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/03.setup_drivers_license_type.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 2 — ADD AI TASK
+#{
+# ## Create test_drivers_license Task
+# Adds the AI task into maiql.ai_tasks using the new AiTaskAdd resolver.
+#
+# stepinto: 04.add_drivers_license_task.gql
+#}
+mutation AddDriversLicenseTask {
+  DbExecute(path: "scripts/courses/01000.ai_tasks/04.add_drivers_license_task.gql") {
+    success
+    message
+    result
+  }
+}

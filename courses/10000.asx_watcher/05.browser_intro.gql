@@ -1,0 +1,62 @@
+#!maicro
+#---
+# title: ASX Watcher - Browser Intro
+# description: Intro lesson for browser automation with navigation and DOM extraction.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - browser-automation
+#   - dom-extraction
+#   - intro
+# intent: Demonstrate a complete browser lifecycle with predictable cleanup.
+#---
+
+###> STEP 1 - OPEN BROWSER SESSION
+#{
+# Opens a headless Chrome session for interactive browser actions.
+# Dependency: Chrome executable available at /usr/bin/google-chrome.
+#}
+mutation Step1_OpenSession {
+  session: OpenBrowser(input: {
+    executablePath: "/usr/bin/google-chrome"
+    headless: true
+  }) {
+    sessionId
+  }
+}
+
+###> STEP 2 - NAVIGATE AND EXTRACT TOP ROWS
+#{
+# Navigates to Wikipedia's population page, waits for render, and extracts top rows.
+# Expected effect: `extract.steps` includes successful goto/wait/evaluate operations.
+#}
+mutation Step2_ExtractTableData {
+  extract: BrowserExecute(
+    sessionId: "{{@@.session.sessionId}}"
+    actions: [
+      { op: "goto", url: "https://en.wikipedia.org/wiki/List_of_countries_by_population" }
+      { op: "waitForTimeout", ms: 3000 }
+      { op: "evaluate", expression: "(() => { const rows = document.querySelectorAll('table.wikitable tr'); const results = []; for (let i = 1; i < Math.min(6, rows.length); i++) { const cells = rows[i].querySelectorAll('td'); if (cells.length > 2) { results.push({ rank: cells[0]?.innerText?.trim(), country: cells[1]?.innerText?.trim(), population: cells[2]?.innerText?.trim() }); } } return results; })();" }
+    ]
+  ) {
+    success
+    steps {
+      op
+      status
+      output
+      error
+      durationMs
+    }
+  }
+}
+
+###> STEP 3 - CLEANUP SESSION
+#{
+# Closes all browser sessions to keep this script safely repeatable.
+# stepinto: scripts/courses/10000.asx_watcher/06.browser_advanced.gql
+#}
+mutation Step3_CloseAllBrowsers {
+  CloseAllBrowsers {
+    closedCount
+  }
+}

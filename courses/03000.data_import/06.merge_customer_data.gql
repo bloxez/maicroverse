@@ -1,0 +1,117 @@
+#!maicro
+#---
+# title: Business Dataset Merge
+# description: >
+#   CRITICAL: Download the the demonstration data from: https://github.com/bloxez/maicroverse/tree/main/file_storage
+#
+#   Appends additional customers and orders to the existing tables
+#   imported by 05.import_customer_data.gql.
+#   Uses DbImportFile with merge: true - the tables must already exist.
+#   Safe to run multiple times; each run appends the same rows again,
+#   so run 05.import_customer_data.gql first to start from a clean state.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - database
+#   - import
+#   - merge
+#   - csv
+# intent: data
+# resources:
+#   - type: docs
+#     url: /reference/database
+#     title: Database Reference
+#---
+
+###> LOAD IMPORT ROOT
+#{
+# ## Load Shared Import Root
+# Reads the import root from memory (`import_root.path`) so merge
+# patch files are loaded from the same shared base location.
+#}
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> MergeCustomers
+#{
+# ## Merge Customers
+# Appends 5 new customers (IDs 21-25) to the existing `customers` table.
+#
+# `merge: true` skips table creation and fails fast if the table does
+# not exist - run 05.import_customer_data.gql first.
+#
+# `created_at` is omitted from columns so mAIcro auto-sets the
+# insert timestamp rather than forwarding the CSV value.
+#}
+mutation MergeCustomers {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/merge_customers.csv"
+    table: "customers"
+    merge: true
+    columns: [
+      { file_column: "id",         type: "Int"     }
+      { file_column: "first_name", type: "String"  }
+      { file_column: "last_name",  type: "String"  }
+      { file_column: "email",      type: "String"  }
+      { file_column: "phone",      type: "String"  }
+      { file_column: "company",    type: "String"  }
+      { file_column: "city",       type: "String"  }
+      { file_column: "state",      type: "String"  }
+      { file_column: "zip_code",   type: "Int"     }
+      { file_column: "country",    type: "String"  }
+      { file_column: "is_active",  type: "Boolean" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> MergeOrders
+#{
+# ## Merge Orders
+# Appends 5 new orders (IDs 1021-1025) to the existing `orders` table.
+#
+# `customer_id` references both existing customers (16, 17) and the
+# newly merged customers (21, 22, 23), demonstrating that merges can
+# span multiple runs.
+#}
+mutation MergeOrders {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/merge_orders.csv"
+    table: "orders"
+    merge: true
+    columns: [
+      { file_column: "id",           type: "Int"    }
+      { file_column: "customer_id",  type: "ID"     }
+      { file_column: "order_date",   type: "String" }
+      { file_column: "status",       type: "String" }
+      { file_column: "total_amount", type: "Float"  }
+      { file_column: "tax",          type: "Float"  }
+      { file_column: "shipping",     type: "Float"  }
+      { file_column: "notes",        type: "String" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> VerifyMerge
+#{
+# ## Verify Merge
+# Checks total row counts then previews the last page of customers
+# (page 5, 5 per page = rows 21-25) with their merged orders.
+#
+# Expect:
+#   customersCount -> { count: 25 }  (20 original + 5 merged)
+#   ordersCount    -> { count: 25 }  (20 original + 5 merged)
+#}
+query VerifyMerge {
+  customersCount
+  ordersCount
+  customers(
+    page: { page: 5, items: 5 }
+    sort: [{ key: "id", asc: true }]
+  ) {
+    id first_name last_name email company city
+    orders {
+      id order_date status total_amount
+    }
+  }
+}

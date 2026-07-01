@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Wait, Click, Keyboard, Mouse
+# description: Demonstrates timing and interaction primitives.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - interaction
+#   - x4m
+# intent: Practice robust action sequencing with waits and user-input primitives.
+#---
+
+###> STEP 1 - INTERACTION FLOW
+#{
+# Waits for a selector, clicks, simulates keyboard/mouse events, then evaluates title.
+#}
+mutation Step1_WaitClickKeyboardMouse {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_WAIT_FOR_SELECTOR(selector:'a', visible:true, timeout:5000) | BROWSER_CLICK(selector:'a') | BROWSER_WAIT(ms:500) | BROWSER_KEYBOARD(key:'Tab') | BROWSER_MOUSE(action:'move', x:120, y:140) | BROWSER_EVALUATE(expression:'(() => document.title)()')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

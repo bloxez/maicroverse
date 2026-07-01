@@ -1,0 +1,80 @@
+#!maicro
+# Pexels API - High-quality stock photos and videos
+# Requires: PEXELS_API_KEY in .env file
+
+###> CREATE PEXELS PHOTO SEARCH RESOLVER
+mutation PexelsPhotoSearchSetup {
+  PexelsPhotoSearch: ApiWrap(
+    name: "PexelsPhotoSearch"
+    operation: "QUERY"
+    method: "GET"
+    endpoint: "https://api.pexels.com/v1/search"
+    inputs: [
+      { name: "query", type: "String!", description: "Search term" }
+      { name: "per_page", type: "Int", description: "Results per page (default 15, max 80)" }
+      { name: "orientation", type: "String", description: "landscape, portrait, or square" }
+    ]
+    outputs: [
+      { name: "total_results", type: "Int", description: "Total matching photos" }
+      { name: "photographer", type: "String", description: "Photographer name" }
+      { name: "photo_url", type: "String", description: "Pexels photo page URL" }
+      { name: "original", type: "String", description: "Original size image URL" }
+      { name: "large", type: "String", description: "Large size image URL" }
+      { name: "medium", type: "String", description: "Medium size image URL" }
+      { name: "width", type: "Int", description: "Original width" }
+      { name: "height", type: "Int", description: "Original height" }
+    ]
+    responseMapping: """{"total_results": "total_results", "photographer": "photos.0.photographer", "photo_url": "photos.0.url", "original": "photos.0.src.original", "large": "photos.0.src.large", "medium": "photos.0.src.medium", "width": "photos.0.width", "height": "photos.0.height"}"""
+    headers: """{"Authorization": "{{PEXELS_API_KEY}}"}"""
+  ) {
+    success
+    name
+    message
+  }
+
+  PexelsPhotosAll: ApiWrap(
+    name: "PexelsPhotosAll"
+    operation: "QUERY"
+    method: "GET"
+    endpoint: "https://api.pexels.com/v1/search"
+    inputs: [
+      { name: "query", type: "String!", description: "Search term" }
+      { name: "per_page", type: "Int", description: "Results per page" }
+    ]
+    outputs: [
+      { name: "photos", type: "JSON", description: "All photo results" }
+    ]
+    responseMapping: """{"photos": "photos"}"""
+    headers: """{"Authorization": "{{PEXELS_API_KEY}}"}"""
+  ) {
+    success
+    name
+    message
+  }
+
+  PexelsCuratedPhotos: ApiWrap(
+    name: "PexelsCuratedPhotos"
+    operation: "QUERY"
+    method: "GET"
+    endpoint: "https://api.pexels.com/v1/curated"
+    inputs: [
+      { name: "per_page", type: "Int", description: "Results per page (default 15)" }
+    ]
+    outputs: [
+      { name: "photographer", type: "String", description: "First photo's photographer" }
+      { name: "photo_url", type: "String", description: "First photo's page URL" }
+      { name: "large", type: "String", description: "Large image URL" }
+    ]
+    responseMapping: """{"photographer": "photos.0.photographer", "photo_url": "photos.0.url", "large": "photos.0.src.large"}"""
+    headers: """{"Authorization": "{{PEXELS_API_KEY}}"}"""
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> RELOAD SCHEMA TO REGISTER NEW RESOLVERS
+mutation ReloadSchema {
+  DbReload
+}

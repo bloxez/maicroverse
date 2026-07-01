@@ -1,0 +1,90 @@
+#!maicro
+#---
+# title: Verify Client Drivers License Typed Traversal
+# description: Verifies client drivers_license traversal using canonical DriversLicense structure.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - verification
+#   - clients
+#   - documents
+#   - graphql
+#---
+
+###> GET LINKED FILE (DOC 82)
+query Step01_LinkedFile {
+  linked_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
+    metadata {
+      id
+      path
+      metadata
+      ai_results
+    }
+  }
+}
+
+###> ASSERT FILE HAS client_id LINK
+query Step02_AssertClientIdPresent {
+  Assert(
+    actual: "{{linked_file.metadata.metadata.custom_fields.client_id}}"
+    op: "exists"
+    expected: "true"
+  ) {
+    success
+    message
+  }
+}
+
+###> QUERY CLIENT WITH CANONICAL DRIVERSLICENSE FIELDS
+query Step03_ClientTypedTraversal {
+  linked_client: clients(
+    where: { id: { eq: "{{linked_file.metadata.metadata.custom_fields.client_id}}" } }
+    page: { page: 1, items: 1 }
+  ) {
+    id
+    first_name
+    last_name
+    drivers_license {
+      DOB
+      document_type
+      license_number
+      issued_by
+      class
+      expires
+      fullname
+      firstname
+      lastname
+      middlename
+      citizen_status
+      addr_unit
+      addr_street
+      addr_suburb
+      addr_state
+      addr_postcode
+    }
+  }
+}
+
+###> ASSERT LICENSE NUMBER IS MAPPED
+query Step04_AssertLicenseNumber {
+  Assert(
+    actual: "{{linked_client.0.drivers_license.license_number}}"
+    op: "contains"
+    expected: "999999999"
+  ) {
+    success
+    message
+  }
+}
+
+###> ASSERT ADDRESS STREET IS POPULATED
+query Step05_AssertAddressStreet {
+  Assert(
+    actual: "{{linked_client.0.drivers_license.addr_street}}"
+    op: "contains"
+    expected: "ST GEORGES TERRACE"
+  ) {
+    success
+    message
+  }
+}

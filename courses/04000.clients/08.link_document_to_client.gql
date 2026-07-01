@@ -1,0 +1,82 @@
+#!maicro
+#---
+# title: Link Drivers License Document To Client
+# description: Sets metadata.custom_fields.client_id on document 82 so clients->documents traversal resolves.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - clients
+#   - documents
+#   - linking
+#---
+
+###> GET FIRST CLIENT
+query Step01_FirstClient {
+  first_client: clients(page: { page: 1, items: 1 }) {
+    id
+    first_name
+    last_name
+  }
+}
+
+###> GET TARGET DRIVERS LICENSE FILE (DOC 82)
+query Step02_TargetDriversLicenseFile {
+  target_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
+    metadata {
+      id
+      path
+      metadata
+      ai_results
+    }
+  }
+}
+
+###> ASSERT CLIENT EXISTS
+query Step03_AssertClientExists {
+  Assert(
+    actual: "{{first_client.0.id}}"
+    op: "exists"
+    expected: "true"
+  ) {
+    success
+    message
+  }
+}
+
+###> ASSERT TARGET FILE EXISTS
+query Step04_AssertTargetFileExists {
+  Assert(
+    actual: "{{target_file.metadata.id}}"
+    op: "exists"
+    expected: "true"
+  ) {
+    success
+    message
+  }
+}
+
+###> FORGE CONNECTION VIA metadata.custom_fields.client_id
+mutation Step05_LinkFileToClient {
+  link_file_to_client: FileUpdate(
+    id: "{{target_file.metadata.id}}"
+    custom_fields: {
+      client_id: "{{first_client.0.id}}"
+      reader_id: ""
+    }
+  ) {
+    id
+    metadata
+  }
+}
+
+###> ASSERT LINK CREATED
+query Step06_AssertLinkCreated {
+  Assert(
+    actual: "{{link_file_to_client.metadata.custom_fields.client_id}}"
+    op: "eq"
+    expected: "{{first_client.0.id}}"
+  ) {
+    success
+    message
+  }
+}

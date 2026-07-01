@@ -1,0 +1,58 @@
+#!maicro
+#---
+# title: Graph Bootstrap
+# description: Enable Apache AGE, create the social graph, and install row-sync triggers on readers, authors, and books. Run this BEFORE inserting data so every new row automatically creates a matching graph node.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - graph
+#   - cypher
+#---
+
+###> ENABLE CYPHER AND CREATE GRAPH
+#{
+# ## Install Graph Infrastructure
+# This step:
+# 1. Enables the Apache AGE extension
+# 2. Creates the `book_club_social` graph (idempotent)
+# 3. Installs AFTER INSERT/DELETE triggers on **readers**, **authors**, and **books**
+#
+# **Why run this before inserting data?**
+# The triggers only fire on *future* INSERTs. Running bootstrap first means
+# every reader, author and book added in subsequent steps automatically gets
+# a matching graph node with `table` and `name` properties — no extra code needed.
+#
+# The triggers use `graphLabel: "Person"` for readers/authors and `"Book"` for books,
+# so they appear as distinct labels in Cypher queries and in the IDE graph view.
+#}
+mutation GraphBootstrap {
+  DbEnableGraph {
+    age_extension
+    status
+  }
+
+  GraphCreate: GraphCreate(name: "book_club_social", ifNotExists: true)
+
+  ReadersAsPerson: DbSetGraphSync(
+    table: "readers"
+    graphNode: "auto"
+    graphName: "book_club_social"
+    graphLabel: "Person"
+  )
+
+  AuthorsAsPerson: DbSetGraphSync(
+    table: "authors"
+    graphNode: "auto"
+    graphName: "book_club_social"
+    graphLabel: "Person"
+  )
+
+  BooksAsBook: DbSetGraphSync(
+    table: "books"
+    graphNode: "auto"
+    graphName: "book_club_social"
+    graphLabel: "Book"
+  )
+
+  DbReload
+}

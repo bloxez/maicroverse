@@ -1,0 +1,68 @@
+#!maicro
+# OpenAI API - AI completions and chat
+# Requires: OPENAI_API_KEY in .env file
+
+###> CREATE OPENAI CHAT COMPLETION RESOLVER
+mutation OpenAIChatSetup {
+  OpenAIChat: ApiWrap(
+    name: "OpenAIChat"
+    operation: "MUTATION"
+    method: "POST"
+    endpoint: "https://api.openai.com/v1/chat/completions"
+    inputs: [
+      { name: "message", type: "String!", description: "User message to send" }
+      { name: "system", type: "String", description: "System prompt (optional)" }
+      { name: "model", type: "String", description: "Model name (default: gpt-3.5-turbo)", default: "gpt-3.5-turbo" }
+      { name: "max_tokens", type: "Int", description: "Max response tokens" }
+      { name: "temperature", type: "Float", description: "Creativity 0.0-2.0 (default 1.0)" }
+    ]
+    outputs: [
+      { name: "response", type: "String", description: "AI response text" }
+      { name: "model", type: "String", description: "Model used" }
+      { name: "prompt_tokens", type: "Int", description: "Tokens in prompt" }
+      { name: "completion_tokens", type: "Int", description: "Tokens in response" }
+      { name: "total_tokens", type: "Int", description: "Total tokens used" }
+    ]
+    responseMapping: """{"response": "choices.0.message.content", "model": "model", "prompt_tokens": "usage.prompt_tokens", "completion_tokens": "usage.completion_tokens", "total_tokens": "usage.total_tokens"}"""
+    bodyTemplate: """{
+      "model": "{model}",
+      "messages": [
+        {"role": "system", "content": "{system}"},
+        {"role": "user", "content": "{message}"}
+      ]
+    }"""
+    headers: """{"Authorization": "Bearer {{OPENAI_API_KEY}}", "Content-Type": "application/json"}"""
+  ) {
+    success
+    name
+    message
+  }
+
+  OpenAISimpleChat: ApiWrap(
+    name: "OpenAISimpleChat"
+    operation: "MUTATION"
+    method: "POST"
+    endpoint: "https://api.openai.com/v1/chat/completions"
+    inputs: [
+      { name: "prompt", type: "String!", description: "Simple prompt" }
+    ]
+    outputs: [
+      { name: "text", type: "String", description: "AI response" }
+    ]
+    responseMapping: """{"text": "choices.0.message.content"}"""
+    bodyTemplate: """{
+      "model": "gpt-3.5-turbo",
+      "messages": [{"role": "user", "content": "{prompt}"}]
+    }"""
+    headers: """{"Authorization": "Bearer {{OPENAI_API_KEY}}", "Content-Type": "application/json"}"""
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> RELOAD SCHEMA TO REGISTER NEW RESOLVERS
+mutation ReloadSchema {
+  DbReload
+}

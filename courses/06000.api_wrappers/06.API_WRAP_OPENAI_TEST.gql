@@ -1,0 +1,51 @@
+#!maicro
+# Test OpenAI API resolvers
+
+###> Test 1: Simple chat completion
+mutation OpenAISimpleTest {
+  OpenAISimpleChat(prompt: "Explain GraphQL in one sentence") {
+    text
+  }
+}
+
+###> Test 2: Chat with system prompt and parameters
+mutation OpenAIChatWithSystem {
+  OpenAIChat(
+    message: "Write a haiku about databases"
+    system: "You are a creative poet with technical knowledge"
+    model: "gpt-3.5-turbo"
+    max_tokens: 100
+    temperature: 1.2
+  ) {
+    response
+    model
+    prompt_tokens
+    completion_tokens
+    total_tokens
+  }
+}
+
+###> Test 3: Technical explanation
+mutation OpenAITechnicalQuery {
+  OpenAIChat(
+    message: "What are the benefits of using TypeScript over JavaScript?"
+    system: "You are a senior software engineer"
+    max_tokens: 200
+    temperature: 0.7
+  ) {
+    response
+    total_tokens
+  }
+}
+
+###> Test 4: Creative writing
+mutation OpenAICreativeTest {
+  OpenAIChat(
+    message: "Generate 3 unique book club discussion questions"
+    system: "You are a book club moderator"
+    temperature: 1.5
+  ) {
+    response
+    completion_tokens
+  }
+}

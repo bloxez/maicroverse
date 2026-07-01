@@ -1,0 +1,35 @@
+#!maicro
+#---
+# title: ASX Watcher - Multi Stock Markdown
+# description: Produces markdown reports for DRO and TLX in one execution.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - asx
+#   - markdown
+#   - comparison
+#   - yahoo-finance
+# intent: Compare markdown consistency across two tickers in a single run.
+#---
+
+###> STEP 1 - DRO MARKDOWN
+#{
+# Converts DRO payload to markdown for quick analyst-friendly reading.
+#}
+mutation Step1_DroMarkdown {
+  dro: X4m(pipeline: "FETCH_URL(url:'https://query1.finance.yahoo.com/v8/finance/chart/DRO.AX') | TO_MARKDOWN") {
+    result
+  }
+}
+
+###> STEP 2 - TLX MARKDOWN
+#{
+# Converts TLX payload to markdown using the same pipeline.
+# Expected effect: comparable output format for both tickers.
+# stepinto: scripts/courses/10000.asx_watcher/05.browser_intro.gql
+#}
+mutation Step2_TlxMarkdown {
+  tlx: X4m(pipeline: "FETCH_URL(url:'https://query1.finance.yahoo.com/v8/finance/chart/TLX.AX') | TO_MARKDOWN") {
+    result
+  }
+}

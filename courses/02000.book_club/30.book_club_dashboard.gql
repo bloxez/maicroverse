@@ -1,0 +1,77 @@
+#!maicro
+#---
+# title: Book Club Dashboard Payload
+# description: Unified payload dashboard for the Book Club demo.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - dashboard
+#   - book-club
+#   - analytics
+#---
+
+###> STEP 1 - DASHBOARD PAYLOAD + DATA
+#{
+# Returns one unified JSON payload block plus all chart datasets.
+# Uses `readersLookup { id label }` so UI dropdowns can directly consume clean options.
+#}
+query BookClubDashboard {
+  dashboard: JsonObject {
+    title: eval(v: "Book Club Command Center")
+    description: eval(v: "Unified payload: layout + charts + query data")
+    layout: eval(v: "{\"columns\":12,\"gap\":12}")
+    controls: eval(v: "[{\"id\":\"genre\",\"label\":\"Genre\",\"field\":\"genre\",\"type\":\"select\"},{\"id\":\"membership_level\",\"label\":\"Membership\",\"field\":\"membership_level\",\"type\":\"select\"},{\"id\":\"reader_id\",\"label\":\"Reader\",\"field\":\"id\",\"type\":\"select\",\"source\":\"readers_lookup\"}]")
+    charts: eval(v: "[{\"id\":\"w_books_genre\",\"title\":\"Books by Genre\",\"subtitle\":\"Catalog mix\",\"dataPath\":\"books_by_genre\",\"chart\":{\"type\":\"bar\",\"xField\":\"genre\",\"yField\":\"price\",\"topN\":10},\"layout\":{\"x\":1,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_rating_dist\",\"title\":\"Ratings Distribution\",\"subtitle\":\"Review quality signal\",\"dataPath\":\"reviews_flat\",\"chart\":{\"type\":\"doughnut\",\"xField\":\"rating\"},\"layout\":{\"x\":5,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_membership_mix\",\"title\":\"Reader Membership Mix\",\"subtitle\":\"Audience composition\",\"dataPath\":\"reader_membership\",\"chart\":{\"type\":\"pie\",\"xField\":\"membership_level\"},\"layout\":{\"x\":9,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_reviews_timeline\",\"title\":\"Review Timeline\",\"subtitle\":\"Trend by date\",\"dataPath\":\"reviews_timeline\",\"chart\":{\"type\":\"line\",\"xField\":\"review_date\",\"yField\":\"rating\"},\"layout\":{\"x\":1,\"y\":2,\"w\":6,\"h\":1}},{\"id\":\"w_price_dist\",\"title\":\"Price Distribution\",\"subtitle\":\"Book pricing spread\",\"dataPath\":\"books_by_genre\",\"chart\":{\"type\":\"bar\",\"xField\":\"title\",\"yField\":\"price\",\"topN\":12},\"layout\":{\"x\":7,\"y\":2,\"w\":6,\"h\":1}}]")
+  }
+
+  readers_lookup: readersLookup {
+    id
+    label
+  }
+
+  books_by_genre: books(page: { page: 1, items: 300 }) {
+    id
+    genre
+    title
+    price
+  }
+
+  reviews_timeline: reviews(page: { page: 1, items: 300 }, sort: [{ key: "review_date", asc: true }]) {
+    id
+    review_date
+    rating
+  }
+
+  reviews_flat: reviews(page: { page: 1, items: 300 }) {
+    id
+    rating
+  }
+
+  reader_membership: readers(page: { page: 1, items: 300 }) {
+    id
+    membership_level
+  }
+}
+
+###> STEP 2 - QUICK VALIDATION
+#{
+# Confirms this script returns dashboard + at least one chart dataset.
+#}
+query ValidatePayload {
+  AssertDashboard: Assert(actual: "{{dashboard.title}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertBooksData: Assert(actual: "{{books_by_genre.0.id}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertReadersLookupData: Assert(actual: "{{readers_lookup.0.id}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertChartCount: Assert(actual: "{{dashboard.charts.4.id}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+}

@@ -1,0 +1,30 @@
+#!maicro
+#---
+# title: CRON Utility - List Jobs
+# description: Displays cron jobs and operational telemetry for quick diagnostics.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - cron
+#   - diagnostics
+#---
+
+###> STEP 1 - LIST CRON JOBS
+#{
+# Lists recent cron jobs with status, next run, and error details.
+#}
+query Step1_ListCronJobs {
+  CronJobs(limit: 50) {
+    id
+    name
+    description
+    schedule
+    status
+    run_count
+    last_run_at
+    next_run_at
+    last_error
+    created_at
+    updated_at
+  }
+}

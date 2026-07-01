@@ -1,0 +1,26 @@
+###> LIST AND FETCH AI TASKS
+query ListAndFetchDriversLicenseTask {
+  AiTasks {
+    key
+    label
+    description
+    model
+    sources
+    prompt
+    output_mode
+    graphql_type
+    missing_value
+  }
+
+  AiTask(key: "drivers_license") {
+    key
+    label
+    description
+    model
+    sources
+    prompt
+    output_mode
+    graphql_type
+    missing_value
+  }
+}

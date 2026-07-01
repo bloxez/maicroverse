@@ -1,0 +1,95 @@
+#!maicro
+#---
+# title: Create Tables
+# description: Define all tables and auto-generate the full GraphQL API via DbReload.
+# difficulty: beginner
+# estimated_time: 3m
+# tags:
+#   - database
+#   - schema
+#---
+
+###> CREATE TABLES
+mutation CreateTables {
+  readers: DbCreateTable(
+    name: "readers"
+    icon: "users"
+    metadata: { group_name: "people" }
+    description: "Readers write reviews of books"
+    label: "label"
+    fields: [
+      { name: "sequence", type: Int, sequence_for: "GLOBAL", description: "Sequence of readers" }
+      { name: "username", type: String, is_required: true, description: "Unique system user id" }
+      { name: "password", type: String, is_required: true, is_sensitive: true, description: "Encrypted password" }
+      { name: "first_name", type: String, is_required: true, description: "Reader first name" }
+      { name: "middle_name", type: String, is_required: true, description: "Reader middle name" }
+      { name: "last_name", type: String, is_required: true, description: "Reader last name" }
+      { name: "membership_level", type: String, is_required: true, description: "Membership level" }
+      { name: "email", type: String, is_required: true, is_sensitive: true, description: "Email address" }
+      { name: "my_secrets", type: String, is_sensitive: true, default_value: "This is a secret", description: "Private notes" }
+      { name: "label", type: String, virtual: "T({{@.first_name}} {{@.last_name}}) | UPPER", description: "Lookup label" }
+    ]
+  )
+
+  authors: DbCreateTable(
+    name: "authors"
+    icon: "user-edit"
+    metadata: { group_name: "people" }
+    description: "Authors who write and publish books"
+    label: "label"
+    fields: [
+      { name: "name", type: String, is_required: true, description: "Full name of the author" }
+      { name: "demography", type: JSON, is_required: true, description: "Demographic information" }
+      { name: "bio", type: String, description: "Biographical information" }
+      { name: "email", type: String, is_sensitive: true, description: "Author contact email" }
+      { name: "label", type: String, virtual: "T({{@.name}})", description: "Lookup label" }
+    ]
+  )
+
+  books: DbCreateTable(
+    name: "books"
+    icon: "book"
+    metadata: { group_name: "catalog" }
+    description: "Books in the club catalog"
+    label: "label"
+    fields: [
+      { name: "title", type: String, is_required: true, description: "Title of the book" }
+      { name: "genre", type: String, is_required: true, description: "Genre classification" }
+      { name: "author_id", type: ID, description: "Reference to the author" }
+      { name: "synopsis", type: String, has_vector: true, description: "Brief summary" }
+      { name: "price", type: Float, is_sensitive: true, description: "Book price" }
+      { name: "label", type: String, virtual: "T({{@.title}})", description: "Lookup label" }
+    ]
+  )
+
+  reviews: DbCreateTable(
+    name: "reviews"
+    icon: "thumbs-up-fill"
+    metadata: { group_name: "engagement" }
+    description: "Book reviews"
+    fields: [
+      { name: "rating", type: Int, is_required: true, description: "Rating from 1-5" }
+      { name: "review", type: String, is_required: true, description: "Review text" }
+      { name: "reader_id", type: ID, description: "Reference to reader" }
+      { name: "book_id", type: ID, description: "Reference to book" }
+      { name: "reviewer_ip", type: String, is_sensitive: true, description: "Reviewer IP" }
+      { name: "review_date", type: String, description: "ISO 8601 date" }
+    ]
+  )
+
+  team_notes: DbCreateTable(
+    name: "team_notes"
+    icon: "address-book"
+    metadata: { group_name: "operations" }
+    description: "Private team notes"
+    fields: [
+      { name: "title", type: String, is_required: true, description: "Note title" }
+      { name: "content", type: String, is_required: true, description: "Note content" }
+      { name: "priority", type: String, description: "Priority level" }
+      { name: "created_by", type: String, description: "Creator username" }
+    ]
+    filters: ["TeamIsolation"]
+  )
+
+  DbReload
+}

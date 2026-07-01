@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Form Fill
+# description: Fills an injected form on an allowed page to practice typing and selector interaction.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - forms
+#   - x4m
+# intent: Provide reliable form automation without flaky external form dependencies.
+#---
+
+###> STEP 1 - PREPARE FORM ELEMENTS
+#{
+# Injects deterministic form controls into the current page.
+#}
+mutation Step1_FormFill {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_EVALUATE(expression:'(() => { const root = document.createElement(\"div\"); root.id = \"demo-form\"; const i1 = document.createElement(\"input\"); i1.id = \"custname\"; const i2 = document.createElement(\"input\"); i2.id = \"custtel\"; const ta = document.createElement(\"textarea\"); ta.id = \"comments\"; const btn = document.createElement(\"button\"); btn.id = \"submit\"; btn.textContent = \"Submit\"; root.append(i1, i2, ta, btn); document.body.appendChild(root); return true; })()') | BROWSER_WAIT_FOR_SELECTOR(selector:'#custname', timeout:5000) | BROWSER_TYPE(selector:'#custname', text:'Alex Runner') | BROWSER_TYPE(selector:'#custtel', text:'+61-400-555-111') | BROWSER_TYPE(selector:'#comments', text:'Please leave at front desk.') | BROWSER_GET_TEXT(selector:'#submit')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

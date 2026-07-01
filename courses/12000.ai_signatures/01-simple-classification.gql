@@ -1,0 +1,85 @@
+#
+# Simple Classification - Getting Started with mAIql Signatures
+#
+# This script demonstrates the core mAIql workflow:
+# 1. Define a signature with typed input/output schemas
+# 2. Execute the signature with real data
+# 3. Query and inspect signatures
+#
+# Key concepts: Signatures are type-safe AI operations with validated I/O
+# Note: All returns are JSON type containing the full response object
+#
+
+###> Step 1: Create a classification signature
+# Signatures define the contract: what goes in and what comes out.
+# The LLM is constrained to produce valid JSON matching outputSchema.
+mutation CreateClassifySupport {
+  AxCreateSignature(
+    id: "classifySupport"
+    name: "Classify Support Ticket"
+    description: "Analyze customer support tickets and classify by category and urgency level"
+    category: "classification"
+    inputSchema: {
+      type: "object"
+      properties: {
+        ticket_text: { type: "string", description: "The customer's support message" }
+      }
+      required: ["ticket_text"]
+    }
+    outputSchema: {
+      type: "object"
+      properties: {
+        category: { 
+          type: "string"
+          enum: ["billing", "technical", "account", "general"]
+          description: "Primary category of the issue"
+        }
+        urgency: {
+          type: "string"
+          enum: ["low", "medium", "high", "critical"]
+          description: "How urgently this needs attention"
+        }
+        summary: { 
+          type: "string"
+          description: "One-sentence summary of the issue"
+        }
+      }
+      required: ["category", "urgency", "summary"]
+    }
+    modelHint: "simple"
+  )
+}
+
+###> Step 2: Execute the signature with real data
+# Returns: { executionId, output, metadata: { executor, provider, model, tokensUsed, durationMs, cost } }
+mutation ExecuteClassifySupport {
+  ExecuteSignature(
+    signatureId: "classifySupport"
+    input: {
+      ticket_text: "My credit card was charged twice for the same subscription. This needs to be fixed urgently!"
+    }
+  )
+}
+
+###> Step 3: Try another classification
+# Test with a different ticket type to see classification variety.
+mutation ExecuteClassifyTechnical {
+  ExecuteSignature(
+    signatureId: "classifySupport"
+    input: {
+      ticket_text: "The login button isn't working on the mobile app. I've tried reinstalling but nothing helps."
+    }
+  )
+}
+
+###> Step 4: List all signatures with stats
+# Returns: { signatures: [{ id, name, description, category, executionCount, lastExecutedAt }] }
+query ListAllSignatures {
+  ListSignatures
+}
+
+###> Step 5: Get full signature details
+# Returns full signature including inputSchema, outputSchema, modelHint, etc.
+query GetSignatureDetails {
+  GetSignature(id: "classifySupport")
+}

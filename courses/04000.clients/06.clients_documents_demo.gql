@@ -1,0 +1,93 @@
+#!maicro
+#---
+# title: Clients Documents Typed Demo Setup
+# description: Full clients-document relationship setup and verification using typed GraphQL traversal.
+# difficulty: intermediate
+# estimated_time: 3m
+# tags:
+#   - clients
+#   - documents
+#   - demo
+#---
+
+###> SET FILE STORAGE ROOT PATH
+mutation SetRootPath {
+  SetRoot: Remember(
+    id: "import_root"
+    path: "path"
+    value: "maicroverse"
+  )
+}
+
+###> RETRIEVE VALUE
+#{
+# ## Read Back Stored Value
+# Retrieves the memory value just written so the script can verify
+# the path is available in execution context.
+#}
+query GetRootPath {
+  import_root: Recall(
+    id: "import_root"
+    path: "path"
+  )
+}
+
+###> STEP 1 - FETCH DRIVERS LICENSE IMAGE
+mutation PullDriversLicense {
+  FetchFolderFromUrl(
+    url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/au_identity"
+    path: "{{import_root}}/au_identity"
+    overwrite: true
+  ) { path file_size content_type }
+}
+
+###> STEP 1 - CONFIGURE TYPE + RELATIONSHIP
+mutation Step1_ConfigureRelationship {
+  DbExecute(path: "scripts/courses/04000.clients/07.configure_drivers_license_relationship.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 2 - LINK DOCUMENT TO CLIENT VIA metadata.custom_fields.client_id
+mutation Step2_LinkDocument {
+  DbExecute(path: "scripts/courses/04000.clients/08.link_document_to_client.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 3 - ANALYZE DOCUMENT TO REBUILD ai_results
+mutation Step3_AnalyzeDocument {
+  FileAnalyze(
+    id: "{{DbExecute.result.target_file.metadata.id}}"
+    options: {
+      specs: ["drivers_license"]
+      timeout: 60
+    }
+  ) {
+    id
+    job_id
+  }
+}
+
+###> STEP 4 - WAIT FOR ANALYSIS TO COMPLETE
+mutation Step4_WaitForAnalysis {
+  AwaitJobCompletion(jobId: "{{FileAnalyze.job_id}}") {
+    id
+    status
+    error
+    result
+  }
+}
+
+###> STEP 5 - VERIFY TYPED TRAVERSAL + DATA ASSERTIONS
+mutation Step5_VerifyTypedTraversal {
+  DbExecute(path: "scripts/courses/04000.clients/09.verify_client_drivers_license_typed.gql") {
+    success
+    message
+    result
+  }
+}

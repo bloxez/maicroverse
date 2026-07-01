@@ -1,0 +1,102 @@
+#!maicro
+#---
+# title: Import Analytics Extensions (Optional)
+# description: Imports additional analytics tables when extension files exist in customer_orders source.
+# difficulty: intermediate
+# estimated_time: 1m
+# tags:
+#   - import
+#   - analytics
+#   - optional
+# intent: data
+#---
+
+###> LOAD IMPORT ROOT
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> DropExtensionTables
+mutation DropExtensionTables {
+  d1: DbDropTable(name: "returns")
+  d2: DbDropTable(name: "order_fulfillment_events")
+  d3: DbDropTable(name: "customer_touchpoints")
+  d4: DbDropTable(name: "customer_segments")
+}
+
+###> ImportCustomerSegments
+mutation ImportCustomerSegments {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/customer_segments.csv"
+    table: "customer_segments"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "customer_id", type: "ID" }
+      { file_column: "segment", type: "String" }
+      { file_column: "lifetime_value", type: "Float" }
+      { file_column: "risk_score", type: "Int" }
+      { file_column: "churn_probability", type: "Float" }
+      { file_column: "preferred_channel", type: "String" }
+      { file_column: "region", type: "String" }
+      { file_column: "last_engagement_date", type: "String" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportCustomerTouchpoints
+mutation ImportCustomerTouchpoints {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/customer_touchpoints.jsonl"
+    table: "customer_touchpoints"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "customer_id", type: "ID" }
+      { file_column: "channel", type: "String" }
+      { file_column: "campaign", type: "String" }
+      { file_column: "event_type", type: "String" }
+      { file_column: "event_ts", type: "String" }
+      { file_column: "cost", type: "Float" }
+      { file_column: "conversion_value", type: "Float" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportFulfillmentEvents
+mutation ImportFulfillmentEvents {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/order_fulfillment_events.jsonl"
+    table: "order_fulfillment_events"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "order_id", type: "ID" }
+      { file_column: "event_type", type: "String" }
+      { file_column: "event_ts", type: "String" }
+      { file_column: "warehouse", type: "String" }
+      { file_column: "carrier", type: "String" }
+      { file_column: "sla_hours", type: "Int" }
+      { file_column: "delay_minutes", type: "Int" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ImportReturns
+mutation ImportReturns {
+  DbImportFile(
+    path: "{{importRoot}}/customer_orders/returns.jsonl"
+    table: "returns"
+    columns: [
+      { file_column: "id", type: "Int" }
+      { file_column: "order_item_id", type: "ID" }
+      { file_column: "order_id", type: "ID" }
+      { file_column: "reason", type: "String" }
+      { file_column: "refund_amount", type: "Float" }
+      { file_column: "status", type: "String" }
+      { file_column: "processed_date", type: "String" }
+    ]
+  ) { table rows_imported table_created }
+}
+
+###> ReloadSchema
+mutation ReloadSchema {
+  DbReload
+}

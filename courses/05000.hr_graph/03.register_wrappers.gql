@@ -1,0 +1,95 @@
+#!maicro
+#---
+# title: HR Graph — Register Cypher Wrappers
+# description: |
+#   Registers three named, reusable Cypher operations that encode the employment rules:
+#   - Full-time is exclusive: AddFullTimeEmployer closes ALL open roles before opening the new one
+#   - Part-time is only allowed when there is no active full-time role
+#   - Multiple concurrent part-time roles are permitted when no full-time role is active
+# tags: [graph, cypher, wrappers, hr]
+#---
+
+###> REGISTER AddFullTimeEmployer
+#{
+# ## AddFullTimeEmployer
+# Closes ALL currently open roles (full-time and part-time) for the employee,
+# then opens the new full-time role. Full-time is exclusive — you cannot hold any
+# other role at the same time.
+#
+# **Key behaviour:** the `SET old.valid_to = $valid_from` step stamps every open
+# edge with the start date of the incoming role, creating a gapless audit trail.
+#}
+mutation RegisterAddFullTimeEmployer {
+  GraphWrap(
+    name: "AddFullTimeEmployer"
+    graph: "hr_graph"
+    operation: "MUTATION"
+    description: "Add a full-time role, closing all currently open roles first. Full-time is exclusive."
+    cypher: "MERGE (emp:Person {name: $employee}) MERGE (c:Company {name: $employer}) WITH emp, c OPTIONAL MATCH (emp)-[old:EMPLOYED_BY]->() WHERE old.valid_to IS NULL SET old.valid_to = $valid_from WITH emp, c CREATE (emp)-[:EMPLOYED_BY {type: 'full_time', role: $role, valid_from: $valid_from, valid_to: $valid_to}]->(c) RETURN {employee: emp.name, employer: c.name, role: $role} AS result"
+    inputs: [
+      { name: "employee",   type: "String!", description: "Employee name (find-or-create)" }
+      { name: "employer",   type: "String!", description: "Employer name (find-or-create)" }
+      { name: "role",       type: "String!", description: "Job title / role" }
+      { name: "valid_from", type: "String!", description: "Start date ISO (YYYY-MM-DD)" }
+      { name: "valid_to",   type: "String",  description: "End date ISO — omit for open-ended" }
+    ]
+  ) { success name message }
+}
+
+###> REGISTER AddPartTimeEmployer
+#{
+# ## AddPartTimeEmployer
+# Adds a part-time role ONLY IF the person has no currently active full-time role.
+# If an active full-time role exists the query returns 0 rows (silent no-op) —
+# the constraint is enforced entirely inside the Cypher with `WHERE ft IS NULL`.
+#
+# Multiple concurrent part-time roles are allowed when there is no active full-time.
+#}
+mutation RegisterAddPartTimeEmployer {
+  GraphWrap(
+    name: "AddPartTimeEmployer"
+    graph: "hr_graph"
+    operation: "MUTATION"
+    description: "Add a part-time role. Silently skipped if the person already has an active full-time role."
+    cypher: "MERGE (emp:Person {name: $employee}) WITH emp OPTIONAL MATCH (emp)-[ft:EMPLOYED_BY {type: 'full_time'}]->() WHERE ft.valid_to IS NULL WITH emp, ft WHERE ft IS NULL MERGE (c:Company {name: $employer}) WITH emp, c CREATE (emp)-[:EMPLOYED_BY {type: 'part_time', role: $role, valid_from: $valid_from, valid_to: $valid_to}]->(c) RETURN {employee: emp.name, employer: c.name, role: $role} AS result"
+    inputs: [
+      { name: "employee",   type: "String!", description: "Employee name (find-or-create)" }
+      { name: "employer",   type: "String!", description: "Employer name (find-or-create)" }
+      { name: "role",       type: "String!", description: "Job title / role" }
+      { name: "valid_from", type: "String!", description: "Start date ISO (YYYY-MM-DD)" }
+      { name: "valid_to",   type: "String",  description: "End date ISO — omit for open-ended" }
+    ]
+  ) { success name message }
+}
+
+###> REGISTER GetCurrentEmployers
+#{
+# ## GetCurrentEmployers
+# Returns all employment relationships that are active on a given date.
+# A role is active when `valid_from <= as_of` AND (`valid_to IS NULL` OR `valid_to > as_of`).
+# Registers as a QUERY wrapper so it appears as a GraphQL query, not a mutation.
+#}
+mutation RegisterGetCurrentEmployers {
+  GraphWrap(
+    name: "GetCurrentEmployers"
+    graph: "hr_graph"
+    operation: "QUERY"
+    description: "Get all currently active employment relationships for a person"
+    cypher: "MATCH (emp:Person {name: $employee})-[r:EMPLOYED_BY]->(c:Company) WHERE r.valid_from <= $as_of AND (r.valid_to IS NULL OR r.valid_to > $as_of) RETURN {employer: c.name, role: r.role, type: r.type, valid_from: r.valid_from} AS result"
+    inputs: [
+      { name: "employee", type: "String!", description: "Employee name to look up" }
+      { name: "as_of",    type: "String!", description: "Date to check active roles (YYYY-MM-DD)" }
+    ]
+  ) { success name message }
+}
+
+###> ACTIVATE
+#{
+# ## Activate Wrappers in Schema
+# Rebuilds the GraphQL schema so the three newly registered wrappers
+# (`AddFullTimeEmployer`, `AddPartTimeEmployer`, `GetCurrentEmployers`)
+# are immediately available as first-class GraphQL operations.
+#}
+mutation ActivateWrappers {
+  DbReload
+}

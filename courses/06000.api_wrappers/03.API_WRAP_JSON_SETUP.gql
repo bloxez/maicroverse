@@ -1,0 +1,114 @@
+#!maicro
+# API Wrap Examples - Create custom API-based GraphQL resolvers
+# Using JSONPlaceholder (https://jsonplaceholder.typicode.com/) - a free fake REST API for testing
+
+###> Example 1: JSONPlaceholder Posts (no auth required)
+mutation CreatePostsFetch {
+  ApiWrap(
+    name: "JSONPlaceholderPosts"
+    operation: "QUERY"
+    endpoint: "https://jsonplaceholder.typicode.com/posts"
+    method: "GET"
+    inputs: []
+    outputs: [
+      { name: "id", type: "Int", description: "Post ID" }
+      { name: "userId", type: "Int", description: "User ID" }
+      { name: "title", type: "String", description: "Post title" }
+      { name: "body", type: "String", description: "Post body" }
+    ]
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> Example 2: JSONPlaceholder Single Post Lookup
+mutation CreatePostLookup {
+  ApiWrap(
+    name: "JSONPlaceholderPost"
+    operation: "QUERY"
+    endpoint: "https://jsonplaceholder.typicode.com/posts"
+    method: "GET"
+    inputs: [
+      { name: "id", type: "Int!", description: "Post ID to fetch" }
+    ]
+    outputs: [
+      { name: "id", type: "Int", description: "Post ID" }
+      { name: "userId", type: "Int", description: "User ID" }
+      { name: "title", type: "String", description: "Post title" }
+      { name: "body", type: "String", description: "Post body" }
+    ]
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> Example 3: JSONPlaceholder Users (demonstrates response mapping)
+mutation CreateUsersLookup {
+  ApiWrap(
+    name: "JSONPlaceholderUsers"
+    operation: "QUERY"
+    endpoint: "https://jsonplaceholder.typicode.com/users"
+    method: "GET"
+    inputs: []
+    outputs: [
+      { name: "id", type: "Int", description: "User ID" }
+      { name: "name", type: "String", description: "User name" }
+      { name: "username", type: "String", description: "Username" }
+      { name: "email", type: "String", description: "Email address" }
+      { name: "city", type: "String", description: "City" }
+      { name: "company", type: "String", description: "Company name" }
+    ]
+    responseMapping: """{"id": "id", "name": "name", "username": "username", "email": "email", "city": "address.city", "company": "company.name"}"""
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> Example 4: JSONPlaceholder Comments with custom headers demo
+# In production, add API keys to headers: { "X-API-Key": "your-secret-key", "Accept": "application/json" }
+# CRITICAL: Headers are stored securely and never exposed via ApiWrapList
+mutation CreateCommentsLookup {
+  ApiWrap(
+    name: "JSONPlaceholderComments"
+    operation: "QUERY"
+    endpoint: "https://jsonplaceholder.typicode.com/comments"
+    method: "GET"
+    headers: """{"Accept": "application/json"}"""
+    inputs: [
+      { name: "postId", type: "Int", description: "Filter by post ID" }
+    ]
+    outputs: [
+      { name: "id", type: "Int", description: "Comment ID" }
+      { name: "postId", type: "Int", description: "Post ID" }
+      { name: "name", type: "String", description: "Comment title" }
+      { name: "email", type: "String", description: "Commenter email" }
+      { name: "body", type: "String", description: "Comment body" }
+    ]
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> Reload schema to make new resolvers available
+mutation ReloadSchema {
+  DbReload
+}
+
+###> Verify all API resolvers are registered
+query ListAPIResolvers {
+  ApiWrapList {
+    name
+    operation
+    endpoint
+    method
+    # Note: headers field intentionally excluded to protect API keys
+  }
+}

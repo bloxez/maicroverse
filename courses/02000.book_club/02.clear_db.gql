@@ -1,0 +1,43 @@
+#!maicro
+#---
+# title: Clear Database
+# description: Terminate running jobs and wipe all tables and data.
+# difficulty: beginner
+# estimated_time: 1m
+# video: https://www.youtube.com/watch?v=dhi7l1kZi9Y
+# tags:
+#   - database
+#   - cleanup
+#---
+
+###> TERMINATE ALL RUNNING ASYNC JOBS (CRON?)
+#{
+# ## Stop Background Jobs
+# Before dropping tables, we terminate any running async jobs to avoid
+# orphaned processes that reference deleted tables.
+#}
+mutation TerminateJobs {
+  DbTerminateJobs {
+    terminated_count
+    terminated_jobs {
+      id
+      description
+      status
+      event_name
+      source
+      chain_text
+      error
+    }
+  }
+}
+
+###> DELETE ALL TABLES AND DATA - ALSO DROPS ANY CYPHER GRAPHS WHEN POSTGRES IS ACTIVE AND CYPHER IS ENABLED
+#{
+# ## Full Reset
+# `DbFullReset` drops **every** user table, associated indexes, and Apache AGE
+# graphs (if Cypher is enabled). System tables are recreated on next `DbReload`.
+#}
+mutation ClearDatabase {
+  DbFullReset
+}
+

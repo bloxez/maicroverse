@@ -1,0 +1,89 @@
+#!maicro
+#---
+# title: ASX Watcher - Browser Advanced
+# description: Advanced browser interactions with multi-step extraction and challenge awareness.
+# difficulty: advanced
+# estimated_time: 2m
+# tags:
+#   - browser-automation
+#   - advanced
+#   - navigation
+#   - resilience
+# intent: Teach robust multi-call BrowserExecute patterns while preserving repeatability.
+#---
+
+###> STEP 1 - OPEN BROWSER SESSION
+#{
+# Opens a fresh browser session for advanced operations.
+#}
+mutation Step1_OpenSession {
+  session: OpenBrowser(input: {
+    executablePath: "/usr/bin/google-chrome"
+    headless: true
+  }) {
+    sessionId
+  }
+}
+
+###> STEP 2 - NAVIGATE AND VERIFY PAGE TITLE
+#{
+# Loads the Technology page and captures page title to validate navigation.
+#}
+mutation Step2_NavigateAndTitleCheck {
+  navigate: BrowserExecute(
+    sessionId: "{{@@.session.sessionId}}"
+    actions: [
+      { op: "goto", url: "https://en.wikipedia.org/wiki/Technology" }
+      { op: "waitForTimeout", ms: 2000 }
+      { op: "evaluate", expression: "document.title" }
+    ]
+  ) {
+    success
+    steps { op status output durationMs }
+  }
+}
+
+###> STEP 3 - EXTRACT HEADINGS
+#{
+# Extracts first headings and previews to demonstrate structured content capture.
+#}
+mutation Step3_ExtractHeadings {
+  headings: BrowserExecute(
+    sessionId: "{{@@.session.sessionId}}"
+    actions: [
+      { op: "evaluate", expression: "(() => { const headings = []; document.querySelectorAll('h2').forEach((h, i) => { if (i < 5) { const heading = h.innerText.trim(); const nextText = h.nextElementSibling?.innerText?.trim() || ''; headings.push({ heading, preview: nextText.substring(0, 80) }); } }); return headings; })();" }
+    ]
+  ) {
+    success
+    steps { op status output }
+  }
+}
+
+###> STEP 4 - CHALLENGE AWARENESS CHECK
+#{
+# Checks whether page text hints at anti-bot challenge language.
+# Expected effect: structured output with title, challenge flag, and body preview.
+#}
+mutation Step4_ChallengeDetection {
+  testNavigation: BrowserExecute(
+    sessionId: "{{@@.session.sessionId}}"
+    actions: [
+      { op: "goto", url: "https://en.wikipedia.org/wiki/List_of_countries_by_population" }
+      { op: "waitForTimeout", ms: 1500 }
+      { op: "evaluate", expression: "(() => { const title = document.title; const bodyText = document.body.innerText.substring(0, 120); const hasChallenge = /unusual traffic|challenge/i.test(document.body.innerText); return { title, challenge: hasChallenge, bodyPreview: bodyText }; })();" }
+    ]
+  ) {
+    success
+    steps { op status output }
+  }
+}
+
+###> STEP 5 - CLEANUP SESSION
+#{
+# Closes all browser sessions so this advanced script can be re-run safely.
+#}
+mutation Step5_CloseAllBrowsers {
+  CloseAllBrowsers {
+    closedCount
+  }
+}

@@ -1,0 +1,87 @@
+#!maicro
+#---
+# title: Team A Visibility Check (23)
+# description: Run as Team A user (maicro1@maicro.ai) to verify only Team A notes are visible.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - security
+#   - team-isolation
+#---
+
+###> STEP 1 - TEAM A NOTE VIEW
+#{
+# Purpose:
+# Demonstrate row-level isolation for Team A in an interactive user session.
+#
+# Required execution context:
+# - Sign in as maicro1@maicro.ai in IDE settings before running.
+#
+# What this step does:
+# - Queries all visible team_notes for the current user.
+# - Attempts a filtered query for Team B notes.
+#
+# Expected outcome:
+# - visible_notes contains only rows where team_label = teama.
+# - visible_notes should return 4 rows (Team A has the larger editorial backlog).
+# - attempted_other_team returns an empty list.
+#}
+query TeamA_View {
+  visible_count: team_notesCount
+  attempted_other_team_count: team_notesCount(where: { team_label: { eq: "teamb" } })
+
+  visible_notes: team_notes(page: { page: 1, items: 100 }, sort: [{ key: "title", asc: true }]) {
+    id
+    title
+    content
+    priority
+    created_by
+    team_label
+  }
+
+  attempted_other_team: team_notes(
+    where: { team_label: { eq: "teamb" } }
+    page: { page: 1, items: 100 }
+  ) {
+    id
+    title
+    team_label
+  }
+}
+
+###> STEP 2 - ASSERT TEAM A SEGREGATION
+#{
+# Purpose:
+# Fail fast if Team A visibility is incorrect.
+#
+# What this step does:
+# - Asserts Team A sees exactly 4 notes.
+# - Asserts Team A sees 0 Team B notes.
+#
+# Expected outcome:
+# - Both assertions pass.
+# - Script errors immediately if either assertion fails.
+#}
+query TeamA_Assert {
+  assert_visible_count: AssertOrThrow(
+    actual: "{{@@.visible_count.count}}"
+    op: "eq"
+    expected: "4"
+    message: "Team A visibility mismatch: expected 4 visible notes"
+  ) {
+    success
+    assertion
+    message
+  }
+
+  assert_other_team_empty: AssertOrThrow(
+    actual: "{{@@.attempted_other_team_count.count}}"
+    op: "eq"
+    expected: "0"
+    message: "Team isolation failure: Team A can see Team B notes"
+  ) {
+    success
+    assertion
+    message
+  }
+}

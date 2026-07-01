@@ -1,0 +1,69 @@
+# !maicro
+# ---
+# title: Product Promo Pricing Demo (10% Off)
+# description: >
+#   Demonstrates typed virtual-field calculations using `_v` with `CALC`.
+#   Reads imported `products` rows and computes promo values at query time.
+#
+#   Prerequisite:
+#     - Run 05.import_customer_data.gql first (creates and seeds `products`).
+#
+#   This demo shows three values side-by-side:
+#     1) original price (real DB column)
+#     2) discount percent (virtual field via `_v`)
+#     3) discounted price (virtual field via `CALC`, returned as a number)
+#
+#   Calculation pattern used here:
+#     @.price * 0.9
+#
+#   Meaning:
+#     - `@.price` = price from the current product row
+#     - `* 0.9` = keep 90% (apply 10% discount)
+# difficulty: beginner
+# estimated_time: 20s
+# tags:
+#   - database
+#   - products
+#   - virtual-fields
+#   - interpolation
+#   - pricing
+#   - calc
+# intent: demo
+# resources:
+#   - type: docs
+#     url: /reference/data-operations
+#     title: Data Operations Reference
+# ---
+
+### > PromoPreview
+# {
+# ## Promo Query With Typed Virtual Calculations
+#
+# `price` is read directly from the DB.
+# `discount_percent` is formatted text.
+# `discounted_price` is computed with `CALC`, so it stays numeric.
+#
+# Expected example for product id 5 after the fixed source import:
+#   name: Monitor 27" 4K
+#   price: 599.99
+#   discount_percent: 10%
+#   discounted_price: 539.991
+# }
+query PromoPreview {
+  products(
+    page: { page: 1, items: 10 }
+    sort: [{ key: "id", asc: true }]
+  ) {
+    id
+    name
+    price
+
+    discount_percent: _v(chain: [
+      { do: T, args: { template: "10%" } }
+    ])
+
+    discounted_price: _v(chain: [
+      { do: CALC, args: { expression: "@.price * 0.9" } }
+    ])
+  }
+}

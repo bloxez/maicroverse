@@ -1,0 +1,47 @@
+###> DELETE DRIVERSLICENSE TYPE
+mutation RemoveDriversLicenseType {
+  DeleteType(name: "DriversLicense", failIfNotFound: false) {
+    success
+  }
+}
+
+###> RELOAD SCHEMA AFTER TyPE REMOVED
+mutation ReloadAfterRemoval {
+  DbReload
+}
+
+###> CREATE DRIVERSLICENSE TYPE
+mutation RegisterDriversLicenseType {
+  RegisterType(
+    name: "DriversLicense"
+    description: "Structured extraction payload for Australian drivers license records."
+    fields: [
+    { name: "DOB", type: "String", description: "Date of birth shown on the license." }
+    { name: "document_type", type: "String", description: "Detected document label from the card (for example DRIVER'S LICENCE)." }
+    { name: "license_number", type: "String", description: "Primary driver license number." }
+    { name: "issued_by", type: "String", description: "Issuing authority or department." }
+    { name: "class", type: "String", description: "License class or entitlement class." }
+    { name: "expires", type: "String", description: "License expiry date." }
+    { name: "fullname", type: "String", description: "Full legal name as displayed on the document." }
+    { name: "firstname", type: "String", description: "Given name component." }
+    { name: "lastname", type: "String", description: "Family name or surname component." }
+    { name: "middlename", type: "String", description: "Middle name component when present." }
+    { name: "citizen_status", type: "String", description: "Citizenship or residency status if explicitly present." }
+    { name: "addr_unit", type: "String", description: "Unit, apartment, or suite identifier if present." }
+    { name: "addr_street", type: "String", description: "Street number and street name portion of the address." }
+    { name: "addr_suburb", type: "String", description: "Suburb or locality from the address." }
+    { name: "addr_state", type: "String", description: "State or region from the address." }
+    { name: "addr_postcode", type: "String", description: "Postal code from the address." }
+    ]
+  ) {
+    success
+    name
+    message
+  }
+}
+
+
+###> RELOAD SCHEMA AFTER TYPE CREATED
+mutation ReloadAfterCreated {
+  DbReload
+}

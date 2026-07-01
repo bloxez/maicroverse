@@ -1,0 +1,93 @@
+#!maicro
+#---
+# title: Forms Demo Setup
+# description: Guided setup for the aged care Form Completion demo. This script provisions the form definition, seeds realistic submissions, and confirms the demo assets are ready in the IDE.
+# difficulty: beginner
+# estimated_time: 3m
+# tags:
+#   - forms
+#   - demo-data
+#   - graphql
+#   - seed
+#   - ide
+# intent: Prepare the Form Completion panel with a realistic multi-step aged care intake form and two seeded applicants for demos, testing, and stakeholder walkthroughs.
+# resources:
+#   - type: docs
+#     url: /reference/database
+#     title: Database Reference
+#   - type: docs
+#     url: /guide/02-database-foundations
+#     title: Database Foundations
+#---
+
+###> STEP 1 — UPSERT FORM DEFINITION
+#{
+# ## Create the Aged Care Intake Form
+# Installs or updates the full residential aged care application form used by the
+# Form Completion panel.
+#
+# The script defines markdown guidance, ordered sections, and a large field model
+# that exercises autosave, validation, and step navigation in the IDE.
+#
+# stepinto: 02.aged_care_intake.gql
+#}
+mutation Step1_UpsertFormDefinition {
+  DbExecute(path: "scripts/courses/20000.forms/02.aged_care_intake.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 2 — SEED REALISTIC SUBMISSIONS
+#{
+# ## Create Demo Applicants
+# Seeds two realistic example applications against the aged care intake form:
+# - Helen Papadopoulos: hospital discharge, dementia progression, falls, family-led decision support
+# - Arthur McKenzie: home-based decline, Parkinson's disease, diabetes, mobility complexity, spouse support
+#
+# stepinto: 03.aged_care_intake_submissions.gql
+#}
+mutation Step2_SeedSubmissions {
+  DbExecute(path: "scripts/courses/20000.forms/03.aged_care_intake_submissions.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> STEP 3 — VERIFY DEMO ASSETS
+#{
+# ## Confirm the Form and Seeded Submissions Exist
+# Verifies the form definition is available and that both submission groups are
+# queryable by submission ID.
+#}
+query Step3_Verify {
+  form: FormDefinitionGet(id: "aged_care_intake_v1") {
+    id
+    name
+    title
+  }
+  helen: FormSubmissionList(
+    form_definition_id: "aged_care_intake_v1"
+    submission_id: "submission_helen_papadopoulos_20260527"
+  ) {
+    submission_id
+    responses {
+      field_definition_id
+      response
+      errors
+    }
+  }
+  arthur: FormSubmissionList(
+    form_definition_id: "aged_care_intake_v1"
+    submission_id: "submission_arthur_mckenzie_20260527"
+  ) {
+    submission_id
+    responses {
+      field_definition_id
+      response
+      errors
+    }
+  }
+}

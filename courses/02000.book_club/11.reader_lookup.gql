@@ -1,0 +1,77 @@
+#!maicro
+#---
+# title: Reader Lookup and Relationship Preview
+# description: Demonstrates dynamic reader labels and simple reader/book joins used by the Book Club dashboard.
+# difficulty: beginner
+# estimated_time: 30s
+# tags:
+#   - lookup
+#   - readers
+#   - dashboard
+#---
+
+###> STEP 1 - READER LOOKUP OPTIONS
+#{
+# Purpose:
+# Return compact {id, label} options for UI controls (for example dashboard reader dropdowns).
+#
+# What this step does:
+# - Executes readersLookup to produce stable lookup options.
+#
+# Expected outcome:
+# - At least one row with id + label when seed data exists.
+#}
+query Step1_ReaderLookup {
+  readersLookup {
+    id
+    label
+  }
+}
+
+###> STEP 2 - READER + AUTHOR PREVIEW
+#{
+# Purpose:
+# Show how lookup labels align with core relational data.
+#
+# What this step does:
+# - Returns readers with label/email.
+# - Returns books with author labels for a quick join preview.
+#
+# Expected outcome:
+# - Reader list is populated.
+# - Book rows include nested author labels.
+#}
+query Step2_RelationshipPreview {
+  readers(page: { page: 1, items: 50 }, sort: [{ key: "id", asc: true }]) {
+    id
+    label
+    email
+  }
+  books(page: { page: 1, items: 50 }, sort: [{ key: "id", asc: true }]) {
+    id
+    title
+    author {
+      label
+    }
+  }
+}
+
+###> STEP 3 - QUICK VALIDATION
+#{
+# Purpose:
+# Confirm this script returned both lookup and relational payloads.
+#}
+query Step3_Validate {
+  AssertLookup: Assert(actual: "{{readersLookup.0.id}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertReaderList: Assert(actual: "{{readers.0.id}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertBookAuthor: Assert(actual: "{{books.0.author.label}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+}

@@ -1,0 +1,273 @@
+###> script_overview
+# Purpose: Reset demo submission rows, then seed deterministic aged care submissions.
+# Safety: Existing rows for aged_care_intake_v1 are deleted before inserts to avoid duplicates.
+# Contract: Save uses required submission_id and responses[].
+
+###> delete_previous_aged_care_responses
+mutation DeleteResponses{
+  deleteExistingResponses: formSubmissionDeleteWhere(where: { form_definition_id: { eq: "aged_care_intake_v1" } }) {
+    count
+  }
+}
+
+###> seed_aged_care_submissions
+mutation CreateResponses {
+  helenPapadopoulos: FormSubmissionSave(
+    submission_id: "submission_helen_20260527"
+    form_definition_id: "aged_care_intake_v1"
+    responses: [
+      { field_definition_id: "title", response: { value: "Mrs" } }
+      { field_definition_id: "given_names", response: { text: "Helen Anastasia" } }
+      { field_definition_id: "preferred_name", response: { text: "Helen" } }
+      { field_definition_id: "last_name", response: { text: "Papadopoulos" } }
+      { field_definition_id: "date_of_birth", response: { date: "1942-11-18" } }
+      { field_definition_id: "sex_at_birth", response: { value: "Female" } }
+      { field_definition_id: "gender_identity", response: { value: "Female" } }
+      { field_definition_id: "marital_status", response: { value: "Widowed" } }
+      { field_definition_id: "nationality", response: { text: "Greek" } }
+      { field_definition_id: "country_of_birth", response: { text: "Greece" } }
+      { field_definition_id: "preferred_language", response: { value: "Greek (Ελληνικά)" } }
+      { field_definition_id: "interpreter_required", response: { value: "Yes" } }
+      { field_definition_id: "religion_spiritual_preferences", response: { value: "Christian" } }
+      { field_definition_id: "smoking_status", response: { value: "Non-smoker" } }
+      { field_definition_id: "current_living_arrangement", response: { value: "Hospital" } }
+      { field_definition_id: "current_provider_or_hospital", response: { text: "Flinders Medical Centre" } }
+      { field_definition_id: "current_ward_unit", response: { text: "Geriatric Evaluation Unit" } }
+      { field_definition_id: "hospital_admissions_12m", response: { value: "4+" } }
+      { field_definition_id: "hospital_discharge", response: { value: "Yes" } }
+      { field_definition_id: "expected_discharge_date", response: { date: "2026-06-03" } }
+      { field_definition_id: "care_needed_when", response: { value: "Within 7 days" } }
+      { field_definition_id: "my_aged_care_id", response: { text: "MAC-8204-1176" } }
+      { field_definition_id: "assessment_completed", response: { value: "Yes" } }
+      { field_definition_id: "assessment_approval_type", response: { values: ["Permanent Residential Care", "Residential Respite Care"] } }
+      { field_definition_id: "support_plan_issued", response: { value: "Yes" } }
+      { field_definition_id: "receiving_inhome_support", response: { value: "Yes" } }
+      { field_definition_id: "inhome_support_program", response: { value: "Commonwealth Home Support Program (CHSP)" } }
+      { field_definition_id: "support_classification", response: { value: "Classification 5" } }
+      { field_definition_id: "current_supports_received", response: { values: ["Clinical supports", "Personal care", "Meal preparation", "Transport services", "Respite supports"] } }
+      { field_definition_id: "primary_reason_moving", response: { values: ["Dementia progression", "Frequent falls", "Carer burnout", "Medication management complexity", "Recurrent hospital admissions"] } }
+      { field_definition_id: "dietary_requirements", response: { values: ["Diabetic", "Soft diet", "Requires prompting to eat or drink"] } }
+      { field_definition_id: "swallowing_disorder", response: { value: "No" } }
+      { field_definition_id: "malnutrition_risk", response: { value: "Yes" } }
+      { field_definition_id: "mobility_supports", response: { values: ["4-wheel walker", "Falls risk", "1-person assist", "Night-time mobility support"] } }
+      { field_definition_id: "falls_last_6m", response: { value: "Yes" } }
+      { field_definition_id: "falls_count_6m", response: { value: "4+" } }
+      { field_definition_id: "transfer_independence", response: { value: "1-person assist" } }
+      { field_definition_id: "hygiene_supports", response: { values: ["Partial shower assistance", "Oral care assistance", "Sensitive skin care", "Requires skin monitoring"] } }
+      { field_definition_id: "toileting_supports", response: { values: ["Night continence support", "Uses continence aids", "Requires overnight toileting assistance"] } }
+      { field_definition_id: "cognitive_conditions", response: { values: ["Dementia diagnosis", "Memory impairment", "Cognitive decline", "Short term memory loss"] } }
+      { field_definition_id: "behaviour_support_needs", response: { values: ["Sundowning", "Anxiety", "Wandering"] } }
+      { field_definition_id: "behaviour_support_plan", response: { value: "Yes" } }
+      { field_definition_id: "medical_healthcare_needs", response: { values: ["Insulin dependent diabetes", "Wound management", "Pressure injuries"] } }
+      { field_definition_id: "current_pharmacy", response: { text: "TerryWhite Chemmart Bedford Park" } }
+      { field_definition_id: "webster_pack_used", response: { value: "Yes" } }
+      { field_definition_id: "self_medication_capable", response: { value: "No" } }
+      { field_definition_id: "insulin_admin_required", response: { value: "Yes" } }
+      { field_definition_id: "gp_given_name", response: { text: "Mina" } }
+      { field_definition_id: "gp_last_name", response: { text: "Konstantinou" } }
+      { field_definition_id: "gp_practice_name", response: { text: "Southcare Family Practice" } }
+      { field_definition_id: "has_advance_care_directive", response: { value: "Yes" } }
+      { field_definition_id: "enduring_power_attorney", response: { value: "Yes" } }
+      { field_definition_id: "decision_making_capacity", response: { value: "Limited capacity" } }
+      { field_definition_id: "government_supports_received", response: { values: ["Age Pension", "Commonwealth Seniors Health Card"] } }
+      { field_definition_id: "preferred_accommodation_payment_method", response: { value: "Combination RAD + DAP" } }
+      { field_definition_id: "estimated_rad_contribution", response: { value: "$250,001-$500,000" } }
+      { field_definition_id: "primary_rep_relationship", response: { value: "Child" } }
+      { field_definition_id: "primary_rep_is_emergency", response: { value: "Yes" } }
+      { field_definition_id: "primary_rep_legal_authority", response: { value: "Yes" } }
+      { field_definition_id: "rep_title", response: { value: "Ms" } }
+      { field_definition_id: "rep_given_name", response: { text: "Eleni" } }
+      { field_definition_id: "rep_last_name", response: { text: "Papadopoulos" } }
+      { field_definition_id: "rep_mobile", response: { text: "0412 884 190" } }
+      { field_definition_id: "rep_email", response: { text: "eleni.papadopoulos@example.org" } }
+      { field_definition_id: "preferred_room_type", response: { value: "Single room" } }
+      { field_definition_id: "preferred_bathroom_arrangement", response: { value: "Private" } }
+      { field_definition_id: "preferred_location_radius", response: { value: "25km" } }
+      { field_definition_id: "preferred_suburb_region", response: { text: "Unley / Mitcham" } }
+      { field_definition_id: "preferred_provider_features", response: { values: ["Dementia-specific", "Multilingual staff", "Registered nurse onsite 24/7"] } }
+      { field_definition_id: "upload_gp_health_summary", response: { text: "gp_health_summary_helen_papadopoulos_2026-05-14.pdf" } }
+      { field_definition_id: "upload_current_medications", response: { text: "current_medications_helen_papadopoulos_2026-05-25.pdf" } }
+      { field_definition_id: "upload_medicare_card", response: { text: "medicare_card_helen_papadopoulos.jpg" } }
+      { field_definition_id: "upload_pension_card_step9", response: { text: "pension_card_helen_papadopoulos.jpg" } }
+      { field_definition_id: "upload_photo_id", response: { text: "photo_id_helen_papadopoulos_passport.jpg" } }
+      { field_definition_id: "upload_aged_care_support_plan_step9", response: { text: "aged_care_support_plan_helen_papadopoulos.pdf" } }
+      { field_definition_id: "consent_collect_store_info", response: { value: true } }
+      { field_definition_id: "consent_share_with_providers", response: { value: true } }
+      { field_definition_id: "consent_share_clinical_docs", response: { value: true } }
+      { field_definition_id: "consent_electronic_comm_step10", response: { value: true } }
+      { field_definition_id: "consent_financial_info_step10", response: { value: true } }
+      { field_definition_id: "consent_understand_admission_decision", response: { value: true } }
+      { field_definition_id: "consent_declaration_true_correct", response: { value: true } }
+      { field_definition_id: "declarant_full_legal_name", response: { text: "Eleni Papadopoulos" } }
+      { field_definition_id: "digital_signature", response: { text: "Eleni Papadopoulos - digital signature acknowledgement" } }
+      { field_definition_id: "aboriginal_tsi", response: { value: "Neither" } }
+      { field_definition_id: "veteran_dva", response: { value: "No" } }
+      { field_definition_id: "lgbtqia_identification", response: { value: "Prefer not to say" } }
+      { field_definition_id: "residential_permanent_code", response: { text: "RPC-HEL-2026-01" } }
+      { field_definition_id: "residential_respite_code", response: { text: "RSP-HEL-2026-01" } }
+      { field_definition_id: "upload_support_plan", response: { text: "aged_care_support_plan_helen_papadopoulos.pdf" } }
+      { field_definition_id: "upload_assessment_outcome", response: { text: "assessment_outcome_helen_papadopoulos.pdf" } }
+      { field_definition_id: "current_provider_name", response: { text: "Southern Cross Home Care" } }
+      { field_definition_id: "services_commenced_date", response: { date: "2024-10-01" } }
+      { field_definition_id: "upload_care_plan_budget", response: { text: "care_plan_budget_helen_papadopoulos.pdf" } }
+      { field_definition_id: "speech_pathology_assessed", response: { value: "Yes" } }
+      { field_definition_id: "eat_independently", response: { value: "Partial assistance" } }
+      { field_definition_id: "meal_cultural_requirements", response: { text: "Greek meals when possible; tea with breakfast." } }
+      { field_definition_id: "mobility_aid_used", response: { values: ["Walker", "Wheelchair"] } }
+      { field_definition_id: "dressing_supports", response: { values: ["Prompting required", "Assistance with dressing", "Requires adaptive clothing"] } }
+      { field_definition_id: "select_own_clothing", response: { value: "Yes" } }
+      { field_definition_id: "prompts_for_dressing", response: { value: "Yes" } }
+      { field_definition_id: "behavioural_concerns_personal_care", response: { value: "No" } }
+      { field_definition_id: "dressing_preferences", response: { text: "Prefers loose-fitting clothing and cardigans." } }
+      { field_definition_id: "resists_personal_care", response: { value: "No" } }
+      { field_definition_id: "oral_care_assistance", response: { value: "Yes" } }
+      { field_definition_id: "dentures_used", response: { value: "Partial dentures" } }
+      { field_definition_id: "specialised_skin_care", response: { value: "Yes" } }
+      { field_definition_id: "skin_integrity_concerns", response: { value: "Yes" } }
+      { field_definition_id: "showering_assistance_level", response: { value: "Partial assistance" } }
+      { field_definition_id: "continent_overnight", response: { value: "No" } }
+      { field_definition_id: "toileting_behaviour_impacts", response: { value: "No" } }
+      { field_definition_id: "behaviour_triggers", response: { text: "Late afternoon fatigue and unfamiliar routines." } }
+      { field_definition_id: "schedule8_medications", response: { value: "No" } }
+      { field_definition_id: "oxygen_equipment_required", response: { value: "No" } }
+      { field_definition_id: "upload_hospital_discharge_summary", response: { text: "hospital_discharge_summary_helen_papadopoulos.pdf" } }
+      { field_definition_id: "upload_allied_health_reports", response: { text: "allied_health_reports_helen_papadopoulos.pdf" } }
+      { field_definition_id: "gp_practice_address", response: { text: "123 South Road, Adelaide SA 5041" } }
+      { field_definition_id: "gp_phone", response: { text: "08 7123 4567" } }
+      { field_definition_id: "gp_email", response: { text: "mina.konstantinou@southcarefp.example.org" } }
+      { field_definition_id: "gp_continue_after_admission", response: { value: "Yes" } }
+      { field_definition_id: "under_specialist_care", response: { value: "Yes" } }
+      { field_definition_id: "specialist_services", response: { values: ["Geriatrician", "Neurologist", "Palliative Care Team"] } }
+      { field_definition_id: "palliative_team_involved", response: { value: "Yes" } }
+      { field_definition_id: "upload_advance_care_directive", response: { text: "advance_care_directive_helen_papadopoulos.pdf" } }
+      { field_definition_id: "has_funeral_plan", response: { value: "Yes" } }
+      { field_definition_id: "funeral_provider_name", response: { text: "White Lady Funerals" } }
+      { field_definition_id: "funeral_provider_phone", response: { text: "08 8223 0000" } }
+      { field_definition_id: "enduring_guardianship", response: { value: "Yes" } }
+      { field_definition_id: "financial_administrator", response: { value: "No" } }
+      { field_definition_id: "guardianship_tribunal_order", response: { value: "No" } }
+      { field_definition_id: "upload_legal_authority_docs", response: { text: "legal_authority_docs_helen_papadopoulos.pdf" } }
+      { field_definition_id: "residential_means_assessment_completed", response: { value: "Yes" } }
+      { field_definition_id: "upload_means_assessment_letter", response: { text: "means_assessment_letter_helen_papadopoulos.pdf" } }
+      { field_definition_id: "sa_forms_submitted", response: { value: "Both" } }
+      { field_definition_id: "consent_share_financial_info", response: { value: "Yes" } }
+      { field_definition_id: "pension_number", response: { text: "PEN-4382719" } }
+      { field_definition_id: "pension_card_expiry", response: { date: "2027-11-30" } }
+      { field_definition_id: "upload_pension_card", response: { text: "pension_card_helen_papadopoulos.jpg" } }
+      { field_definition_id: "financial_advice_required", response: { value: "Yes" } }
+      { field_definition_id: "primary_rep_accounts", response: { value: "Yes" } }
+      { field_definition_id: "rep_phone", response: { text: "0412 884 190" } }
+      { field_definition_id: "rep_residential_address", response: { text: "18 Seaview Avenue, Glenelg SA 5045" } }
+      { field_definition_id: "rep_postal_address", response: { text: "PO Box 42, Glenelg SA 5045" } }
+      { field_definition_id: "preferred_communication_method", response: { value: "Phone" } }
+      { field_definition_id: "preferred_contact_time", response: { value: "Afternoon" } }
+      { field_definition_id: "consent_electronic_communication", response: { value: "Yes" } }
+      { field_definition_id: "upload_dva_card", response: { text: "dva_card_not_applicable_helen_papadopoulos.pdf" } }
+      { field_definition_id: "upload_behaviour_support_plan", response: { text: "behaviour_support_plan_helen_papadopoulos.pdf" } }
+      { field_definition_id: "upload_financial_authority_docs", response: { text: "financial_authority_docs_helen_papadopoulos.pdf" } }
+      { field_definition_id: "application_on_behalf", response: { value: "Yes" } }
+      { field_definition_id: "authority_type", response: { value: "Enduring Power of Attorney" } }
+      { field_definition_id: "upload_authority_documents", response: { text: "authority_documents_helen_papadopoulos.pdf" } }
+      { field_definition_id: "consent_updates_about_placements", response: { value: "Yes" } }
+      { field_definition_id: "consent_resources_support_info", response: { value: "Yes" } }
+      { field_definition_id: "date_signed", response: { date: "2026-05-27" } }
+    ]
+  ) {
+    submission_id
+    responses { field_definition_id errors }
+  }
+
+  arthurMckenzie: FormSubmissionSave(
+    form_definition_id: "aged_care_intake_v1"
+    submission_id: "submission_arthur_mckenzie_20260527"
+    responses: [
+      { field_definition_id: "title", response: { value: "Mr" } }
+      { field_definition_id: "given_names", response: { text: "Arthur James" } }
+      { field_definition_id: "preferred_name", response: { text: "Arthur" } }
+      { field_definition_id: "last_name", response: { text: "McKenzie" } }
+      { field_definition_id: "date_of_birth", response: { date: "1946-03-02" } }
+      { field_definition_id: "sex_at_birth", response: { value: "Male" } }
+      { field_definition_id: "gender_identity", response: { value: "Male" } }
+      { field_definition_id: "marital_status", response: { value: "Married" } }
+      { field_definition_id: "nationality", response: { text: "Australian" } }
+      { field_definition_id: "country_of_birth", response: { text: "Australia" } }
+      { field_definition_id: "smoking_status", response: { value: "Non-smoker" } }
+      { field_definition_id: "current_living_arrangement", response: { value: "Own home" } }
+      { field_definition_id: "care_needed_when", response: { value: "Within 30 days" } }
+      { field_definition_id: "my_aged_care_id", response: { text: "MAC-6931-2284" } }
+      { field_definition_id: "assessment_completed", response: { value: "Yes" } }
+      { field_definition_id: "assessment_approval_type", response: { values: ["Permanent Residential Care", "Transitional Care"] } }
+      { field_definition_id: "receiving_inhome_support", response: { value: "Yes" } }
+      { field_definition_id: "inhome_support_program", response: { value: "Support at Home" } }
+      { field_definition_id: "support_classification", response: { value: "Classification 6" } }
+      { field_definition_id: "current_supports_received", response: { values: ["Nursing supports", "Allied health supports", "Personal care", "Domestic assistance", "Transport services"] } }
+      { field_definition_id: "primary_reason_moving", response: { values: ["Reduced mobility", "Clinical complexity", "Carer burnout", "Difficulty managing meals or nutrition", "Increased overnight care needs"] } }
+      { field_definition_id: "dietary_requirements", response: { values: ["Diabetic", "High protein diet", "Fluid restriction"] } }
+      { field_definition_id: "speech_pathology_assessed", response: { value: "Yes" } }
+      { field_definition_id: "swallowing_disorder", response: { value: "Yes" } }
+      { field_definition_id: "mobility_supports", response: { values: ["Wheelchair", "2-person assist", "Full hoist transfer", "Pressure care mattress required"] } }
+      { field_definition_id: "falls_last_6m", response: { value: "Yes" } }
+      { field_definition_id: "falls_count_6m", response: { value: "2-3" } }
+      { field_definition_id: "hygiene_supports", response: { values: ["Full shower assistance", "Assistance with shaving", "Oral care assistance", "Continence-related skin management"] } }
+      { field_definition_id: "toileting_supports", response: { values: ["Physical assistance", "Night continence support", "Catheter", "Requires overnight toileting assistance"] } }
+      { field_definition_id: "cognitive_conditions", response: { values: ["Memory impairment", "Short term memory loss"] } }
+      { field_definition_id: "behaviour_support_needs", response: { values: ["Anxiety", "Depression"] } }
+      { field_definition_id: "medical_healthcare_needs", response: { values: ["Parkinson's disease", "Insulin dependent diabetes", "Oxygen therapy", "Catheter care", "Wound management"] } }
+      { field_definition_id: "current_pharmacy", response: { text: "Priceline Pharmacy Glenelg" } }
+      { field_definition_id: "webster_pack_used", response: { value: "Yes" } }
+      { field_definition_id: "self_medication_capable", response: { value: "No" } }
+      { field_definition_id: "schedule8_medications", response: { value: "Yes" } }
+      { field_definition_id: "insulin_admin_required", response: { value: "Yes" } }
+      { field_definition_id: "oxygen_equipment_required", response: { value: "Yes" } }
+      { field_definition_id: "gp_given_name", response: { text: "Nathan" } }
+      { field_definition_id: "gp_last_name", response: { text: "Russo" } }
+      { field_definition_id: "gp_practice_name", response: { text: "Brighton Seaside Medical" } }
+      { field_definition_id: "under_specialist_care", response: { value: "Yes" } }
+      { field_definition_id: "specialist_services", response: { values: ["Neurologist", "Cardiologist", "Pain Specialist"] } }
+      { field_definition_id: "has_advance_care_directive", response: { value: "Yes" } }
+      { field_definition_id: "has_funeral_plan", response: { value: "Yes" } }
+      { field_definition_id: "enduring_power_attorney", response: { value: "Yes" } }
+      { field_definition_id: "financial_administrator", response: { value: "Yes" } }
+      { field_definition_id: "decision_making_capacity", response: { value: "With support" } }
+      { field_definition_id: "government_supports_received", response: { values: ["Age Pension", "Veteran White Card"] } }
+      { field_definition_id: "preferred_accommodation_payment_method", response: { value: "Daily Accommodation Payment (DAP)" } }
+      { field_definition_id: "estimated_rad_contribution", response: { value: "$100,000-$250,000" } }
+      { field_definition_id: "financial_advice_required", response: { value: "Yes" } }
+      { field_definition_id: "primary_rep_relationship", response: { value: "Spouse" } }
+      { field_definition_id: "primary_rep_is_emergency", response: { value: "Yes" } }
+      { field_definition_id: "primary_rep_legal_authority", response: { value: "Yes" } }
+      { field_definition_id: "rep_title", response: { value: "Mrs" } }
+      { field_definition_id: "rep_given_name", response: { text: "Margaret" } }
+      { field_definition_id: "rep_last_name", response: { text: "McKenzie" } }
+      { field_definition_id: "rep_mobile", response: { text: "0407 116 402" } }
+      { field_definition_id: "rep_email", response: { text: "margaret.mckenzie@example.org" } }
+      { field_definition_id: "preferred_communication_method", response: { value: "Phone" } }
+      { field_definition_id: "preferred_contact_time", response: { value: "Afternoon" } }
+      { field_definition_id: "preferred_room_type", response: { value: "Single room" } }
+      { field_definition_id: "preferred_bathroom_arrangement", response: { value: "Private" } }
+      { field_definition_id: "preferred_location_radius", response: { value: "10km" } }
+      { field_definition_id: "preferred_suburb_region", response: { text: "Glenelg / Brighton" } }
+      { field_definition_id: "preferred_provider_features", response: { values: ["Registered nurse onsite 24/7", "Specialist palliative care", "Outdoor access"] } }
+      { field_definition_id: "upload_gp_health_summary", response: { text: "gp_health_summary_arthur_mckenzie_2026-05-09.pdf" } }
+      { field_definition_id: "upload_current_medications", response: { text: "current_medications_arthur_mckenzie_2026-05-24.pdf" } }
+      { field_definition_id: "upload_medicare_card", response: { text: "medicare_card_arthur_mckenzie.jpg" } }
+      { field_definition_id: "upload_pension_card_step9", response: { text: "pension_card_arthur_mckenzie.jpg" } }
+      { field_definition_id: "upload_photo_id", response: { text: "photo_id_arthur_mckenzie_driverlicence.jpg" } }
+      { field_definition_id: "upload_aged_care_support_plan_step9", response: { text: "aged_care_support_plan_arthur_mckenzie.pdf" } }
+      { field_definition_id: "consent_collect_store_info", response: { value: true } }
+      { field_definition_id: "consent_share_with_providers", response: { value: true } }
+      { field_definition_id: "consent_share_clinical_docs", response: { value: true } }
+      { field_definition_id: "consent_electronic_comm_step10", response: { value: true } }
+      { field_definition_id: "consent_financial_info_step10", response: { value: true } }
+      { field_definition_id: "consent_understand_admission_decision", response: { value: true } }
+      { field_definition_id: "consent_declaration_true_correct", response: { value: true } }
+      { field_definition_id: "declarant_full_legal_name", response: { text: "Margaret McKenzie" } }
+      { field_definition_id: "digital_signature", response: { text: "Margaret McKenzie - digital signature acknowledgement" } }
+      { field_definition_id: "date_signed", response: { date: "2026-05-27" } }
+    ]
+  ) {
+    submission_id
+    responses { field_definition_id errors }
+  }
+}
+

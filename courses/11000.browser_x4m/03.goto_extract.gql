@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Navigate and Extract
+# description: Navigates pages and extracts text, html, and attributes.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - extraction
+#   - x4m
+# intent: Teach content extraction patterns after basic navigation.
+#---
+
+###> STEP 1 - NAVIGATE + GET TEXT
+#{
+# Visits example.com and extracts heading text.
+#}
+mutation Step1_GotoExtract {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com', waitUntil:'domcontentloaded') | BROWSER_GET_TEXT(selector:'h1') | BROWSER_GOTO(url:'https://example.com') | BROWSER_GET_HTML(selector:'body') | BROWSER_GOTO(url:'https://example.com') | BROWSER_GET_ATTR(selector:'a', attr:'href')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

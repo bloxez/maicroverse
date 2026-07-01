@@ -1,0 +1,146 @@
+#!maicro
+#---
+# title: Verify Setup
+# description: Confirm features, schema, graph state, vector embeddings, and semantic search behavior.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - verification
+#   - vector-search
+#   - introspection
+#---
+
+###> RELOAD SCHEMA
+#{
+# ## Fresh Schema
+# Reload before inspection so all generated types and resolvers are current.
+#}
+mutation Reload {
+  DbReload
+}
+
+###> GET THE DATABASE STATE
+#{
+# ## Core State
+# Reads project id, active schema context, enabled features, and table list.
+#}
+query DbState {
+  ActiveInstance {
+    label
+  }
+
+  SchemaDetails: JsonObject {
+    DbSchemaName: eval(v: "{{@@.CTX.DbSchemaName}}")
+    DbIdType: eval(v: "{{@@.CTX.DbIdType}}")
+    DbIdField: eval(v: "{{@@.CTX.DbIdField}}")
+    DbIdSuffix: eval(v: "{{@@.CTX.DbIdSuffix}}")
+  }
+
+  SystemFeatures {
+    feature
+  }
+
+  DbTables {
+    name
+    description
+  }
+
+  PrjStoresList
+}
+
+###> GET DATABASE SCHEMA DETAILS
+#{
+# ## Schema Info
+# Returns schema owner, table count, and system-schema flags.
+#}
+query DatabaseSchema {
+  DatabaseSchema: DbSchema {
+    name
+    owner
+    tableCount
+    isSystem
+  }
+}
+
+###> GET SQL WRAP CONFIGURATIONS
+#{
+# ## SQL Wraps
+# Lists registered SQL wrappers and their contract details.
+#}
+query SqlWraps {
+  SqlWrapList {
+    name
+    operation
+    sql
+    inputs
+    outputs
+    createdAt
+    createdBy
+  }
+}
+
+###> GET API WRAP CONFIGURATIONS
+#{
+# ## API Wraps
+# Lists registered API wrappers and their HTTP mapping metadata.
+#}
+query ApiWraps {
+  ApiWrapList {
+    name
+    operation
+    endpoint
+    method
+    inputs
+    outputs
+    responseMapping
+    createdAt
+    createdBy
+  }
+}
+
+###> VERIFY VECTOR EMBEDDINGS ARE STORED
+#{
+# ## Vector Verification
+# Confirms synopsis_vector values were generated during seed inserts.
+#}
+query VerifyVectorEmbeddings {
+  VerifyBookVectors: books(page: { page: 1, items: 3 }) {
+    id
+    title
+    synopsis
+    synopsis_vector
+  }
+}
+
+###> SEMANTIC VECTOR SEARCH - FIND BOOKS BY MEANING
+#{
+# ## Semantic Search
+# Compares query embedding to stored vectors to return conceptually similar books.
+#}
+query SemanticBookSearch {
+  AndroidBooks: books(
+    where: { synopsis_vector: { query: "android technologies" } }
+    page: { page: 1, items: 5 }
+  ) {
+    id
+    title
+    genre
+    synopsis
+  }
+}
+
+###> SEMANTIC SEARCH WITH DISTANCE THRESHOLD
+#{
+# ## Distance Filtering
+# Adds a maximum vector distance; lower values are closer semantic matches.
+#}
+query FindSimilarBooksWithThreshold {
+  TimeTravelBooks: books(
+    where: { synopsis_vector: { query: "time travel and historical fiction", distance: 1.35 } }
+    page: { page: 1, items: 3 }
+  ) {
+    id
+    title
+    synopsis
+  }
+}

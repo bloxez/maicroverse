@@ -1,0 +1,58 @@
+#!maicro
+#---
+# title: Pull Customer & Order Data
+# description: >
+#   Downloads the customer orders demonstration dataset from the
+#   maicroverse GitHub repository into file storage.
+#
+#   Fetches all files from:
+#   https://github.com/bloxez/maicroverse/tree/main/file_storage/customer_orders
+#
+#   Files saved to: <import_root>/customer_orders/
+#     customers.csv     - customer contact and address records
+#     products.csv      - product catalogue with pricing and stock
+#     orders.jsonl      - order headers linked to customers
+#     order_items.jsonl - line items linking orders to products
+#     invoices.jsonl    - invoice records per order
+#     merge_customers.csv - merge patch data for customers
+#     merge_orders.csv    - merge patch data for orders
+#
+#   Run 05.import_customer_data.gql after this to load the data into the DB.
+# difficulty: beginner
+# estimated_time: 15s
+# tags:
+#   - files
+#   - fetch
+#   - github
+#   - customers
+#   - orders
+# intent: setup
+#---
+
+###> LOAD IMPORT ROOT
+#{
+# ## Load Shared Import Root
+# Reads the import root from memory (`import_root.path`) so the
+# download path can be composed dynamically.
+#}
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> FETCH CUSTOMER DATA
+#{
+# ## Pull Customer & Order Files
+# Fetches the entire customer_orders folder from the maicroverse
+# repository and saves all files into file storage under
+# <import_root>/customer_orders/.
+#
+# Set overwrite: true to refresh files that already exist.
+# The mutation returns the list of files that were saved.
+#}
+mutation PullCustomerOrders {
+  FetchFolderFromUrl(
+    url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/customer_orders"
+    path: "{{importRoot}}/customer_orders"
+    overwrite: true
+  ) { path file_size content_type }
+}

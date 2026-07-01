@@ -1,0 +1,27 @@
+#!maicro
+#---
+# title: ASX Watcher - Single Stock Markdown
+# description: Converts a single ASX ticker payload to markdown for readable reporting.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - asx
+#   - markdown
+#   - reporting
+#   - yahoo-finance
+# intent: Teach markdown shaping on one payload before scaling to multiple tickers.
+#---
+
+###> STEP 1 - PRODUCE DRO MARKDOWN REPORT
+#{
+# Pipeline behavior:
+# 1) FETCH_URL retrieves JSON from Yahoo Finance.
+# 2) TO_MARKDOWN converts that structure into markdown text.
+# Expected effect: `dro.result` contains markdown output.
+# stepinto: scripts/courses/10000.asx_watcher/04.multi_stock_md.gql
+#}
+mutation Step1_SingleStockMarkdown {
+  dro: X4m(pipeline: "FETCH_URL(url:'https://query1.finance.yahoo.com/v8/finance/chart/DRO.AX') | TO_MARKDOWN") {
+    result
+  }
+}

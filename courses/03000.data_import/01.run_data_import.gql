@@ -1,0 +1,131 @@
+#!maicro
+#---
+# title: Run Data Import Suite
+# description: Executes the data import scripts in order from 02 onwards.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - data-import
+#   - orchestration
+#   - files
+#   - database
+# intent: One-click execution of the full data import workflow.
+#---
+
+###> STEP 1 — SET IMPORT ROOT
+#{
+# ## Configure Shared Import Root
+# Initializes the `import_root` memory value and validates both value and type.
+# All downstream scripts resolve file paths from this memory key.
+#
+# stepinto: 02.set_root_path.gql
+#}
+mutation Step1_SetRootPath {
+  run02: DbExecute(path: "scripts/courses/03000.data_import/02.set_root_path.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 2 — PULL CUSTOMER DATA
+#{
+# ## Download Customer Dataset Files
+# Fetches the customer/order source files from GitHub into
+# `<import_root>/customer_orders/` so import scripts can load them.
+#
+# stepinto: 03.pull_customer_data.gql
+#}
+mutation Step2_PullCustomerData {
+  run03: DbExecute(path: "scripts/courses/03000.data_import/03.pull_customer_data.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 3 — PULL WEATHER DATA
+#{
+# ## Download Weather Dataset File
+# Fetches weather_readings.jsonl from GitHub into `<import_root>/weather/`.
+#
+# stepinto: 04.pull_weather_data.gql
+#}
+mutation Step3_PullWeatherData {
+  run04: DbExecute(path: "scripts/courses/03000.data_import/04.pull_weather_data.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 4 — IMPORT CUSTOMER DATA
+#{
+# ## Create and Load Customer/Order Tables
+# Drops and recreates customer-related tables, imports CSV/JSONL data,
+# and reloads schema so generated queries/mutations are immediately available.
+#
+# stepinto: 05.import_customer_data.gql
+#}
+mutation Step4_ImportCustomerData {
+  run05: DbExecute(path: "scripts/courses/03000.data_import/05.import_customer_data.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 5 — MERGE CUSTOMER PATCHES
+#{
+# ## Apply Merge Patch Files
+# Imports merge CSV files into existing tables with `merge: true`
+# to append demonstration merge records.
+#
+# stepinto: 06.merge_customer_data.gql
+#}
+mutation Step5_MergeCustomerData {
+  run06: DbExecute(path: "scripts/courses/03000.data_import/06.merge_customer_data.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+###> STEP 6 — IMPORT WEATHER DATA
+#{
+# ## Create and Load Weather Table
+# Recreates `weather_readings`, imports JSONL sensor rows,
+# reloads schema, and runs a verification query.
+#
+# stepinto: 07.import_weather_data.gql
+#}
+mutation Step6_ImportWeatherData {
+  run07: DbExecute(path: "scripts/courses/03000.data_import/07.import_weather_data.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}
+
+
+###> STEP 7 — CALCULATE PROMOTIONAL PRICING
+#{
+# ## Run x4m operations to calculate discounted pricing
+# Uses the x4m CALC operation to dynamically apply the set percentage to each row of data
+#
+# stepinto: 09.promo.gql
+#}
+mutation Step7_CalculateDiscount {
+  run08: DbExecute(path: "scripts/courses/03000.data_import/09.promo.gql") {
+    success
+    message
+    executionTime
+    result
+  }
+}

@@ -1,0 +1,72 @@
+#!maicro
+#---
+# title: Platform Setup
+# description: Enable mAIcro platform features and create filter templates.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - platform
+#   - filters
+#---
+
+###> ENABLE FILE MANAGEMENT AND BACKGROUND JOBS
+#{
+# ## Platform Features
+# mAIcro has optional features that must be explicitly enabled:
+#
+# - **File Storage** — Stores binary files (images, PDFs) directly in the database.
+# - **Search** — Enables full-text search with automatic text chunking.
+# - **Async Jobs** — Background task queue for long-running operations.
+#
+# Each feature creates its own system tables when enabled.
+#}
+mutation EnableFeatures {
+  DbEnableFilestorage {
+    files_table
+    chunks_table
+  }
+
+  DbEnableSearch {
+    status 
+    text_chunks_table
+  }
+
+  DbEnableAsyncJobs {
+    jobs_table
+    status
+  }
+}
+
+
+###> CREATE TEAM ISOLATION FILTER TEMPLATE
+#{
+# ## Row-Level Security
+# A **Filter Template** defines a reusable access policy.
+# The `TeamIsolation` filter adds a `team_label` column to any table,
+# then automatically restricts queries so users only see rows matching their team.
+#
+# Filter operators: `eq`, `neq`, `gt`, `lt`, `contains`, `startsWith`.
+#
+# ```mermaid
+# flowchart LR
+#     User -->|team_label = X| Filter
+#     Filter -->|WHERE team_label = X| Database
+# ```
+#}
+mutation CreateFilterTemplates {
+  TeamFilter: FilterTemplateCreate(input: {
+    name: "TeamIsolation"
+    description: "Restricts access based on user's team - rows are only visible to members of the same team"
+    column_definition: {
+      name: "team_label"
+      type: "String"
+      enforced: "add"
+      description: "Team identifier for row-level security"
+    }
+    computed_value: "team_label"
+    operator: eq
+  }) {
+    id
+    name
+  }
+}

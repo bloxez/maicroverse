@@ -1,0 +1,25 @@
+#!maicro
+#---
+# title: Browser X4m - Open, List, Close
+# description: Demonstrates basic session lifecycle operations.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - browser
+#   - lifecycle
+#   - x4m
+# intent: Build confidence in opening and closing sessions safely.
+#---
+
+###> STEP 1 - OPEN SESSION
+#{
+# Opens a browser session with autoClose disabled for explicit closure.
+#}
+mutation Step1_OpenListClose {
+  demo: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome', autoClose:false) | BROWSER_LIST | BROWSER_CLOSE"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

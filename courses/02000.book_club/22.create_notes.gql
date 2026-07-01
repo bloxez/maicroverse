@@ -1,0 +1,158 @@
+#!maicro
+#---
+# title: Seed Team Notes (22)
+# description: Create intentionally uneven, team-distinct notes for Team A and Team B.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - notes
+#   - seed
+#   - team-isolation
+#---
+
+###> RESET - RESET TEAM NOTES
+#{
+# Purpose:
+# Ensure deterministic demo data on every setup run.
+#
+# What this step does:
+# - Clears all existing rows from team_notes.
+#
+# Expected outcome:
+# - team_notes table is empty before fresh inserts.
+#}
+mutation Reset_ClearTeamNotes {
+  team_noteDeleteWhere(where: { id: { ne: 0 } }) {
+    count
+  }
+}
+
+###> STEP 1 - CREATE TEAM A NOTES
+#{
+# Purpose:
+# Insert a larger Team A backlog (editorial/reviewer workflow).
+#
+# What this step does:
+# - Adds four Team A-oriented notes without team_label on insert.
+# - team_label is assigned in STEP 2 (system-controlled field behavior).
+#
+# Expected outcome:
+# - four Team A note IDs available for update.
+#}
+mutation Step1_CreateTeamANotes {
+  teamA_note_1: team_noteAdd(data: {
+    title: "Team A kickoff"
+    content: "Welcome to Team A. Focus this week: literary fiction shortlist and review cadence."
+    priority: "normal"
+    created_by: "maicro1@maicro.ai"
+  }) {
+    data { id title team_label created_by }
+  }
+
+  teamA_note_2: team_noteAdd(data: {
+    title: "Team A reviewer pairing"
+    content: "Pair senior and junior reviewers for Friday critique circles."
+    priority: "high"
+    created_by: "maicro1@maicro.ai"
+  }) {
+    data { id title team_label created_by }
+  }
+
+  teamA_note_3: team_noteAdd(data: {
+    title: "Team A reading agenda"
+    content: "Prepare chapter map for the monthly long-form discussion session."
+    priority: "medium"
+    created_by: "maicro1@maicro.ai"
+  }) {
+    data { id title team_label created_by }
+  }
+
+  teamA_note_4: team_noteAdd(data: {
+    title: "Team A follow-up queue"
+    content: "Collect unresolved critique comments and assign owners before Monday."
+    priority: "high"
+    created_by: "maicro1@maicro.ai"
+  }) {
+    data { id title team_label created_by }
+  }
+}
+
+###> STEP 2 - ASSIGN TEAM A LABEL
+#{
+# Purpose:
+# Explicitly mark Team A rows with the proper team label.
+#
+# What this step does:
+# - Updates all Team A notes with team_label = teama.
+#
+# Expected outcome:
+# - Team A rows are query-isolated by TeamIsolation filters.
+#}
+mutation Step2_AssignTeamALabel {
+  a1: team_noteUpdate(data: { id: "{{@@.teamA_note_1.data.id}}", team_label: "teama" }) { data { id title team_label } }
+  a2: team_noteUpdate(data: { id: "{{@@.teamA_note_2.data.id}}", team_label: "teama" }) { data { id title team_label } }
+  a3: team_noteUpdate(data: { id: "{{@@.teamA_note_3.data.id}}", team_label: "teama" }) { data { id title team_label } }
+  a4: team_noteUpdate(data: { id: "{{@@.teamA_note_4.data.id}}", team_label: "teama" }) { data { id title team_label } }
+}
+
+###> STEP 3 - CREATE TEAM B NOTES
+#{
+# Purpose:
+# Insert a smaller Team B operations note set.
+#
+# What this step does:
+# - Adds one Team B operations note without team_label on insert.
+# - team_label is assigned in STEP 4.
+#
+# Expected outcome:
+# - one Team B note ID available for update.
+#}
+mutation Step3_CreateTeamBNotes {
+  teamB_note_1: team_noteAdd(data: {
+    title: "Team B operations checkpoint"
+    content: "Validate overnight pipeline health and rollback plan before standup."
+    priority: "normal"
+    created_by: "maicro2@maicro.ai"
+  }) {
+    data { id title team_label created_by }
+  }
+}
+
+###> STEP 4 - ASSIGN TEAM B LABEL
+#{
+# Purpose:
+# Explicitly mark Team B rows with the proper team label.
+#
+# What this step does:
+# - Updates Team B note with team_label = teamb.
+#
+# Expected outcome:
+# - Team B rows are query-isolated by TeamIsolation filters.
+#}
+mutation Step4_AssignTeamBLabel {
+  b1: team_noteUpdate(data: { id: "{{@@.teamB_note_1.data.id}}", team_label: "teamb" }) {
+    data { id title team_label }
+  }
+}
+
+###> STEP 5 - VERIFY NOTES
+#{
+# Purpose:
+# Return an admin-visible snapshot of seeded notes.
+#
+# What this step does:
+# - Returns total notes and sorted note list with team labels.
+#
+# Expected outcome:
+# - exactly five notes: four labeled teama and one labeled teamb.
+#}
+query Step5_Verify {
+  total: team_notesCount
+  notes: team_notes(page: { page: 1, items: 100 }, sort: [{ key: "title", asc: true }]) {
+    id
+    title
+    priority
+    created_by
+    team_label
+  }
+}

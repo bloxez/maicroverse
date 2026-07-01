@@ -1,0 +1,15 @@
+###> DELETE AI TASK
+mutation DeleteDriversLicenseTask {
+  AiTaskDelete(key: "drivers_license") {
+    success
+    key
+    message
+  }
+}
+
+###> DELETE DRIVERLICENSE TYPE
+mutation DeleteType {
+  DeleteType(name: "DriverLicense"){
+    success
+  }
+}

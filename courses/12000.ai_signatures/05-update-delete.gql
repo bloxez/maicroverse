@@ -1,0 +1,84 @@
+#
+# Signature Lifecycle Management - Update, Delete, Organize
+#
+# This script demonstrates signature management operations.
+# Key concepts:
+# - Update signatures to change model hints, descriptions, schemas
+# - Delete signatures when no longer needed
+# - Organize signatures by category for discovery
+# - Executions are preserved separately from signatures
+#
+
+###> Step 1: Upgrade a signature to use a better model
+# Change from "simple" (local Ollama) to "complex" (Claude) for better accuracy.
+# Returns JSON with updated signature.
+mutation UpgradeModelHint {
+  UpdateSignature(
+    id: "classifySupport"
+    modelHint: "complex"
+    preferredExecutor: "basic"
+  )
+}
+
+###> Step 2: Update signature description for clarity
+# Good descriptions help with discoverability and understanding.
+# Returns JSON with updated signature.
+mutation UpdateDescription {
+  UpdateSignature(
+    id: "extractInvoice"
+    description: "Extract structured financial data from invoice text including vendor, amounts, line items, and dates"
+  )
+}
+
+###> Step 3: Update output schema to add a new field
+# Evolve signatures over time as requirements change.
+# Returns JSON with updated signature.
+mutation AddConfidenceField {
+  UpdateSignature(
+    id: "classifySupport"
+    outputSchema: {
+      type: "object"
+      properties: {
+        category: { type: "string", enum: ["billing", "technical", "account", "general"] }
+        urgency: { type: "string", enum: ["low", "medium", "high", "critical"] }
+        summary: { type: "string" }
+        confidence: { type: "number", description: "Confidence score 0-1" }
+      }
+      required: ["category", "urgency", "summary"]
+    }
+  )
+}
+
+###> Step 4: List signatures by category - Classification
+# Organize and discover signatures by their category tag.
+# Returns JSON array of matching signatures.
+query ListClassificationSignatures {
+  ListSignatures(category: "classification")
+}
+
+###> Step 5: List signatures by category - Extraction
+# Returns JSON array of extraction signatures.
+query ListExtractionSignatures {
+  ListSignatures(category: "extraction")
+}
+
+###> Step 6: Get complete signature details
+# Retrieve full definition including input/output schemas.
+# Returns JSON with complete signature including schemas.
+query GetFullSignatureDetails {
+  GetSignature(id: "extractInvoice")
+}
+
+###> Step 7: Delete a signature
+# Removes the signature definition. Note: Execution history is preserved.
+# Returns JSON with success status.
+mutation DeleteUnusedSignature {
+  DeleteSignature(id: "reasoningTask")
+}
+
+###> Step 8: List all signatures to verify
+# Final check to see what signatures remain after cleanup.
+# Returns JSON array of all signatures.
+query ListAllRemaining {
+  ListSignatures
+}

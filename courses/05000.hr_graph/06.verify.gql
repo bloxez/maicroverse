@@ -1,0 +1,87 @@
+#!maicro
+#---
+# title: HR Graph — Verify
+# description: Spot-checks the employment graph using the registered query wrappers and raw Cypher.
+#   GraphQL field aliases (`alice_roles:`, `carmen_roles:` etc.) give each result a unique key
+#   so all six checks can be read at a glance in the IDE result panel.
+# tags: [graph, cypher, hr, verify]
+#---
+
+###> WHO IS ALICE CURRENTLY WORKING FOR?
+#{
+# ## Alice Chen — Current Role
+# Calls the `GetCurrentEmployers` wrapper to confirm Alice has exactly one active role
+# (BluePeak Tech, Senior Engineer) and that the closed Axiom Labs role does not appear.
+#}
+query AliceCurrentRoles {
+  alice_roles: GetCurrentEmployers(employee: "Alice Chen", as_of: "2026-04-07") {
+    data rowCount
+  }
+}
+
+###> ALL OF CARMEN'S ACTIVE ROLES
+#{
+# ## Carmen Silva — Concurrent Part-Time Roles
+# Confirms Carmen has two active part-time roles simultaneously (Ember Systems and
+# BluePeak Tech), demonstrating the multi-part-time model for freelancers.
+#}
+query CarmenCurrentRoles {
+  carmen_roles: GetCurrentEmployers(employee: "Carmen Silva", as_of: "2026-04-07") {
+    data rowCount
+  }
+}
+
+###> BOB'S FULL EMPLOYMENT HISTORY
+#{
+# ## Bob Okafor — Complete Timeline
+# Raw Cypher query returning all EMPLOYED_BY edges regardless of date, so both
+# the closed Cornerstone role and the current DeltaCore role appear with their dates.
+#}
+query BobFullHistory {
+  bob_history: GraphQuery(
+    graph: "hr_graph"
+    cypher: "MATCH (p:Person {name: 'Bob Okafor'})-[r:EMPLOYED_BY]->(c:Company) RETURN {employer: c.name, role: r.role, type: r.type, from: r.valid_from, to: r.valid_to} AS result"
+  ) { data rowCount }
+}
+
+###> ALL CURRENT FULL-TIME EMPLOYEES
+#{
+# ## Active Full-Time Roles
+# Returns every open-ended full-time EMPLOYED_BY edge (`valid_to IS NULL`).
+# Expected: Alice (BluePeak), Bob (DeltaCore), David (Axiom Labs), Femi (Ember) — 4 rows.
+# This validates that `AddFullTimeEmployer` correctly left exactly one open full-time
+# edge per person.
+#}
+query AllCurrentFullTime {
+  full_time_now: GraphQuery(
+    graph: "hr_graph"
+    cypher: "MATCH (p:Person)-[r:EMPLOYED_BY {type: 'full_time'}]->(c:Company) WHERE r.valid_to IS NULL RETURN {employee: p.name, employer: c.name, role: r.role, since: r.valid_from} AS result"
+  ) { data rowCount }
+}
+
+###> PEOPLE WITH MULTIPLE ACTIVE ROLES ON TODAY'S DATE
+#{
+# ## Concurrent Roles
+# Finds every person holding more than one active EMPLOYED_BY edge on 2026-04-07.
+# Expected: Carmen (2 active part-time) and Emma (2 active part-time). Full-time
+# employees should NOT appear here — confirming mutual exclusivity.
+#}
+query ConcurrentRoles {
+  concurrent: GraphQuery(
+    graph: "hr_graph"
+    cypher: "MATCH (p:Person)-[r:EMPLOYED_BY]->(c:Company) WHERE r.valid_from <= '2026-04-07' AND (r.valid_to IS NULL OR r.valid_to > '2026-04-07') WITH p, collect({employer: c.name, role: r.role, type: r.type}) AS roles WHERE size(roles) > 1 RETURN {employee: p.name, roles: roles} AS result"
+  ) { data rowCount }
+}
+
+###> WRAPPER LIST — confirm all three wrappers are registered
+#{
+# ## Registered Wrappers
+# Lists all Cypher wrappers stored in the system. Confirms that `AddFullTimeEmployer`,
+# `AddPartTimeEmployer`, and `GetCurrentEmployers` were all registered in step 3
+# and are available as GraphQL operations.
+#}
+query WrapperList {
+  wrappers: GraphWrapList {
+    name graph operation description
+  }
+}

@@ -1,0 +1,75 @@
+#!maicro
+#---
+# title: HR Graph — Full Setup
+# description: End-to-end setup of the HR employment graph. Run once to get a fully working graph with Cypher wrappers for adding full-time and part-time roles, with temporal tracking and audit history.
+# tags:
+#   - graph
+#   - cypher
+#   - hr
+#   - wrappers
+#---
+
+###> STEP 1 — GRAPH BOOTSTRAP
+#{
+# ## Enable Cypher & Create Graph
+# Enables Apache AGE and creates the `hr` graph.
+# stepinto: hr_graph/02.graph_bootstrap.gql
+#}
+mutation Step1_Bootstrap {
+  DbExecute(path: "scripts/courses/05000.hr_graph/02.graph_bootstrap.gql") {
+    success message result
+  }
+}
+
+###> STEP 2 — REGISTER WRAPPERS
+#{
+# ## Register Cypher Wrappers
+# Saves `AddFullTimeEmployer`, `AddPartTimeEmployer`, and `GetCurrentEmployers`
+# as named, reusable Cypher operations. DbReload activates them in the schema.
+# stepinto: hr_graph/03.register_wrappers.gql
+#}
+mutation Step2_RegisterWrappers {
+  DbExecute(path: "scripts/courses/05000.hr_graph/03.register_wrappers.gql") {
+    success message result
+  }
+}
+
+###> STEP 3 — SEED EMPLOYEES & EMPLOYERS
+#{
+# ## Create People & Companies
+# Adds 6 employees and 5 companies as pure graph nodes (no SQL tables needed).
+# stepinto: hr_graph/04.seed_nodes.gql
+#}
+mutation Step3_SeedNodes {
+  DbExecute(path: "scripts/courses/05000.hr_graph/04.seed_nodes.gql") {
+    success message result
+  }
+}
+
+###> STEP 4 — EMPLOYMENT HISTORY
+#{
+# ## Build Employment History
+# Calls the registered wrappers to create a realistic mix of:
+# - past full-time roles (closed with valid_to)
+# - current full-time roles (open-ended)
+# - concurrent part-time roles
+# stepinto: hr_graph/05.seed_employment.gql
+#}
+mutation Step4_SeedEmployment {
+  DbExecute(path: "scripts/courses/05000.hr_graph/05.seed_employment.gql") {
+    success message result
+  }
+}
+
+###> STEP 5 — VERIFY
+#{
+# ## Verify the Graph
+# Queries current roles, past roles, and concurrent part-time employment
+# to confirm the temporal model is working correctly.
+# stepinto: hr_graph/06.verify.gql
+#}
+mutation Step5_Verify {
+  DbExecute(path: "scripts/courses/05000.hr_graph/06.verify.gql") {
+    success message result
+  }
+}

@@ -1,0 +1,17 @@
+#!maicro
+#---
+# title: Alice must be the first reader stored in memory
+# description: Check that the first reader stored in memory is Alice Johnson
+#---
+
+###> ASSERT FIRST STORED READER NAME
+query AssertFirstStoredReaderName {
+  IsAlice: Assert(
+    actual: "{{@#.readers.0.username}}"
+    op: "eq"
+    expected: "Alice Johnson"
+  ) {
+  success
+  message
+  }
+}

@@ -1,0 +1,124 @@
+#!maicro
+#---
+# title: Seed Clients
+# description: Seed demo client records used later by forms and documents.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - data
+#   - seed
+#   - clients
+#---
+
+###> CREATE CLIENTS
+mutation SeedClients {
+  client_amelia: clientAdd(
+    data: {
+      first_name: "Patricia"
+      last_name: "Marie"
+      middle_name: "Beckham"
+      dob: "2019-06-20"
+      address_unit: "Unit 4"
+      address_street: "66 ST GEORGES TERRACE"
+      address_suburb: "Perth"
+      address_state: "NSW"
+      address_postcode: "6000"
+    }
+  ) {
+    data {
+      id
+      label
+      first_name
+      last_name
+      dob
+    }
+  }
+
+  client_noah: clientAdd(
+    data: {
+      first_name: "Noah"
+      last_name: "Campbell"
+      middle_name: ""
+      dob: "1941-11-28"
+      address_unit: ""
+      address_street: "245 River Road"
+      address_suburb: "Toowoomba"
+      address_state: "QLD"
+      address_postcode: "4350"
+    }
+  ) {
+    data {
+      id
+      label
+      first_name
+      last_name
+      dob
+    }
+  }
+
+  client_charlotte: clientAdd(
+    data: {
+      first_name: "Charlotte"
+      last_name: "Nguyen"
+      middle_name: "Mai"
+      dob: "1939-07-09"
+      address_unit: "Apt 12B"
+      address_street: "90 Collins Street"
+      address_suburb: "Melbourne"
+      address_state: "VIC"
+      address_postcode: "3000"
+    }
+  ) {
+    data {
+      id
+      label
+      first_name
+      last_name
+      dob
+    }
+  }
+
+  client_liam: clientAdd(
+    data: {
+      first_name: "Liam"
+      last_name: "Patel"
+      middle_name: "R"
+      dob: "1944-01-05"
+      address_unit: "Suite 7"
+      address_street: "52 Main Street"
+      address_suburb: "Launceston"
+      address_state: "TAS"
+      address_postcode: "7250"
+    }
+  ) {
+    data {
+      id
+      label
+      first_name
+      last_name
+      dob
+    }
+  }
+
+  client_olivia: clientAdd(
+    data: {
+      first_name: "Olivia"
+      last_name: "Wilson"
+      middle_name: "Anne"
+      dob: "1950-05-17"
+      address_unit: "Unit 10"
+      address_street: "14 Beach Road"
+      address_suburb: "Glenelg"
+      address_state: "SA"
+      address_postcode: "5045"
+    }
+  ) {
+    data {
+      id
+      label
+      first_name
+      last_name
+      dob
+    }
+  }
+}

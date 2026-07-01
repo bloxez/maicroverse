@@ -1,0 +1,61 @@
+#!maicro
+# Brave Search API - Web search with rich results
+# Requires: BRAVE_API_KEY in .env file
+
+###> CREATE BRAVE WEB SEARCH RESOLVER
+mutation BraveWebSearchSetup {
+  BraveWebSearch: ApiWrap(
+    name: "BraveWebSearch"
+    operation: "QUERY"
+    method: "GET"
+    endpoint: "https://api.search.brave.com/res/v1/web/search"
+    throttle: 2000
+    throttleKey: "brave_api"
+    maxConcurrentCalls: 1
+    inputs: [
+      { name: "q", type: "String!", description: "Search query" }
+      { name: "count", type: "Int", description: "Number of results (default 10, max 20)" }
+    ]
+    outputs: [
+      { name: "query", type: "String", description: "Original search query" }
+      { name: "title", type: "String", description: "Result title" }
+      { name: "url", type: "String", description: "Result URL" }
+      { name: "description", type: "String", description: "Result description" }
+      { name: "age", type: "String", description: "Content age/freshness" }
+    ]
+    responseMapping: """{"query": "query.original", "title": "web.results.0.title", "url": "web.results.0.url", "description": "web.results.0.description", "age": "web.results.0.age"}"""
+    headers: """{"X-Subscription-Token": "{{BRAVE_API_KEY}}"}"""
+  ) {
+    success
+    name
+    message
+  }
+
+  BraveWebSearchAll: ApiWrap(
+    name: "BraveWebSearchAll"
+    operation: "QUERY"
+    method: "GET"
+    endpoint: "https://api.search.brave.com/res/v1/web/search"
+    throttle: 2000
+    throttleKey: "brave_api"
+    maxConcurrentCalls: 1
+    inputs: [
+      { name: "q", type: "String!", description: "Search query" }
+      { name: "count", type: "Int", description: "Number of results (default 10, max 20)" }
+    ]
+    outputs: [
+      { name: "results", type: "JSON", description: "All search results" }
+    ]
+    responseMapping: """{"results": "web.results"}"""
+    headers: """{"X-Subscription-Token": "{{BRAVE_API_KEY}}"}"""
+  ) {
+    success
+    name
+    message
+  }
+}
+
+###> RELOAD SCHEMA TO REGISTER NEW RESOLVERS
+mutation ReloadSchema {
+  DbReload
+}

@@ -1,0 +1,51 @@
+#!maicro
+#---
+# title: Pull Weather Station Data
+# description: >
+#   Downloads the weather station demonstration dataset from the
+#   maicroverse GitHub repository into file storage.
+#
+#   Fetches all files from:
+#   https://github.com/bloxez/maicroverse/tree/main/file_storage/weather
+#
+#   Files saved to: <import_root>/weather/
+#     weather_readings.jsonl - 39 readings from 13 global stations
+#                              at 06:00, 12:00, and 18:00 UTC
+#
+#   Run 07.import_weather_data.gql after this to load the data into the DB.
+# difficulty: beginner
+# estimated_time: 10s
+# tags:
+#   - files
+#   - fetch
+#   - github
+#   - weather
+# intent: setup
+#---
+
+###> LOAD IMPORT ROOT
+#{
+# ## Load Shared Import Root
+# Reads the import root from memory (`import_root.path`) so the
+# download path can be composed dynamically.
+#}
+query LoadImportRoot {
+  importRoot: Recall(id: "import_root", path: "path")
+}
+
+###> PullWeatherData
+#{
+# ## Pull Weather Station Files
+# Fetches the weather folder from the maicroverse repository and
+# saves all files into file storage under <import_root>/weather/.
+#
+# Set overwrite: true to refresh files that already exist.
+# The mutation returns the list of files that were saved.
+#}
+mutation PullWeatherData {
+  FetchFolderFromUrl(
+    url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/weather"
+    path: "{{importRoot}}/weather"
+    overwrite: true
+  ) { path file_size content_type }
+}

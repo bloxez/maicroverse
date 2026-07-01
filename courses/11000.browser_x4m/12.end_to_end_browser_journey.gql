@@ -1,0 +1,38 @@
+#!maicro
+#---
+# title: Browser X4m - End-to-End Browser Journey
+# description: Integrated journey combining navigation, extraction, interaction, and state verification.
+# difficulty: advanced
+# estimated_time: 2m
+# tags:
+#   - browser
+#   - end-to-end
+#   - x4m
+# intent: Consolidate learned operations into a complete, repeatable scenario.
+#---
+
+###> STEP 1 - EXTRACT + VISUAL CHECK FLOW
+#{
+# Opens session, navigates, extracts heading text, captures visual metadata, and closes.
+#}
+mutation Step1_EndToEndFlowA {
+  stepA: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome', autoClose:false) | BROWSER_GOTO(url:'https://example.com') | BROWSER_GET_TEXT(selector:'h1') | BROWSER_EVALUATE(expression:'(() => ({ title: document.title, width: window.innerWidth, height: window.innerHeight }))()') | BROWSER_CLOSE"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}
+
+###> STEP 2 - FORM INTERACTION FLOW
+#{
+# Injects deterministic controls into an allowed page and performs interaction.
+#}
+mutation Step2_EndToEndFlowB {
+  stepB: X4m(
+    pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_EVALUATE(expression:'(() => { const root = document.createElement(\"div\"); root.id = \"journey-form\"; const i1 = document.createElement(\"input\"); i1.id = \"name\"; const ta = document.createElement(\"textarea\"); ta.id = \"comments\"; const btn = document.createElement(\"button\"); btn.id = \"submit\"; btn.textContent = \"Done\"; root.append(i1, ta, btn); document.body.appendChild(root); return true; })()') | BROWSER_WAIT_FOR_SELECTOR(selector:'#name', timeout:5000) | BROWSER_TYPE(selector:'#name', text:'Training User') | BROWSER_TYPE(selector:'#comments', text:'Browser X4m journey complete.') | BROWSER_GET_TEXT(selector:'#submit')"
+    runtime: { input: "" }
+  ) {
+    result
+  }
+}

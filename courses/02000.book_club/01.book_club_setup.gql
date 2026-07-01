@@ -1,0 +1,143 @@
+#!maicro
+#---
+# title: Book Club Full Setup
+# intent: Learn how mAIcro auto-generates a full GraphQL API, syncs SQL rows to a graph, and enables semantic search — all without writing backend code.
+# description: End-to-end setup of the book club database. This script orchestrates all setup steps in order — run it once to get a fully working book club with SQL tables, graph integration, seed data, semantic search, and team demo users/notes.
+# difficulty: beginner
+# estimated_time: 17m
+# video: https://www.youtube.com/watch?v=dhi7l1kZi9Y
+# tags:
+#   - database
+#   - graphql
+#   - vector-search
+#   - graph
+#   - seed
+# resources:
+#   - type: docs
+#     url: /reference/database
+#     title: Database Reference
+#   - type: docs
+#     url: /reference/filters
+#     title: Filter Templates
+#---
+
+###> STEP 1 — CLEAR
+#{
+# ## Reset
+# Wipes the database clean: terminates async jobs, drops all tables, and removes any Apache AGE graphs.
+# This makes the script safe to re-run at any time.
+#
+# stepinto: 02.clear_db.gql
+#}
+mutation Step1_Clear {
+  DbExecute(path: "scripts/courses/02000.book_club/02.clear_db.gql") {
+    success message result
+  }
+}
+
+###> STEP 2 — PLATFORM SETUP
+#{
+# ## Platform Features & Filters
+# Enables File Storage, Full-Text Search, and Async Jobs — then creates the
+# `TeamIsolation` filter template for row-level security.
+#
+# stepinto: 03.platform_setup.gql
+#}
+mutation Step2_PlatformSetup {
+  DbExecute(path: "scripts/courses/02000.book_club/03.platform_setup.gql") {
+    success message result
+  }
+}
+
+###> STEP 3 — CREATE TABLES
+#{
+# ## Database Schema
+# Creates the `readers`, `authors`, `books`, `reviews`, and `team_notes` tables.
+# mAIcro auto-generates a full GraphQL API for each table, then `DbReload`
+# makes the new types immediately available.
+#
+# stepinto: 04.create_tables.gql
+#}
+mutation Step3_CreateTables {
+  DbExecute(path: "scripts/courses/02000.book_club/04.create_tables.gql") {
+    success message result
+  }
+}
+
+###> STEP 4 — GRAPH BOOTSTRAP
+#{
+# ## Install Graph Triggers
+# Enables Apache AGE, creates the `book_club_social` graph, and installs
+# AFTER INSERT/DELETE triggers on readers, authors, and books.
+#
+# **Order matters:** this must run before seeding data so every inserted row
+# automatically creates a matching graph node.
+#
+# stepinto: 05.graph_bootstrap.gql
+#}
+mutation Step4_GraphBootstrap {
+  DbExecute(path: "scripts/courses/02000.book_club/05.graph_bootstrap.gql") {
+    success message result
+  }
+}
+
+###> STEP 5 — SEED DATA
+#{
+# ## Populate the Database
+# Inserts 8 readers, 8 authors, 18 books, and 40 reviews.
+# Because the graph triggers are already installed, each insert also creates
+# a SQL-backed graph node automatically — no extra code required.
+#
+# stepinto: 06.seed_data.gql
+#}
+mutation Step5_SeedData {
+  DbExecute(path: "scripts/courses/02000.book_club/06.seed_data.gql") {
+    success message result
+  }
+}
+
+###> STEP 6 — BUILD SOCIAL GRAPH
+#{
+# ## Enrich the Graph
+# Adds the graph-only layer on top of the SQL-backed nodes:
+# - WROTE edges connecting authors to their books
+# - 8 historical literary influences (graph-only Person nodes)
+# - 5 publishers (graph-only) with PUBLISHED_BY edges to books
+# - 6 literary awards (graph-only) with WON edges to books
+# - Power traversal queries demonstrating SQL + Cypher integration
+#
+# stepinto: 07.build_social_graph.gql
+#}
+mutation Step6_BuildSocialGraph {
+  DbExecute(path: "scripts/courses/02000.book_club/07.build_social_graph.gql") {
+    success message result
+  }
+}
+
+###> STEP 7 — TEAM DEMO SETUP
+#{
+# ## Seed Team Demo Users and Notes
+# Creates Team A / Team B users, assigns memberships and roles, then seeds
+# team-scoped notes so row-level isolation is ready to test immediately in IDE.
+#
+# stepinto: 20.teams_setup.gql
+#}
+mutation Step7_TeamDemoSetup {
+  DbExecute(path: "scripts/courses/02000.book_club/20.teams_setup.gql") {
+    success message result
+  }
+}
+
+###> STEP 8 — VERIFY
+#{
+# ## Confirm Everything Works
+# Checks all platform features, tables, and graph nodes are in place.
+# Tests vector embeddings and semantic search.
+#
+# stepinto: 08.verify.gql
+#}
+mutation Step8_Verify {
+  DbExecute(path: "scripts/courses/02000.book_club/08.verify.gql") {
+    success message result
+  }
+}

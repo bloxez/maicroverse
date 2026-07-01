@@ -1,0 +1,172 @@
+#!maicro
+#---
+# title: Seed Data
+# description: Insert readers, authors, books, and reviews aligned with strict reader name schema.
+# difficulty: beginner
+# estimated_time: 5m
+# tags:
+#   - data
+#   - seed
+#---
+
+###> CREATE READERS (STRICT NAME FIELDS)
+mutation CreateReaders {
+   patty: readerAdd(
+    data: {
+      username: "pattyb"
+      password: "hashed_password_123"
+      first_name: "Patricia"
+      middle_name: "Marie"
+      last_name: "Beckham"
+      email: "pat.beckham@email.com"
+      membership_level: "premium"
+    }
+  ) {
+    data {
+      id
+      label
+      membership_level
+    }
+  }
+  
+  alice: readerAdd(
+    data: {
+      username: "bookworm2024"
+      password: "hashed_password_123"
+      first_name: "Alice"
+      middle_name: "Marie"
+      last_name: "Johnson"
+      email: "alice.johnson@email.com"
+      membership_level: "premium"
+    }
+  ) {
+    data { id first_name middle_name last_name membership_level }
+  }
+
+  bob: readerAdd(
+    data: {
+      username: "literaturelover"
+      password: "hashed_password_456"
+      first_name: "Bob"
+      middle_name: "Wei"
+      last_name: "Chen"
+      email: "bob.chen@email.com"
+      membership_level: "user"
+    }
+  ) {
+    data { id first_name middle_name last_name membership_level }
+  }
+
+  carol: readerAdd(
+    data: {
+      username: "novelfan"
+      password: "hashed_password_789"
+      first_name: "Carol"
+      middle_name: "Lee"
+      last_name: "Williams"
+      email: "carol.williams@email.com"
+      membership_level: "premium"
+    }
+  ) {
+    data { id first_name middle_name last_name membership_level }
+  }
+}
+
+###> CREATE AUTHORS
+mutation CreateAuthors {
+  margaret: authorAdd(
+    data: {
+      name: "Margaret Atwood"
+      demography: "{\"age\":84, \"nationality\":\"Canadian\", \"genres\":[\"dystopian\", \"literary fiction\"]}"
+      bio: "Canadian novelist and poet"
+      email: "margaret.atwood@publisher.com"
+    }
+  ) { data { id name } }
+
+  george: authorAdd(
+    data: {
+      name: "George R.R. Martin"
+      demography: "{\"age\":75, \"nationality\":\"American\", \"genres\":[\"fantasy\"]}"
+      bio: "American fantasy novelist"
+      email: "grrm@author.com"
+    }
+  ) { data { id name } }
+
+  agatha: authorAdd(
+    data: {
+      name: "Agatha Christie"
+      demography: "{\"age\":85, \"nationality\":\"British\", \"genres\":[\"mystery\"]}"
+      bio: "English detective novelist"
+      email: "agatha.christie@classic.com"
+    }
+  ) { data { id name } }
+}
+
+###> CREATE BOOKS
+mutation CreateBooks {
+  handmaids_tale: bookAdd(
+    data: {
+      title: "The Handmaid's Tale"
+      genre: "dystopian fiction"
+      author_id: "{{@@.margaret.id}}"
+      synopsis: "A dystopian novel about a totalitarian society."
+      price: 15.99
+    }
+  ) { data { id title } }
+
+  game_of_thrones: bookAdd(
+    data: {
+      title: "A Game of Thrones"
+      genre: "fantasy"
+      author_id: "{{@@.george.id}}"
+      synopsis: "The first novel in A Song of Ice and Fire."
+      price: 18.50
+    }
+  ) { data { id title } }
+
+  orient_express: bookAdd(
+    data: {
+      title: "Murder on the Orient Express"
+      genre: "mystery"
+      author_id: "{{@@.agatha.id}}"
+      synopsis: "A detective novel featuring Hercule Poirot."
+      price: 12.99
+    }
+  ) { data { id title } }
+}
+
+###> CREATE REVIEWS
+mutation CreateReviews {
+  review1: reviewAdd(
+    data: {
+      rating: 5
+      review: "Excellent dystopian novel."
+      reader_id: "{{@@.alice.id}}"
+      book_id: "{{@@.handmaids_tale.id}}"
+      reviewer_ip: "192.168.1.100"
+      review_date: "2024-09-15T10:30:00Z"
+    }
+  ) { data { id } }
+
+  review2: reviewAdd(
+    data: {
+      rating: 4
+      review: "Epic fantasy with deep world-building."
+      reader_id: "{{@@.bob.id}}"
+      book_id: "{{@@.game_of_thrones.id}}"
+      reviewer_ip: "192.168.1.101"
+      review_date: "2024-09-16T14:20:00Z"
+    }
+  ) { data { id } }
+
+  review3: reviewAdd(
+    data: {
+      rating: 5
+      review: "Classic mystery with brilliant plotting."
+      reader_id: "{{@@.carol.id}}"
+      book_id: "{{@@.orient_express.id}}"
+      reviewer_ip: "192.168.1.102"
+      review_date: "2024-09-17T12:00:00Z"
+    }
+  ) { data { id } }
+}

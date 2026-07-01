@@ -1,0 +1,58 @@
+#!maicro
+#---
+# title: Clear Client Data
+# description: Remove seeded client rows and reset the linked drivers license document to a clean state.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - cleanup
+#   - clients
+#   - documents
+#---
+
+###> ENABLE CONTINUE-ON-ERROR
+mutation Step01_EnableContinueOnError {
+  OnError(continueOnError: true) {
+    success
+    mode
+    message
+  }
+}
+
+###> DELETE CLIENT ROWS
+mutation Step02_DeleteClientRows {
+  DbDeleteAllData(name: "clients")
+}
+
+###> RESET DRIVER'S LICENSE DOCUMENT AI DATA
+mutation Step03_ResetDriversLicenseDocument {
+  FileResetAnalysis(id: "82") {
+    id
+    path
+    ai_results
+    text_indexed
+  }
+}
+
+###> CLEAR DOCUMENT LINK
+mutation Step04_ClearDocumentLink {
+  FileUpdate(
+    id: "82"
+    custom_fields: {
+      client_id: ""
+      reader_id: ""
+    }
+  ) {
+    id
+    metadata
+  }
+}
+
+###> RESTORE FAIL-FAST MODE
+mutation Step05_DisableContinueOnError {
+  OnError(continueOnError: false) {
+    success
+    mode
+    message
+  }
+}

@@ -1,0 +1,89 @@
+#!maicro
+#---
+# title: CRON Worker - Fetch Weather
+# description: Worker script executed by cron. Fetches weather data for three cities and persists rows to weather_readings.
+# difficulty: beginner
+# estimated_time: 3m
+# tags:
+#   - cron-worker
+#   - api-wrapper
+#   - ingest
+#---
+
+###> STEP 1 - FETCH PERTH WEATHER
+#{
+# Calls `GetWeather` for Perth and stores the response in script memory.
+#}
+query Step1_FetchPerth {
+  perth: GetWeather(latitude: -31.9505, longitude: 115.8605, current: "temperature_2m") {
+    current
+  }
+}
+
+###> STEP 2 - SAVE PERTH READING
+#{
+# Inserts Perth reading into `weather_readings`.
+#}
+mutation Step2_SavePerth {
+  weather_readingAdd(
+    data: {
+      location: "Perth"
+      temperature: {{@@.perth.0.current.temperature_2m}}
+      timestamp: {{timestamp_ms}}
+    }
+  ) {
+    data { id }
+  }
+}
+
+###> STEP 3 - FETCH ADELAIDE WEATHER
+#{
+# Calls `GetWeather` for Adelaide.
+#}
+query Step3_FetchAdelaide {
+  adelaide: GetWeather(latitude: -34.9285, longitude: 138.6007, current: "temperature_2m") {
+    current
+  }
+}
+
+###> STEP 4 - SAVE ADELAIDE READING
+#{
+# Inserts Adelaide reading into `weather_readings`.
+#}
+mutation Step4_SaveAdelaide {
+  weather_readingAdd(
+    data: {
+      location: "Adelaide"
+      temperature: {{@@.adelaide.0.current.temperature_2m}}
+      timestamp: {{timestamp_ms}}
+    }
+  ) {
+    data { id }
+  }
+}
+
+###> STEP 5 - FETCH SYDNEY WEATHER
+#{
+# Calls `GetWeather` for Sydney.
+#}
+query Step5_FetchSydney {
+  sydney: GetWeather(latitude: -33.8688, longitude: 151.2093, current: "temperature_2m") {
+    current
+  }
+}
+
+###> STEP 6 - SAVE SYDNEY READING
+#{
+# Inserts Sydney reading into `weather_readings`.
+#}
+mutation Step6_SaveSydney {
+  weather_readingAdd(
+    data: {
+      location: "Sydney"
+      temperature: {{@@.sydney.0.current.temperature_2m}}
+      timestamp: {{timestamp_ms}}
+    }
+  ) {
+    data { id }
+  }
+}
