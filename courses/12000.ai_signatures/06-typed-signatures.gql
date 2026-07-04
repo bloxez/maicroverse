@@ -18,10 +18,10 @@ mutation CreateTicketClassificationType {
     name: "TicketClassification"
     description: "Classification result for customer support tickets"
     fields: [
-      { name: "category", type: "String", description: "Primary category: billing, technical, account, general", required: true }
-      { name: "urgency", type: "String", description: "Priority level: low, medium, high, critical", required: true }
-      { name: "summary", type: "String", description: "One-sentence summary of the issue", required: true }
-      { name: "confidence", type: "Float", description: "Confidence score 0.0 to 1.0" }
+      { name: "category", type: "String", description: "Primary category: billing, technical, account, general. e.g. billing", required: true }
+      { name: "urgency", type: "String", description: "Priority level: low, medium, high, critical. e.g. high", required: true }
+      { name: "summary", type: "String", description: "One-sentence summary of the issue. e.g. Customer was charged twice for the same invoice", required: true }
+      { name: "confidence", type: "Float", description: "Confidence score 0.0 to 1.0. e.g. 0.97" }
     ]
   ) {
     success
@@ -52,9 +52,9 @@ mutation CreateTicketInputType {
     description: "Input for ticket classification"
     kind: "input"
     fields: [
-      { name: "ticketText", type: "String", description: "The customer's message", required: true }
-      { name: "customerId", type: "String", description: "Customer identifier" }
-      { name: "channel", type: "String", description: "Support channel: email, chat, phone" }
+      { name: "ticketText", type: "String", description: "The customer's message. e.g. I was charged twice for my subscription", required: true }
+      { name: "customerId", type: "String", description: "Customer identifier. e.g. C-10482" }
+      { name: "channel", type: "String", description: "Support channel: email, chat, phone. e.g. email" }
     ]
   ) {
     success
@@ -91,12 +91,12 @@ mutation CreateInvoiceDataType {
     name: "InvoiceData"
     description: "Structured invoice extraction result"
     fields: [
-      { name: "vendorName", type: "String", description: "Company that issued the invoice", required: true }
-      { name: "invoiceNumber", type: "String", description: "Unique invoice identifier" }
-      { name: "invoiceDate", type: "String", description: "Date of invoice (ISO format)" }
-      { name: "totalAmount", type: "Float", description: "Total amount due", required: true }
-      { name: "currency", type: "String", description: "Currency code (USD, EUR, etc.)" }
-      { name: "lineItems", type: "[JSON]", description: "Array of line item objects" }
+      { name: "vendorName", type: "String", description: "Company that issued the invoice. e.g. Acme Supplies", required: true }
+      { name: "invoiceNumber", type: "String", description: "Unique invoice identifier. e.g. INV-10042" }
+      { name: "invoiceDate", type: "String", description: "Date of invoice (ISO format). e.g. 2026-06-15" }
+      { name: "totalAmount", type: "Float", description: "Total amount due. e.g. 1250.75", required: true }
+      { name: "currency", type: "String", description: "Currency code (USD, EUR, etc.). e.g. AUD" }
+      { name: "lineItems", type: "[JSON]", description: "Array of line item objects. e.g. [{\"description\":\"Consulting\",\"amount\":500}]" }
     ]
   ) {
     success

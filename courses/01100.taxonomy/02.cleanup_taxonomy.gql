@@ -1,0 +1,27 @@
+###> CLEAN UP TAXONOMY ENUMS AND TYPES (COMPACT)
+mutation CleanupTaxonomy {
+  drop_document_purpose: DbDropEnum(name: "DocumentPurpose", failIfNotFound: false)
+  drop_document_type: DbDropEnum(name: "DocumentType", failIfNotFound: false)
+  drop_dva_card_colour: DbDropEnum(name: "DVACardColour", failIfNotFound: false)
+
+  delete_passport: DeleteType(name: "Passport", failIfNotFound: false) { success }
+  delete_drivers_license: DeleteType(name: "DriversLicense", failIfNotFound: false) { success }
+  delete_dva_card: DeleteType(name: "DVACard", failIfNotFound: false) { success }
+  delete_pension_card: DeleteType(name: "PensionCard", failIfNotFound: false) { success }
+  delete_medicare_card: DeleteType(name: "MedicareCard", failIfNotFound: false) { success }
+  delete_gp_health_summary: DeleteType(name: "GPHealthSummary", failIfNotFound: false) { success }
+  delete_current_medication_list: DeleteType(name: "CurrentMedicationList", failIfNotFound: false) { success }
+  delete_allied_health_reports: DeleteType(name: "AlliedHealthReports", failIfNotFound: false) { success }
+  delete_hospital_discharge_summary: DeleteType(name: "HospitalDischargeSummary", failIfNotFound: false) { success }
+  delete_assessment_outcome_letter: DeleteType(name: "AssessmentOutcomeLetter", failIfNotFound: false) { success }
+  delete_advance_care_directive: DeleteType(name: "AdvanceCareDirective", failIfNotFound: false) { success }
+  delete_behaviour_support_plan: DeleteType(name: "BehaviourSupportPlan", failIfNotFound: false) { success }
+  delete_my_aged_care_support_plan: DeleteType(name: "MyAgedCareSupportPlan", failIfNotFound: false) { success }
+  delete_support_at_home_care_plan: DeleteType(name: "SupportAtHomeCarePlan", failIfNotFound: false) { success }
+  delete_financial_authority_documents: DeleteType(name: "FinancialAuthorityDocuments", failIfNotFound: false) { success }
+  delete_residential_means_assessment_outcome: DeleteType(name: "ResidentialMeansAssessmentOutcome", failIfNotFound: false) { success }
+  delete_sa457: DeleteType(name: "SA457", failIfNotFound: false) { success }
+  delete_sa485: DeleteType(name: "SA485", failIfNotFound: false) { success }
+  delete_enduring_power_of_attorney: DeleteType(name: "EnduringPowerOfAttorney", failIfNotFound: false) { success }
+  delete_guardianship_orders: DeleteType(name: "GuardianshipOrders", failIfNotFound: false) { success }
+}
