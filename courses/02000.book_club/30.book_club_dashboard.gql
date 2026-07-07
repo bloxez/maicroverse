@@ -16,12 +16,89 @@
 # Uses `readersLookup { id label }` so UI dropdowns can directly consume clean options.
 #}
 query BookClubDashboard {
-  dashboard: JsonObject {
-    title: eval(v: "Book Club Command Center")
-    description: eval(v: "Unified payload: layout + charts + query data")
-    layout: eval(v: "{\"columns\":12,\"gap\":12}")
-    controls: eval(v: "[{\"id\":\"genre\",\"label\":\"Genre\",\"field\":\"genre\",\"type\":\"select\"},{\"id\":\"membership_level\",\"label\":\"Membership\",\"field\":\"membership_level\",\"type\":\"select\"},{\"id\":\"reader_id\",\"label\":\"Reader\",\"field\":\"id\",\"type\":\"select\",\"source\":\"readers_lookup\"}]")
-    charts: eval(v: "[{\"id\":\"w_books_genre\",\"title\":\"Books by Genre\",\"subtitle\":\"Catalog mix\",\"dataPath\":\"books_by_genre\",\"chart\":{\"type\":\"bar\",\"xField\":\"genre\",\"yField\":\"price\",\"topN\":10},\"layout\":{\"x\":1,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_rating_dist\",\"title\":\"Ratings Distribution\",\"subtitle\":\"Review quality signal\",\"dataPath\":\"reviews_flat\",\"chart\":{\"type\":\"doughnut\",\"xField\":\"rating\"},\"layout\":{\"x\":5,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_membership_mix\",\"title\":\"Reader Membership Mix\",\"subtitle\":\"Audience composition\",\"dataPath\":\"reader_membership\",\"chart\":{\"type\":\"pie\",\"xField\":\"membership_level\"},\"layout\":{\"x\":9,\"y\":1,\"w\":4,\"h\":1}},{\"id\":\"w_reviews_timeline\",\"title\":\"Review Timeline\",\"subtitle\":\"Trend by date\",\"dataPath\":\"reviews_timeline\",\"chart\":{\"type\":\"line\",\"xField\":\"review_date\",\"yField\":\"rating\"},\"layout\":{\"x\":1,\"y\":2,\"w\":6,\"h\":1}},{\"id\":\"w_price_dist\",\"title\":\"Price Distribution\",\"subtitle\":\"Book pricing spread\",\"dataPath\":\"books_by_genre\",\"chart\":{\"type\":\"bar\",\"xField\":\"title\",\"yField\":\"price\",\"topN\":12},\"layout\":{\"x\":7,\"y\":2,\"w\":6,\"h\":1}}]")
+  Dashboard(view: {
+    title: "Book Club Command Center"
+    description: "Unified payload: layout + charts + query data"
+    layout: { columns: 12, gap: 12 }
+    controls: [
+      { id: "genre", label: "Genre", field: "genre", type: "select" }
+      { id: "membership_level", label: "Membership", field: "membership_level", type: "select" }
+      { id: "reader_id", label: "Reader", field: "id", type: "select", source: "readers_lookup" }
+    ]
+    charts: [
+      {
+        id: "w_books_genre"
+        title: "Books by Genre"
+        subtitle: "Catalog mix"
+        dataPath: "books_by_genre"
+        chart: { type: "bar", xField: "genre", yField: "price", topN: 10 }
+        layout: { x: 1, y: 1, w: 4, h: 1 }
+      }
+      {
+        id: "w_rating_dist"
+        title: "Ratings Distribution"
+        subtitle: "Review quality signal"
+        dataPath: "reviews_flat"
+        chart: { type: "doughnut", xField: "rating" }
+        layout: { x: 5, y: 1, w: 4, h: 1 }
+      }
+      {
+        id: "w_membership_mix"
+        title: "Reader Membership Mix"
+        subtitle: "Audience composition"
+        dataPath: "reader_membership"
+        chart: { type: "pie", xField: "membership_level" }
+        layout: { x: 9, y: 1, w: 4, h: 1 }
+      }
+      {
+        id: "w_reviews_timeline"
+        title: "Review Timeline"
+        subtitle: "Trend by date"
+        dataPath: "reviews_timeline"
+        chart: { type: "line", xField: "review_date", yField: "rating" }
+        layout: { x: 1, y: 2, w: 6, h: 1 }
+      }
+      {
+        id: "w_price_dist"
+        title: "Price Distribution"
+        subtitle: "Book pricing spread"
+        dataPath: "books_by_genre"
+        chart: { type: "bar", xField: "title", yField: "price", topN: 12 }
+        layout: { x: 7, y: 2, w: 6, h: 1 }
+      }
+    ]
+  }) {
+    title
+    description
+    layout {
+      columns
+      gap
+    }
+    controls {
+      id
+      label
+      field
+      type
+      source
+    }
+    charts {
+      id
+      title
+      subtitle
+      dataPath
+      chart {
+        type
+        xField
+        yField
+        topN
+      }
+      layout {
+        x
+        y
+        w
+        h
+      }
+    }
   }
 
   readers_lookup: readersLookup {
@@ -58,7 +135,7 @@ query BookClubDashboard {
 # Confirms this script returns dashboard + at least one chart dataset.
 #}
 query ValidatePayload {
-  AssertDashboard: Assert(actual: "{{dashboard.title}}", op: "exists", expected: "true") {
+  AssertDashboard: Assert(actual: "{{Dashboard.title}}", op: "exists", expected: "true") {
     success
     message
   }
@@ -70,7 +147,7 @@ query ValidatePayload {
     success
     message
   }
-  AssertChartCount: Assert(actual: "{{dashboard.charts.4.id}}", op: "exists", expected: "true") {
+  AssertChartCount: Assert(actual: "{{Dashboard.charts.4.id}}", op: "exists", expected: "true") {
     success
     message
   }
