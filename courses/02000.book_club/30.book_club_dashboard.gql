@@ -21,9 +21,9 @@ query BookClubDashboard {
     description: "Unified payload: layout + charts + query data"
     layout: { columns: 12, gap: 12 }
     controls: [
-      { id: "genre", label: "Genre", field: "genre", type: "select" }
-      { id: "membership_level", label: "Membership", field: "membership_level", type: "select" }
-      { id: "reader_id", label: "Reader", field: "id", type: "select", source: "readers_lookup" }
+      { id: "genre", label: "Genre", field: "genre", type: SELECT, operator: EQ }
+      { id: "membership_level", label: "Membership", field: "membership_level", type: SELECT, operator: EQ }
+      { id: "reader_id", label: "Reader", field: "id", type: SELECT, operator: EQ, source: "readers_lookup" }
     ]
     charts: [
       {
@@ -31,7 +31,7 @@ query BookClubDashboard {
         title: "Books by Genre"
         subtitle: "Catalog mix"
         dataPath: "books_by_genre"
-        chart: { type: "bar", xField: "genre", yField: "price", topN: 10 }
+        chart: { type: BAR, xField: "genre", yField: "price", topN: 10 }
         layout: { x: 1, y: 1, w: 4, h: 1 }
       }
       {
@@ -39,7 +39,7 @@ query BookClubDashboard {
         title: "Ratings Distribution"
         subtitle: "Review quality signal"
         dataPath: "reviews_flat"
-        chart: { type: "doughnut", xField: "rating" }
+        chart: { type: DOUGHNUT, xField: "rating" }
         layout: { x: 5, y: 1, w: 4, h: 1 }
       }
       {
@@ -47,7 +47,7 @@ query BookClubDashboard {
         title: "Reader Membership Mix"
         subtitle: "Audience composition"
         dataPath: "reader_membership"
-        chart: { type: "pie", xField: "membership_level" }
+        chart: { type: PIE, xField: "membership_level" }
         layout: { x: 9, y: 1, w: 4, h: 1 }
       }
       {
@@ -55,7 +55,7 @@ query BookClubDashboard {
         title: "Review Timeline"
         subtitle: "Trend by date"
         dataPath: "reviews_timeline"
-        chart: { type: "line", xField: "review_date", yField: "rating" }
+        chart: { type: LINE, xField: "review_date", yField: "rating" }
         layout: { x: 1, y: 2, w: 6, h: 1 }
       }
       {
@@ -63,7 +63,7 @@ query BookClubDashboard {
         title: "Price Distribution"
         subtitle: "Book pricing spread"
         dataPath: "books_by_genre"
-        chart: { type: "bar", xField: "title", yField: "price", topN: 12 }
+        chart: { type: BAR, xField: "title", yField: "price", topN: 12 }
         layout: { x: 7, y: 2, w: 6, h: 1 }
       }
     ]
@@ -78,6 +78,7 @@ query BookClubDashboard {
       id
       label
       field
+      operator
       type
       source
     }
