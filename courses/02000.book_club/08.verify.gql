@@ -10,15 +10,6 @@
 #   - introspection
 #---
 
-###> RELOAD SCHEMA
-#{
-# ## Fresh Schema
-# Reload before inspection so all generated types and resolvers are current.
-#}
-mutation Reload {
-  DbReload
-}
-
 ###> GET THE DATABASE STATE
 #{
 # ## Core State

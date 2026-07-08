@@ -53,6 +53,4 @@ mutation GraphBootstrap {
     graphName: "book_club_social"
     graphLabel: "Book"
   )
-
-  DbReload
 }
