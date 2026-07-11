@@ -1,0 +1,76 @@
+#!maicro
+#---
+# title: Inspect and Evolve Signatures
+# description: Reviews signature inventory and demonstrates safe signature metadata evolution.
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - signatures
+#   - lifecycle
+#   - observability
+#---
+
+###> LIST ALL SIGNATURES
+#{
+# Top-level inventory view.
+#}
+query ListSignatures {
+  ListSignatures {
+    id
+    name
+    description
+    category
+  }
+}
+
+###> INSPECT EACH COURSE SIGNATURE
+#{
+# Reads signature details by id.
+#}
+query GetSignatures {
+  classify: GetSignature(id: "sig12001_classify_support") {
+    id
+    name
+    description
+    category
+  }
+  invoice: GetSignature(id: "sig12001_extract_invoice") {
+    id
+    name
+    description
+    category
+  }
+}
+
+###> EVOLVE CLASSIFICATION SIGNATURE METADATA
+#{
+# Signature lifecycle example: adjust metadata while keeping contract intent stable.
+#}
+mutation UpdateClassificationSignature {
+  UpdateSignature(
+    id: "sig12001_classify_support"
+    input: {
+      name: "Typed Support Classifier v2"
+      description: "Classify support tickets using explicit contract fields and stronger operational naming"
+      category: "operations"
+    }
+  ) {
+    success
+    message
+    signature {
+      id
+      name
+      description
+      category
+    }
+  }
+}
+
+###> VERIFY TYPE SDL STILL MATCHES CONTRACT STORY
+#{
+# These custom type contracts stay as documentation anchors for signature schemas.
+#}
+query VerifySdlAnchors {
+  inputContract: GetTypeSDL(name: "Sig12001TicketInput")
+  outputContract: GetTypeSDL(name: "Sig12001TicketClassification")
+}

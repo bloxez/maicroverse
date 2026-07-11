@@ -12,11 +12,11 @@
 # intent: Show how chain composition can avoid manual session id wiring.
 #---
 
-###> STEP 1 - CHAINED SESSION FLOW
+###> CHAINED SESSION FLOW
 #{
 # Opens a session with `autoClose:false`, performs actions, lists sessions, then closes.
 #}
-mutation Step1_ImplicitSessionChain {
+mutation ImplicitSessionChain {
   demo: X4m(
     pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome', autoClose:false) | BROWSER_GOTO(url:'https://example.com') | BROWSER_WAIT(ms:400) | BROWSER_GET_TEXT(selector:'h1') | BROWSER_LIST | BROWSER_CLOSE"
     runtime: { input: "" }

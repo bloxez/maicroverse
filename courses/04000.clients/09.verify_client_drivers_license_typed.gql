@@ -12,7 +12,7 @@
 #---
 
 ###> GET LINKED FILE (DOC 82)
-query Step01_LinkedFile {
+query LinkedFile {
   linked_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
     metadata {
       id
@@ -24,7 +24,7 @@ query Step01_LinkedFile {
 }
 
 ###> ASSERT FILE HAS client_id LINK
-query Step02_AssertClientIdPresent {
+query AssertClientIdPresent {
   Assert(
     actual: "{{linked_file.metadata.metadata.custom_fields.client_id}}"
     op: "exists"
@@ -36,7 +36,7 @@ query Step02_AssertClientIdPresent {
 }
 
 ###> QUERY CLIENT WITH CANONICAL DRIVERSLICENSE FIELDS
-query Step03_ClientTypedTraversal {
+query ClientTypedTraversal {
   linked_client: clients(
     where: { id: { eq: "{{linked_file.metadata.metadata.custom_fields.client_id}}" } }
     page: { page: 1, items: 1 }
@@ -66,7 +66,7 @@ query Step03_ClientTypedTraversal {
 }
 
 ###> ASSERT LICENSE NUMBER IS MAPPED
-query Step04_AssertLicenseNumber {
+query AssertLicenseNumber {
   Assert(
     actual: "{{linked_client.0.drivers_license.license_number}}"
     op: "contains"
@@ -78,7 +78,7 @@ query Step04_AssertLicenseNumber {
 }
 
 ###> ASSERT ADDRESS STREET IS POPULATED
-query Step05_AssertAddressStreet {
+query AssertAddressStreet {
   Assert(
     actual: "{{linked_client.0.drivers_license.addr_street}}"
     op: "contains"

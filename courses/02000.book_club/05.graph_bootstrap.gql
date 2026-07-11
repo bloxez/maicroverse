@@ -26,12 +26,12 @@
 # so they appear as distinct labels in Cypher queries and in the IDE graph view.
 #}
 mutation GraphBootstrap {
-  DbEnableGraph {
+  EnableGraphs {
     age_extension
     status
   }
 
-  GraphCreate: GraphCreate(name: "book_club_social", ifNotExists: true)
+  GraphCreate: DbGraphCreate(name: "book_club_social", ifNotExists: true)
 
   ReadersAsPerson: DbSetGraphSync(
     table: "readers"

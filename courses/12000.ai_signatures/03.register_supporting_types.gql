@@ -1,0 +1,90 @@
+#!maicro
+#---
+# title: Register Supporting Type Contracts
+# description: Defines custom GraphQL types that formalize signature input and output shapes.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - signatures
+#   - custom-types
+#   - contracts
+#---
+
+###> REGISTER INPUT TYPE CONTRACT
+#{
+# This input contract models the support ticket payload our signature expects.
+#}
+mutation RegisterInputType {
+  RegisterType(
+    name: "Sig12001TicketInput"
+    description: "Typed contract for support ticket classification input"
+    kind: "input"
+    fields: [
+      { name: "ticketText", type: "String", description: "Original customer support message", required: true }
+      { name: "customerId", type: "String", description: "Optional customer identifier" }
+      { name: "channel", type: "String", description: "email|chat|phone", required: true }
+      { name: "productArea", type: "String", description: "Billing, API, Dashboard", required: true }
+    ]
+  ) {
+    success
+    name
+    message
+    graphql
+  }
+}
+
+###> REGISTER OUTPUT TYPE CONTRACT
+#{
+# This output contract models what the classifier should return.
+#}
+mutation RegisterOutputType {
+  RegisterType(
+    name: "Sig12001TicketClassification"
+    description: "Typed contract for support ticket classification output"
+    fields: [
+      { name: "category", type: "String", description: "billing|technical|account|general", required: true }
+      { name: "urgency", type: "String", description: "low|medium|high|critical", required: true }
+      { name: "summary", type: "String", description: "One-sentence summary", required: true }
+      { name: "confidence", type: "Float", description: "0.0 to 1.0" }
+    ]
+  ) {
+    success
+    name
+    message
+    graphql
+  }
+}
+
+###> REGISTER SECOND OUTPUT TYPE CONTRACT
+#{
+# A richer extraction type used by the invoice signature.
+#}
+mutation RegisterInvoiceType {
+  RegisterType(
+    name: "Sig12001InvoiceData"
+    description: "Typed contract for invoice extraction output"
+    fields: [
+      { name: "vendorName", type: "String", description: "Company name", required: true }
+      { name: "invoiceNumber", type: "String", description: "Invoice number" }
+      { name: "invoiceDate", type: "String", description: "ISO date" }
+      { name: "totalAmount", type: "Float", description: "Total amount", required: true }
+      { name: "currency", type: "String", description: "Currency code" }
+      { name: "lineItems", type: "[JSON]", description: "Extracted line item objects" }
+    ]
+  ) {
+    success
+    name
+    message
+    graphql
+  }
+}
+
+###> INSPECT CONTRACT SDL
+#{
+# Verify contracts are visible through schema SDL lookup.
+#}
+query InspectTypeSDL {
+  inputSdl: GetTypeSDL(name: "Sig12001TicketInput")
+  outputSdl: GetTypeSDL(name: "Sig12001TicketClassification")
+  invoiceSdl: GetTypeSDL(name: "Sig12001InvoiceData")
+}

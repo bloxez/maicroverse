@@ -10,13 +10,13 @@
 #   - troubleshooting
 #---
 
-###> STEP 1 - RESOLVE TARGET JOB
+###> RESOLVE TARGET JOB
 #{
 # Selects the first cron job from the list.
 #
 # If no jobs exist, run `01.CRON_SETUP_WEATHER_DEMO.gql` first.
 #}
-query Step1_ResolveCronJob {
+query ResolveCronJob {
   weatherDemoJobs: CronJobs(limit: 10) {
     id
     name
@@ -25,11 +25,11 @@ query Step1_ResolveCronJob {
   }
 }
 
-###> STEP 2 - LIST ERROR LOGS
+###> LIST ERROR LOGS
 #{
 # Retrieves failed execution logs for the selected job.
 #}
-query Step2_ListErrorLogs {
+query ListErrorLogs {
   CronJobLogs(
     cronJobId: "{{@@.weatherDemoJobs.0.id}}"
     limit: 50

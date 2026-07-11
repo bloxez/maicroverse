@@ -20,7 +20,7 @@
 #     title: Database Foundations
 #---
 
-###> STEP 1 — UPSERT FORM DEFINITION
+###> UPSERT FORM DEFINITION
 #{
 # ## Create the Aged Care Intake Form
 # Installs or updates the full residential aged care application form used by the
@@ -28,10 +28,8 @@
 #
 # The script defines markdown guidance, ordered sections, and a large field model
 # that exercises autosave, validation, and step navigation in the IDE.
-#
-# stepinto: 02.aged_care_intake.gql
 #}
-mutation Step1_UpsertFormDefinition {
+mutation UpsertFormDefinition {
   DbExecute(path: "scripts/courses/20000.forms/02.aged_care_intake.gql") {
     success
     message
@@ -39,16 +37,14 @@ mutation Step1_UpsertFormDefinition {
   }
 }
 
-###> STEP 2 — SEED REALISTIC SUBMISSIONS
+###> SEED REALISTIC SUBMISSIONS
 #{
 # ## Create Demo Applicants
 # Seeds two realistic example applications against the aged care intake form:
 # - Helen Papadopoulos: hospital discharge, dementia progression, falls, family-led decision support
 # - Arthur McKenzie: home-based decline, Parkinson's disease, diabetes, mobility complexity, spouse support
-#
-# stepinto: 03.aged_care_intake_submissions.gql
 #}
-mutation Step2_SeedSubmissions {
+mutation SeedSubmissions {
   DbExecute(path: "scripts/courses/20000.forms/03.aged_care_intake_submissions.gql") {
     success
     message
@@ -56,13 +52,13 @@ mutation Step2_SeedSubmissions {
   }
 }
 
-###> STEP 3 — VERIFY DEMO ASSETS
+###> VERIFY DEMO ASSETS
 #{
 # ## Confirm the Form and Seeded Submissions Exist
 # Verifies the form definition is available and that both submission groups are
 # queryable by submission ID.
 #}
-query Step3_Verify {
+query Verify {
   form: FormDefinitionGet(id: "aged_care_intake_v1") {
     id
     name

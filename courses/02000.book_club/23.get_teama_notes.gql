@@ -9,7 +9,7 @@
 #   - team-isolation
 #---
 
-###> STEP 1 - TEAM A NOTE VIEW
+###> TEAM A NOTE VIEW
 #{
 # Purpose:
 # Demonstrate row-level isolation for Team A in an interactive user session.
@@ -49,7 +49,7 @@ query TeamA_View {
   }
 }
 
-###> STEP 2 - ASSERT TEAM A SEGREGATION
+###> ASSERT TEAM A SEGREGATION
 #{
 # Purpose:
 # Fail fast if Team A visibility is incorrect.

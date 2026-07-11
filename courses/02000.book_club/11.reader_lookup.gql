@@ -10,7 +10,7 @@
 #   - dashboard
 #---
 
-###> STEP 1 - READER LOOKUP OPTIONS
+###> READER LOOKUP OPTIONS
 #{
 # Purpose:
 # Return compact {id, label} options for UI controls (for example dashboard reader dropdowns).
@@ -21,14 +21,14 @@
 # Expected outcome:
 # - At least one row with id + label when seed data exists.
 #}
-query Step1_ReaderLookup {
+query ReaderLookup {
   readersLookup {
     id
     label
   }
 }
 
-###> STEP 2 - READER + AUTHOR PREVIEW
+###> READER + AUTHOR PREVIEW
 #{
 # Purpose:
 # Show how lookup labels align with core relational data.
@@ -41,7 +41,7 @@ query Step1_ReaderLookup {
 # - Reader list is populated.
 # - Book rows include nested author labels.
 #}
-query Step2_RelationshipPreview {
+query RelationshipPreview {
   readers(page: { page: 1, items: 50 }, sort: [{ key: "id", asc: true }]) {
     id
     label
@@ -56,12 +56,12 @@ query Step2_RelationshipPreview {
   }
 }
 
-###> STEP 3 - QUICK VALIDATION
+###> QUICK VALIDATION
 #{
 # Purpose:
 # Confirm this script returned both lookup and relational payloads.
 #}
-query Step3_Validate {
+query Validate {
   AssertLookup: Assert(actual: "{{readersLookup.0.id}}", op: "exists", expected: "true") {
     success
     message

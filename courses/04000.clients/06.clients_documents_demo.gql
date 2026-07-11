@@ -32,7 +32,7 @@ query GetRootPath {
   )
 }
 
-###> STEP 1 - FETCH DRIVERS LICENSE IMAGE
+###> FETCH DRIVERS LICENSE IMAGE
 mutation PullDriversLicense {
   FetchFolderFromUrl(
     url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/au_identity"
@@ -41,8 +41,8 @@ mutation PullDriversLicense {
   ) { path file_size content_type }
 }
 
-###> STEP 1 - CONFIGURE TYPE + RELATIONSHIP
-mutation Step1_ConfigureRelationship {
+###> CONFIGURE TYPE + RELATIONSHIP
+mutation ConfigureRelationship {
   DbExecute(path: "scripts/courses/04000.clients/07.configure_drivers_license_relationship.gql") {
     success
     message
@@ -50,8 +50,8 @@ mutation Step1_ConfigureRelationship {
   }
 }
 
-###> STEP 2 - LINK DOCUMENT TO CLIENT VIA metadata.custom_fields.client_id
-mutation Step2_LinkDocument {
+###> LINK DOCUMENT TO CLIENT VIA metadata.custom_fields.client_id
+mutation LinkDocument {
   DbExecute(path: "scripts/courses/04000.clients/08.link_document_to_client.gql") {
     success
     message
@@ -59,12 +59,12 @@ mutation Step2_LinkDocument {
   }
 }
 
-###> STEP 3 - ANALYZE DOCUMENT TO REBUILD ai_results
-mutation Step3_AnalyzeDocument {
+###> ANALYZE DOCUMENT TO REBUILD ai_results
+mutation AnalyzeDocument {
   FileAnalyze(
     id: "{{DbExecute.result.target_file.metadata.id}}"
     options: {
-      specs: ["drivers_license"]
+      tasks: ["drivers_license"]
       timeout: 60
     }
   ) {
@@ -73,8 +73,8 @@ mutation Step3_AnalyzeDocument {
   }
 }
 
-###> STEP 4 - WAIT FOR ANALYSIS TO COMPLETE
-mutation Step4_WaitForAnalysis {
+###> WAIT FOR ANALYSIS TO COMPLETE
+mutation WaitForAnalysis {
   AwaitJobCompletion(jobId: "{{FileAnalyze.job_id}}") {
     id
     status
@@ -83,8 +83,8 @@ mutation Step4_WaitForAnalysis {
   }
 }
 
-###> STEP 5 - VERIFY TYPED TRAVERSAL + DATA ASSERTIONS
-mutation Step5_VerifyTypedTraversal {
+###> VERIFY TYPED TRAVERSAL + DATA ASSERTIONS
+mutation VerifyTypedTraversal {
   DbExecute(path: "scripts/courses/04000.clients/09.verify_client_drivers_license_typed.gql") {
     success
     message

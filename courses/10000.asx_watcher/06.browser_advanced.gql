@@ -12,11 +12,11 @@
 # intent: Teach robust multi-call BrowserExecute patterns while preserving repeatability.
 #---
 
-###> STEP 1 - OPEN BROWSER SESSION
+###> OPEN BROWSER SESSION
 #{
 # Opens a fresh browser session for advanced operations.
 #}
-mutation Step1_OpenSession {
+mutation OpenSession {
   session: OpenBrowser(input: {
     executablePath: "/usr/bin/google-chrome"
     headless: true
@@ -25,11 +25,11 @@ mutation Step1_OpenSession {
   }
 }
 
-###> STEP 2 - NAVIGATE AND VERIFY PAGE TITLE
+###> NAVIGATE AND VERIFY PAGE TITLE
 #{
 # Loads the Technology page and captures page title to validate navigation.
 #}
-mutation Step2_NavigateAndTitleCheck {
+mutation NavigateAndTitleCheck {
   navigate: BrowserExecute(
     sessionId: "{{@@.session.sessionId}}"
     actions: [
@@ -43,11 +43,11 @@ mutation Step2_NavigateAndTitleCheck {
   }
 }
 
-###> STEP 3 - EXTRACT HEADINGS
+###> EXTRACT HEADINGS
 #{
 # Extracts first headings and previews to demonstrate structured content capture.
 #}
-mutation Step3_ExtractHeadings {
+mutation ExtractHeadings {
   headings: BrowserExecute(
     sessionId: "{{@@.session.sessionId}}"
     actions: [
@@ -59,12 +59,12 @@ mutation Step3_ExtractHeadings {
   }
 }
 
-###> STEP 4 - CHALLENGE AWARENESS CHECK
+###> CHALLENGE AWARENESS CHECK
 #{
 # Checks whether page text hints at anti-bot challenge language.
 # Expected effect: structured output with title, challenge flag, and body preview.
 #}
-mutation Step4_ChallengeDetection {
+mutation ChallengeDetection {
   testNavigation: BrowserExecute(
     sessionId: "{{@@.session.sessionId}}"
     actions: [
@@ -78,11 +78,11 @@ mutation Step4_ChallengeDetection {
   }
 }
 
-###> STEP 5 - CLEANUP SESSION
+###> CLEANUP SESSION
 #{
 # Closes all browser sessions so this advanced script can be re-run safely.
 #}
-mutation Step5_CloseAllBrowsers {
+mutation CloseAllBrowsers {
   CloseAllBrowsers {
     closedCount
   }

@@ -12,12 +12,10 @@
 #   - graphql
 #---
 
-###> STEP 1 — REGISTER GRAPHQL TYPE
+###> REGISTER GRAPHQL TYPE
 #{
 # ## Create DriversLicense Type
 # Creates the user-defined GraphQL type that the AI task references.
-#
-# stepinto: 03.setup_drivers_license_type.gql
 #}
 mutation RegisterDriversLicenseType {
   DbExecute(path: "scripts/courses/01000.ai_tasks/03.setup_drivers_license_type.gql") {
@@ -27,12 +25,10 @@ mutation RegisterDriversLicenseType {
   }
 }
 
-###> STEP 2 — ADD AI TASK
+###> ADD AI TASK
 #{
 # ## Create test_drivers_license Task
 # Adds the AI task into maiql.ai_tasks using the new AiTaskAdd resolver.
-#
-# stepinto: 04.add_drivers_license_task.gql
 #}
 mutation AddDriversLicenseTask {
   DbExecute(path: "scripts/courses/01000.ai_tasks/04.add_drivers_license_task.gql") {

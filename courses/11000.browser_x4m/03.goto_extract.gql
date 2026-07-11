@@ -11,11 +11,11 @@
 # intent: Teach content extraction patterns after basic navigation.
 #---
 
-###> STEP 1 - NAVIGATE + GET TEXT
+###> NAVIGATE + GET TEXT
 #{
 # Visits example.com and extracts heading text.
 #}
-mutation Step1_GotoExtract {
+mutation GotoExtract {
   demo: X4m(
     pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com', waitUntil:'domcontentloaded') | BROWSER_GET_TEXT(selector:'h1') | BROWSER_GOTO(url:'https://example.com') | BROWSER_GET_HTML(selector:'body') | BROWSER_GOTO(url:'https://example.com') | BROWSER_GET_ATTR(selector:'a', attr:'href')"
     runtime: { input: "" }

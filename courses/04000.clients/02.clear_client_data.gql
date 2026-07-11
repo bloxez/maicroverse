@@ -11,7 +11,7 @@
 #---
 
 ###> ENABLE CONTINUE-ON-ERROR
-mutation Step01_EnableContinueOnError {
+mutation EnableContinueOnError {
   OnError(continueOnError: true) {
     success
     mode
@@ -20,12 +20,12 @@ mutation Step01_EnableContinueOnError {
 }
 
 ###> DELETE CLIENT ROWS
-mutation Step02_DeleteClientRows {
+mutation DeleteClientRows {
   DbDeleteAllData(name: "clients")
 }
 
 ###> RESET DRIVER'S LICENSE DOCUMENT AI DATA
-mutation Step03_ResetDriversLicenseDocument {
+mutation ResetDriversLicenseDocument {
   FileResetAnalysis(id: "82") {
     id
     path
@@ -35,7 +35,7 @@ mutation Step03_ResetDriversLicenseDocument {
 }
 
 ###> CLEAR DOCUMENT LINK
-mutation Step04_ClearDocumentLink {
+mutation ClearDocumentLink {
   FileUpdate(
     id: "82"
     custom_fields: {
@@ -49,7 +49,7 @@ mutation Step04_ClearDocumentLink {
 }
 
 ###> RESTORE FAIL-FAST MODE
-mutation Step05_DisableContinueOnError {
+mutation DisableContinueOnError {
   OnError(continueOnError: false) {
     success
     mode

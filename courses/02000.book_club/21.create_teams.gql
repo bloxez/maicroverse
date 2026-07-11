@@ -10,7 +10,7 @@
 #   - rbac
 #---
 
-###> STEP 1 - CREATE ROLES
+###> CREATE ROLES
 #{
 # Purpose:
 # Create demo-specific roles used by book club team members.
@@ -22,7 +22,7 @@
 # Expected outcome:
 # - both role IDs are available for assignment in later steps.
 #}
-mutation Step1_CreateRoles {
+mutation CreateRoles {
   memberRole: AuthCreateRole(
     input: {
       name: "book_club_member"
@@ -63,7 +63,7 @@ mutation Step1_CreateRoles {
   }
 }
 
-###> STEP 2 - CREATE TEAMS
+###> CREATE TEAMS
 #{
 # Purpose:
 # Create the two demo teams used for row-level isolation.
@@ -74,7 +74,7 @@ mutation Step1_CreateRoles {
 # Expected outcome:
 # - two team IDs are available for membership assignment.
 #}
-mutation Step2_CreateTeams {
+mutation CreateTeams {
   teamA: AuthCreateTeam(input: {
     name: "teama"
     description: "Book Club Team A - Fiction discussion and member support"
@@ -94,7 +94,7 @@ mutation Step2_CreateTeams {
   }
 }
 
-###> STEP 3 - CREATE USERS
+###> CREATE USERS
 #{
 # Purpose:
 # Provision fixed demo users aligned with IDE account switching.
@@ -107,7 +107,7 @@ mutation Step2_CreateTeams {
 # Expected outcome:
 # - both user IDs are available for team and role assignment.
 #}
-mutation Step3_CreateUsers {
+mutation CreateUsers {
   userA: AuthCreateUser(input: {
     email: "maicro1@maicro.ai"
     name: "Book Club Team A User"
@@ -129,7 +129,7 @@ mutation Step3_CreateUsers {
   }
 }
 
-###> STEP 4 - ASSIGN USERS TO TEAMS
+###> ASSIGN USERS TO TEAMS
 #{
 # Purpose:
 # Bind each demo user to exactly one team.
@@ -141,7 +141,7 @@ mutation Step3_CreateUsers {
 # Expected outcome:
 # - AuthUserTeams for each user contains only its team ID.
 #}
-mutation Step4_AssignTeams {
+mutation AssignTeams {
   teamAssignA: AuthAssignTeamsToUser(
     userId: "{{@@.userA.user_id}}"
     teamIds: ["{{@@.teamA.id}}"]
@@ -159,7 +159,7 @@ mutation Step4_AssignTeams {
   }
 }
 
-###> STEP 5 - ASSIGN ROLES TO USERS
+###> ASSIGN ROLES TO USERS
 #{
 # Purpose:
 # Attach RBAC roles for realistic team operation.
@@ -171,7 +171,7 @@ mutation Step4_AssignTeams {
 # Expected outcome:
 # - role assignment payloads return expected role lists.
 #}
-mutation Step5_AssignRoles {
+mutation AssignRoles {
   roleAssignA: AuthAssignRolesToUser(
     userId: "{{@@.userA.user_id}}"
     roleIds: ["{{@@.memberRole.id}}", "{{@@.moderatorRole.id}}"]
@@ -195,7 +195,7 @@ mutation Step5_AssignRoles {
   }
 }
 
-###> STEP 6 - VERIFY USERS AND MEMBERSHIPS
+###> VERIFY USERS AND MEMBERSHIPS
 #{
 # Purpose:
 # Return a final identity snapshot that setup consumers can trust.
@@ -207,7 +207,7 @@ mutation Step5_AssignRoles {
 # Expected outcome:
 # - both users resolved and role memberships visible.
 #}
-query Step6_Verify {
+query Verify {
   userA: AuthUserByEmail(email: "maicro1@maicro.ai") {
     user_id
     email

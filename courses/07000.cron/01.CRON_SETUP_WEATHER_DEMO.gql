@@ -12,29 +12,29 @@
 # intent: Learn how to orchestrate recurring data ingestion with mAIcro CRON jobs and script-based workers.
 #---
 
-###> STEP 1 - RESET EXISTING CRON STATE
+###> RESET EXISTING CRON STATE
 #{
 # ## Clean Slate
 # Deletes all existing cron jobs so the course always starts from a known state.
 #
 # This makes the setup re-runnable for repeated practice sessions.
 #}
-mutation Step1_ResetCron {
+mutation ResetCron {
   deletedCronJobs: CronJobDeleteAll
 }
 
-###> STEP 2 - RESET EXISTING API WRAPPER
+###> RESET EXISTING API WRAPPER
 #{
 # ## Wrapper Reset
 # Deletes the `GetWeather` wrapper if it exists.
 #
 # `ApiWrapDelete` is safe for reruns and avoids duplicate wrapper failures.
 #}
-mutation Step2_ResetWrapper {
+mutation ResetWrapper {
   ApiWrapDelete(name: "GetWeather")
 }
 
-###> STEP 3 - CREATE WEATHER API WRAPPER
+###> CREATE WEATHER API WRAPPER
 #{
 # ## API Wrapper Registration
 # Registers `GetWeather` as a GraphQL query resolver backed by Open-Meteo.
@@ -44,7 +44,7 @@ mutation Step2_ResetWrapper {
 # - longitude
 # - current
 #}
-mutation Step3_CreateWeatherWrapper {
+mutation CreateWeatherWrapper {
   ApiWrap(
     name: "GetWeather"
     operation: "QUERY"
@@ -67,24 +67,24 @@ mutation Step3_CreateWeatherWrapper {
   }
 }
 
-###> STEP 4 - RESET WEATHER TABLE
+###> RESET WEATHER TABLE
 #{
 # ## Table Reset
 # Drops `weather_readings` before recreation, so schema changes and repeated runs
 # remain deterministic.
 #}
-mutation Step4_DropWeatherTable {
+mutation DropWeatherTable {
   DbDropTable(name: "weather_readings")
 }
 
-###> STEP 5 - CREATE WEATHER TABLE
+###> CREATE WEATHER TABLE
 #{
 # ## Destination Table
 # Creates `weather_readings` used by the cron worker script.
 #
 # Each cron execution inserts one row per city.
 #}
-mutation Step5_CreateWeatherTable {
+mutation CreateWeatherTable {
   DbCreateTable(
     name: "weather_readings"
     description: "Stores periodic weather readings from scheduled jobs"
@@ -96,23 +96,23 @@ mutation Step5_CreateWeatherTable {
   )
 }
 
-###> STEP 6 - RELOAD SCHEMA
+###> RELOAD SCHEMA
 #{
 # ## Activate New Types
 # Reloads GraphQL schema so newly created table mutations/queries become available.
 #}
-mutation Step6_ReloadSchema {
+mutation ReloadSchema {
   DbReload
 }
 
-###> STEP 7 - REGISTER CRON JOB
+###> REGISTER CRON JOB
 #{
 # ## Scheduled Worker
 # Registers `australian-weather-collector` to execute every minute.
 #
 # The worker script path is stored in `context.scriptPath` and executed by cron.
 #}
-mutation Step7_CreateCronJob {
+mutation CreateCronJob {
   CronJobCreate(input: {
     name: "australian-weather-collector"
     description: "Fetches weather for Perth, Adelaide, and Sydney every minute"
@@ -130,12 +130,12 @@ mutation Step7_CreateCronJob {
   }
 }
 
-###> STEP 8 - VERIFY SETUP
+###> VERIFY SETUP
 #{
 # ## Quick Validation
 # Confirms the cron job is active and that the destination table is reachable.
 #}
-query Step8_Verify {
+query Verify {
   CronJobs(limit: 10) {
     id
     name

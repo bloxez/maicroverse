@@ -10,27 +10,6 @@
 #   - cleanup
 #---
 
-###> TERMINATE ALL RUNNING ASYNC JOBS (CRON?)
-#{
-# ## Stop Background Jobs
-# Before dropping tables, we terminate any running async jobs to avoid
-# orphaned processes that reference deleted tables.
-#}
-mutation TerminateJobs {
-  DbTerminateJobs {
-    terminated_count
-    terminated_jobs {
-      id
-      description
-      status
-      event_name
-      source
-      chain_text
-      error
-    }
-  }
-}
-
 ###> DELETE ALL TABLES AND DATA - ALSO DROPS ANY CYPHER GRAPHS WHEN POSTGRES IS ACTIVE AND CYPHER IS ENABLED
 #{
 # ## Full Reset

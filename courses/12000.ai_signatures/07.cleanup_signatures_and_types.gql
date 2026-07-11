@@ -1,0 +1,54 @@
+#!maicro
+#---
+# title: Cleanup Signatures and Types
+# description: Optional teardown for all demo signatures and custom types created by course 12001.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - signatures
+#   - custom-types
+#   - cleanup
+#---
+
+###> ENABLE CONTINUE-ON-ERROR FOR CLEANUP
+#{
+# Makes cleanup re-runnable even if items are already removed.
+#}
+mutation EnableContinueOnError {
+  OnError(continueOnError: true) {
+    success
+    mode
+    message
+  }
+}
+
+###> DELETE DEMO SIGNATURES
+#{
+# Removes signatures created in this course.
+#}
+mutation DeleteSignatures {
+  s1: DeleteSignature(id: "sig12001_classify_support") { success message }
+  s2: DeleteSignature(id: "sig12001_extract_invoice") { success message }
+}
+
+###> DELETE DEMO CUSTOM TYPES
+#{
+# Removes supporting type contracts.
+#}
+mutation DeleteTypes {
+  t1: DeleteType(name: "Sig12001TicketInput", failIfNotFound: false) { success message }
+  t2: DeleteType(name: "Sig12001TicketClassification", failIfNotFound: false) { success message }
+  t3: DeleteType(name: "Sig12001InvoiceData", failIfNotFound: false) { success message }
+}
+
+###> RETURN TO FAIL-FAST MODE
+#{
+# Restores normal strict behavior.
+#}
+mutation DisableContinueOnError {
+  OnError(continueOnError: false) {
+    success
+    mode
+    message
+  }
+}

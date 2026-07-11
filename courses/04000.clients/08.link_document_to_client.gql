@@ -11,7 +11,7 @@
 #---
 
 ###> GET FIRST CLIENT
-query Step01_FirstClient {
+query FirstClient {
   first_client: clients(page: { page: 1, items: 1 }) {
     id
     first_name
@@ -20,7 +20,7 @@ query Step01_FirstClient {
 }
 
 ###> GET TARGET DRIVERS LICENSE FILE (DOC 82)
-query Step02_TargetDriversLicenseFile {
+query TargetDriversLicenseFile {
   target_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
     metadata {
       id
@@ -32,7 +32,7 @@ query Step02_TargetDriversLicenseFile {
 }
 
 ###> ASSERT CLIENT EXISTS
-query Step03_AssertClientExists {
+query AssertClientExists {
   Assert(
     actual: "{{first_client.0.id}}"
     op: "exists"
@@ -44,7 +44,7 @@ query Step03_AssertClientExists {
 }
 
 ###> ASSERT TARGET FILE EXISTS
-query Step04_AssertTargetFileExists {
+query AssertTargetFileExists {
   Assert(
     actual: "{{target_file.metadata.id}}"
     op: "exists"
@@ -56,7 +56,7 @@ query Step04_AssertTargetFileExists {
 }
 
 ###> FORGE CONNECTION VIA metadata.custom_fields.client_id
-mutation Step05_LinkFileToClient {
+mutation LinkFileToClient {
   link_file_to_client: FileUpdate(
     id: "{{target_file.metadata.id}}"
     custom_fields: {
@@ -70,7 +70,7 @@ mutation Step05_LinkFileToClient {
 }
 
 ###> ASSERT LINK CREATED
-query Step06_AssertLinkCreated {
+query AssertLinkCreated {
   Assert(
     actual: "{{link_file_to_client.metadata.custom_fields.client_id}}"
     op: "eq"

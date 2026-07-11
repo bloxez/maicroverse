@@ -16,7 +16,7 @@
 # Ensures Graph support is active before graph operations run.
 #}
 mutation EnableGraph {
-  DbEnableGraph {
+  EnableGraphs {
     age_extension
     status
   }
@@ -28,7 +28,7 @@ mutation EnableGraph {
 # Creates book_club_social if it does not exist.
 #}
 mutation CreateGraph {
-  Created: GraphCreate(name: "book_club_social", ifNotExists: true)
+  Created: DbGraphCreate(name: "book_club_social", ifNotExists: true)
 }
 
 ###> CONNECT AUTHORS TO THEIR BOOKS
@@ -38,15 +38,15 @@ mutation CreateGraph {
 # All 9 books covered, including both Atwood titles.
 #}
 mutation CreateWroteRelationships {
-  atwood_handmaids: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Book {table: 'books', name: \"The Handmaid's Tale\"}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  atwood_testaments: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Book {table: 'books', name: 'The Testaments'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  martin_got: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'George R.R. Martin'}), (b:Book {table: 'books', name: 'A Game of Thrones'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  christie_orient: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Agatha Christie'}), (b:Book {table: 'books', name: 'Murder on the Orient Express'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  asimov_foundation: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Isaac Asimov'}), (b:Book {table: 'books', name: 'Foundation'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  morrison_beloved: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Toni Morrison'}), (b:Book {table: 'books', name: 'Beloved'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  gaiman_americangods: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Neil Gaiman'}), (b:Book {table: 'books', name: 'American Gods'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  butler_kindred: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Octavia Butler'}), (b:Book {table: 'books', name: 'Kindred'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
-  murakami_norwegian: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Haruki Murakami'}), (b:Book {table: 'books', name: 'Norwegian Wood'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  atwood_handmaids: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Book {table: 'books', name: \"The Handmaid's Tale\"}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  atwood_testaments: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Book {table: 'books', name: 'The Testaments'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  martin_got: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'George R.R. Martin'}), (b:Book {table: 'books', name: 'A Game of Thrones'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  christie_orient: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Agatha Christie'}), (b:Book {table: 'books', name: 'Murder on the Orient Express'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  asimov_foundation: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Isaac Asimov'}), (b:Book {table: 'books', name: 'Foundation'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  morrison_beloved: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Toni Morrison'}), (b:Book {table: 'books', name: 'Beloved'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  gaiman_americangods: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Neil Gaiman'}), (b:Book {table: 'books', name: 'American Gods'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  butler_kindred: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Octavia Butler'}), (b:Book {table: 'books', name: 'Kindred'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
+  murakami_norwegian: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Haruki Murakami'}), (b:Book {table: 'books', name: 'Norwegian Wood'}) MERGE (a)-[:WROTE]->(b) RETURN count(*) as n") { rowCount }
 }
 
 ###> CREATE HISTORICAL INFLUENCE NODES (GRAPH-ONLY)
@@ -55,10 +55,10 @@ mutation CreateWroteRelationships {
 # Adds historical writers that exist only in graph space, not SQL tables.
 #}
 mutation CreateLiteraryInfluences {
-  orwell: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'George Orwell'}) SET p.source = 'graph-only', p.known_for = 'dystopian satire' RETURN count(p) as n") { rowCount }
-  tolkien: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'J.R.R. Tolkien'}) SET p.source = 'graph-only', p.known_for = 'epic mythology' RETURN count(p) as n") { rowCount }
-  kafka: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'Franz Kafka'}) SET p.source = 'graph-only', p.known_for = 'surreal absurdism' RETURN count(p) as n") { rowCount }
-  leguin: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'Ursula K. Le Guin'}) SET p.source = 'graph-only', p.known_for = 'speculative social fiction' RETURN count(p) as n") { rowCount }
+  orwell: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'George Orwell'}) SET p.source = 'graph-only', p.known_for = 'dystopian satire' RETURN count(p) as n") { rowCount }
+  tolkien: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'J.R.R. Tolkien'}) SET p.source = 'graph-only', p.known_for = 'epic mythology' RETURN count(p) as n") { rowCount }
+  kafka: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'Franz Kafka'}) SET p.source = 'graph-only', p.known_for = 'surreal absurdism' RETURN count(p) as n") { rowCount }
+  leguin: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Person {name: 'Ursula K. Le Guin'}) SET p.source = 'graph-only', p.known_for = 'speculative social fiction' RETURN count(p) as n") { rowCount }
 }
 
 ###> CONNECT INFLUENCE EDGES
@@ -67,10 +67,10 @@ mutation CreateLiteraryInfluences {
 # Crosses from SQL-backed authors to graph-only historical figures.
 #}
 mutation CreateInfluenceEdges {
-  atwood_orwell: GraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Margaret Atwood'}), (hist:Person {name: 'George Orwell'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'dystopian fiction'}]->(hist) RETURN count(*) as n") { rowCount }
-  martin_tolkien: GraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'George R.R. Martin'}), (hist:Person {name: 'J.R.R. Tolkien'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'epic fantasy worldbuilding'}]->(hist) RETURN count(*) as n") { rowCount }
-  murakami_kafka: GraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Haruki Murakami'}), (hist:Person {name: 'Franz Kafka'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'surreal absurdist fiction'}]->(hist) RETURN count(*) as n") { rowCount }
-  butler_leguin: GraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Octavia Butler'}), (hist:Person {name: 'Ursula K. Le Guin'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'speculative social fiction'}]->(hist) RETURN count(*) as n") { rowCount }
+  atwood_orwell: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Margaret Atwood'}), (hist:Person {name: 'George Orwell'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'dystopian fiction'}]->(hist) RETURN count(*) as n") { rowCount }
+  martin_tolkien: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'George R.R. Martin'}), (hist:Person {name: 'J.R.R. Tolkien'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'epic fantasy worldbuilding'}]->(hist) RETURN count(*) as n") { rowCount }
+  murakami_kafka: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Haruki Murakami'}), (hist:Person {name: 'Franz Kafka'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'surreal absurdist fiction'}]->(hist) RETURN count(*) as n") { rowCount }
+  butler_leguin: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (auth:Person {table: 'authors', name: 'Octavia Butler'}), (hist:Person {name: 'Ursula K. Le Guin'}) MERGE (auth)-[:INFLUENCED_BY {domain: 'speculative social fiction'}]->(hist) RETURN count(*) as n") { rowCount }
 }
 
 ###> CREATE PUBLISHERS (GRAPH-ONLY)
@@ -80,13 +80,13 @@ mutation CreateInfluenceEdges {
 # demonstrating the shared-publisher traversal pattern.
 #}
 mutation CreatePublishers {
-  penguin: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Penguin Books'}) SET p.source = 'graph-only', p.country = 'UK' RETURN count(p) as n") { rowCount }
-  doubleday: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Doubleday'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
-  knopf: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Knopf'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
-  bantam: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Bantam Books'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
-  harpercollins: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'HarperCollins'}) SET p.source = 'graph-only', p.country = 'UK' RETURN count(p) as n") { rowCount }
-  william_morrow: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'William Morrow'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
-  vintage: GraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Vintage International'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
+  penguin: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Penguin Books'}) SET p.source = 'graph-only', p.country = 'UK' RETURN count(p) as n") { rowCount }
+  doubleday: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Doubleday'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
+  knopf: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Knopf'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
+  bantam: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Bantam Books'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
+  harpercollins: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'HarperCollins'}) SET p.source = 'graph-only', p.country = 'UK' RETURN count(p) as n") { rowCount }
+  william_morrow: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'William Morrow'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
+  vintage: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (p:Publisher {name: 'Vintage International'}) SET p.source = 'graph-only', p.country = 'USA' RETURN count(p) as n") { rowCount }
 }
 
 ###> CONNECT BOOKS TO PUBLISHERS
@@ -95,15 +95,15 @@ mutation CreatePublishers {
 # All 9 books connected. Year property enables timeline traversals.
 #}
 mutation ConnectPublishers {
-  handmaids_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (p:Publisher {name: 'Penguin Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1985}]->(p) RETURN count(*) as n") { rowCount }
-  testaments_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (p:Publisher {name: 'Doubleday'}) MERGE (b)-[:PUBLISHED_BY {year: 2019}]->(p) RETURN count(*) as n") { rowCount }
-  beloved_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (p:Publisher {name: 'Knopf'}) MERGE (b)-[:PUBLISHED_BY {year: 1987}]->(p) RETURN count(*) as n") { rowCount }
-  got_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (p:Publisher {name: 'Bantam Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1996}]->(p) RETURN count(*) as n") { rowCount }
-  orient_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Murder on the Orient Express'}), (p:Publisher {name: 'HarperCollins'}) MERGE (b)-[:PUBLISHED_BY {year: 1934}]->(p) RETURN count(*) as n") { rowCount }
-  foundation_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (p:Publisher {name: 'Bantam Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1951}]->(p) RETURN count(*) as n") { rowCount }
-  americangods_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (p:Publisher {name: 'William Morrow'}) MERGE (b)-[:PUBLISHED_BY {year: 2001}]->(p) RETURN count(*) as n") { rowCount }
-  kindred_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (p:Publisher {name: 'Doubleday'}) MERGE (b)-[:PUBLISHED_BY {year: 1979}]->(p) RETURN count(*) as n") { rowCount }
-  norwegian_pub: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (p:Publisher {name: 'Vintage International'}) MERGE (b)-[:PUBLISHED_BY {year: 1987}]->(p) RETURN count(*) as n") { rowCount }
+  handmaids_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (p:Publisher {name: 'Penguin Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1985}]->(p) RETURN count(*) as n") { rowCount }
+  testaments_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (p:Publisher {name: 'Doubleday'}) MERGE (b)-[:PUBLISHED_BY {year: 2019}]->(p) RETURN count(*) as n") { rowCount }
+  beloved_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (p:Publisher {name: 'Knopf'}) MERGE (b)-[:PUBLISHED_BY {year: 1987}]->(p) RETURN count(*) as n") { rowCount }
+  got_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (p:Publisher {name: 'Bantam Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1996}]->(p) RETURN count(*) as n") { rowCount }
+  orient_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Murder on the Orient Express'}), (p:Publisher {name: 'HarperCollins'}) MERGE (b)-[:PUBLISHED_BY {year: 1934}]->(p) RETURN count(*) as n") { rowCount }
+  foundation_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (p:Publisher {name: 'Bantam Books'}) MERGE (b)-[:PUBLISHED_BY {year: 1951}]->(p) RETURN count(*) as n") { rowCount }
+  americangods_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (p:Publisher {name: 'William Morrow'}) MERGE (b)-[:PUBLISHED_BY {year: 2001}]->(p) RETURN count(*) as n") { rowCount }
+  kindred_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (p:Publisher {name: 'Doubleday'}) MERGE (b)-[:PUBLISHED_BY {year: 1979}]->(p) RETURN count(*) as n") { rowCount }
+  norwegian_pub: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (p:Publisher {name: 'Vintage International'}) MERGE (b)-[:PUBLISHED_BY {year: 1987}]->(p) RETURN count(*) as n") { rowCount }
 }
 
 ###> CREATE LITERARY AWARDS (GRAPH-ONLY)
@@ -113,11 +113,11 @@ mutation ConnectPublishers {
 # all three in 2002, making it the highest award-connected book in the graph.
 #}
 mutation CreateAwards {
-  booker: GraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Booker Prize'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
-  hugo: GraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Hugo Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
-  pulitzer: GraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Pulitzer Prize'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
-  world_fantasy: GraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'World Fantasy Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
-  nebula: GraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Nebula Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
+  booker: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Booker Prize'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
+  hugo: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Hugo Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
+  pulitzer: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Pulitzer Prize'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
+  world_fantasy: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'World Fantasy Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
+  nebula: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (a:Award {name: 'Nebula Award'}) SET a.source = 'graph-only' RETURN count(a) as n") { rowCount }
 }
 
 ###> CONNECT BOOKS TO AWARDS
@@ -126,13 +126,13 @@ mutation CreateAwards {
 # American Gods triple-wins Hugo, Nebula, and World Fantasy in 2002.
 #}
 mutation ConnectAwards {
-  testaments_booker: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (a:Award {name: 'Booker Prize'}) MERGE (b)-[:WON {year: 2019}]->(a) RETURN count(*) as n") { rowCount }
-  beloved_pulitzer: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (a:Award {name: 'Pulitzer Prize'}) MERGE (b)-[:WON {year: 1988}]->(a) RETURN count(*) as n") { rowCount }
-  foundation_hugo: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (a:Award {name: 'Hugo Award'}) MERGE (b)-[:WON {year: 1966}]->(a) RETURN count(*) as n") { rowCount }
-  americangods_hugo: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'Hugo Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
-  americangods_nebula: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'Nebula Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
-  americangods_wf: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'World Fantasy Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
-  got_wf: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (a:Award {name: 'World Fantasy Award'}) MERGE (b)-[:WON {year: 1997}]->(a) RETURN count(*) as n") { rowCount }
+  testaments_booker: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (a:Award {name: 'Booker Prize'}) MERGE (b)-[:WON {year: 2019}]->(a) RETURN count(*) as n") { rowCount }
+  beloved_pulitzer: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (a:Award {name: 'Pulitzer Prize'}) MERGE (b)-[:WON {year: 1988}]->(a) RETURN count(*) as n") { rowCount }
+  foundation_hugo: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (a:Award {name: 'Hugo Award'}) MERGE (b)-[:WON {year: 1966}]->(a) RETURN count(*) as n") { rowCount }
+  americangods_hugo: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'Hugo Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
+  americangods_nebula: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'Nebula Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
+  americangods_wf: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (a:Award {name: 'World Fantasy Award'}) MERGE (b)-[:WON {year: 2002}]->(a) RETURN count(*) as n") { rowCount }
+  got_wf: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (a:Award {name: 'World Fantasy Award'}) MERGE (b)-[:WON {year: 1997}]->(a) RETURN count(*) as n") { rowCount }
 }
 
 ###> CREATE GENRES (GRAPH-ONLY)
@@ -142,14 +142,14 @@ mutation ConnectAwards {
 # genres, creating fan-out patterns ideal for discovery traversals.
 #}
 mutation CreateGenres {
-  dystopian: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Dystopian Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
-  epic_fantasy: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Epic Fantasy'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
-  mystery: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Golden Age Mystery'}) SET g.source = 'graph-only', g.era = 'classic' RETURN count(g) as n") { rowCount }
-  scifi: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Science Fiction'}) SET g.source = 'graph-only', g.era = 'classic' RETURN count(g) as n") { rowCount }
-  literary: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Literary Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
-  speculative: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Speculative Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
-  magical_realism: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Magical Realism'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
-  japanese_lit: GraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Japanese Literary Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  dystopian: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Dystopian Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  epic_fantasy: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Epic Fantasy'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  mystery: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Golden Age Mystery'}) SET g.source = 'graph-only', g.era = 'classic' RETURN count(g) as n") { rowCount }
+  scifi: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Science Fiction'}) SET g.source = 'graph-only', g.era = 'classic' RETURN count(g) as n") { rowCount }
+  literary: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Literary Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  speculative: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Speculative Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  magical_realism: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Magical Realism'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
+  japanese_lit: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (g:Genre {name: 'Japanese Literary Fiction'}) SET g.source = 'graph-only', g.era = 'modern' RETURN count(g) as n") { rowCount }
 }
 
 ###> CONNECT BOOKS TO GENRES
@@ -159,22 +159,22 @@ mutation CreateGenres {
 # creating a high-centrality node for recommendation traversals.
 #}
 mutation ConnectGenres {
-  handmaids_dys: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Dystopian Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  handmaids_spec: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  handmaids_lit: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  testaments_dys: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (g:Genre {name: 'Dystopian Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  testaments_spec: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  got_fantasy: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (g:Genre {name: 'Epic Fantasy'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  orient_mystery: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Murder on the Orient Express'}), (g:Genre {name: 'Golden Age Mystery'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  foundation_scifi: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (g:Genre {name: 'Science Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  beloved_lit: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  beloved_spec: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  americangods_spec: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  americangods_magical: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (g:Genre {name: 'Magical Realism'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  kindred_scifi: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (g:Genre {name: 'Science Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  kindred_spec: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  norwegian_japanese: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (g:Genre {name: 'Japanese Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
-  norwegian_lit: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  handmaids_dys: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Dystopian Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  handmaids_spec: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  handmaids_lit: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  testaments_dys: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (g:Genre {name: 'Dystopian Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  testaments_spec: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  got_fantasy: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (g:Genre {name: 'Epic Fantasy'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  orient_mystery: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Murder on the Orient Express'}), (g:Genre {name: 'Golden Age Mystery'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  foundation_scifi: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (g:Genre {name: 'Science Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  beloved_lit: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  beloved_spec: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Beloved'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  americangods_spec: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  americangods_magical: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'American Gods'}), (g:Genre {name: 'Magical Realism'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  kindred_scifi: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (g:Genre {name: 'Science Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  kindred_spec: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Kindred'}), (g:Genre {name: 'Speculative Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  norwegian_japanese: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (g:Genre {name: 'Japanese Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
+  norwegian_lit: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Norwegian Wood'}), (g:Genre {name: 'Literary Fiction'}) MERGE (b)-[:BELONGS_TO]->(g) RETURN count(*) as n") { rowCount }
 }
 
 ###> CREATE BOOK SERIES (GRAPH-ONLY)
@@ -184,9 +184,9 @@ mutation ConnectGenres {
 # the narrative is finished.
 #}
 mutation CreateSeries {
-  handmaids_series: GraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'The Handmaids Tale Series'}) SET s.source = 'graph-only', s.author = 'Margaret Atwood', s.complete = true RETURN count(s) as n") { rowCount }
-  got_series: GraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'A Song of Ice and Fire'}) SET s.source = 'graph-only', s.author = 'George R.R. Martin', s.complete = false RETURN count(s) as n") { rowCount }
-  foundation_series: GraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'Foundation Series'}) SET s.source = 'graph-only', s.author = 'Isaac Asimov', s.complete = true RETURN count(s) as n") { rowCount }
+  handmaids_series: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'The Handmaids Tale Series'}) SET s.source = 'graph-only', s.author = 'Margaret Atwood', s.complete = true RETURN count(s) as n") { rowCount }
+  got_series: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'A Song of Ice and Fire'}) SET s.source = 'graph-only', s.author = 'George R.R. Martin', s.complete = false RETURN count(s) as n") { rowCount }
+  foundation_series: DbGraphMutate(graph: "book_club_social", cypher:"MERGE (s:Series {name: 'Foundation Series'}) SET s.source = 'graph-only', s.author = 'Isaac Asimov', s.complete = true RETURN count(s) as n") { rowCount }
 }
 
 ###> CONNECT BOOKS TO SERIES
@@ -196,10 +196,10 @@ mutation CreateSeries {
 # total_books shows how far the series extends.
 #}
 mutation ConnectBookSeries {
-  handmaids_s1: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (s:Series {name: 'The Handmaids Tale Series'}) MERGE (b)-[:PART_OF {position: 1, total_books: 2}]->(s) RETURN count(*) as n") { rowCount }
-  testaments_s2: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (s:Series {name: 'The Handmaids Tale Series'}) MERGE (b)-[:PART_OF {position: 2, total_books: 2}]->(s) RETURN count(*) as n") { rowCount }
-  got_s1: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (s:Series {name: 'A Song of Ice and Fire'}) MERGE (b)-[:PART_OF {position: 1, total_books: 7}]->(s) RETURN count(*) as n") { rowCount }
-  foundation_s1: GraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (s:Series {name: 'Foundation Series'}) MERGE (b)-[:PART_OF {position: 1, total_books: 7}]->(s) RETURN count(*) as n") { rowCount }
+  handmaids_s1: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: \"The Handmaid's Tale\"}), (s:Series {name: 'The Handmaids Tale Series'}) MERGE (b)-[:PART_OF {position: 1, total_books: 2}]->(s) RETURN count(*) as n") { rowCount }
+  testaments_s2: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'The Testaments'}), (s:Series {name: 'The Handmaids Tale Series'}) MERGE (b)-[:PART_OF {position: 2, total_books: 2}]->(s) RETURN count(*) as n") { rowCount }
+  got_s1: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'A Game of Thrones'}), (s:Series {name: 'A Song of Ice and Fire'}) MERGE (b)-[:PART_OF {position: 1, total_books: 7}]->(s) RETURN count(*) as n") { rowCount }
+  foundation_s1: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (b:Book {name: 'Foundation'}), (s:Series {name: 'Foundation Series'}) MERGE (b)-[:PART_OF {position: 1, total_books: 7}]->(s) RETURN count(*) as n") { rowCount }
 }
 
 ###> CONNECT READERS TO BOOKS
@@ -210,25 +210,25 @@ mutation ConnectBookSeries {
 # rating (1-5) and year make edges queryable for recommendation logic.
 #}
 mutation ConnectReadersToBooks {
-  alice_handmaids: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: \"The Handmaid's Tale\"}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  alice_beloved: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: 'Beloved'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
-  alice_kindred: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
-  bob_got: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Bob Chen'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
-  bob_norwegian: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Bob Chen'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  carol_kindred: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Carol Williams'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  carol_orient: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Carol Williams'}), (b:Book {name: 'Murder on the Orient Express'}) MERGE (r)-[:READ {rating: 4, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
-  david_foundation: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'David Kumar'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  david_got: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'David Kumar'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 4, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
-  emma_americangods: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'American Gods'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
-  emma_got: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
-  emma_norwegian: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  frank_orient: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Book {name: 'Murder on the Orient Express'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
-  frank_foundation: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 3, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  grace_norwegian: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Grace Kim'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
-  grace_beloved: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Grace Kim'}), (b:Book {name: 'Beloved'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  henry_norwegian: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
-  henry_foundation: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
-  henry_kindred: GraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  alice_handmaids: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: \"The Handmaid's Tale\"}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  alice_beloved: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: 'Beloved'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  alice_kindred: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Alice Johnson'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  bob_got: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Bob Chen'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
+  bob_norwegian: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Bob Chen'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  carol_kindred: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Carol Williams'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  carol_orient: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Carol Williams'}), (b:Book {name: 'Murder on the Orient Express'}) MERGE (r)-[:READ {rating: 4, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
+  david_foundation: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'David Kumar'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  david_got: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'David Kumar'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 4, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
+  emma_americangods: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'American Gods'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  emma_got: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'A Game of Thrones'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
+  emma_norwegian: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Emma Thompson'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  frank_orient: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Book {name: 'Murder on the Orient Express'}) MERGE (r)-[:READ {rating: 5, year: 2022}]->(b) RETURN count(*) as n") { rowCount }
+  frank_foundation: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 3, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  grace_norwegian: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Grace Kim'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 5, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  grace_beloved: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Grace Kim'}), (b:Book {name: 'Beloved'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  henry_norwegian: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Norwegian Wood'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
+  henry_foundation: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Foundation'}) MERGE (r)-[:READ {rating: 5, year: 2023}]->(b) RETURN count(*) as n") { rowCount }
+  henry_kindred: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (r:Person {table: 'readers', name: 'Henry Martinez'}), (b:Book {name: 'Kindred'}) MERGE (r)-[:READ {rating: 4, year: 2024}]->(b) RETURN count(*) as n") { rowCount }
 }
 
 ###> CONNECT READERS SOCIALLY
@@ -238,12 +238,12 @@ mutation ConnectReadersToBooks {
 # traversals work in either direction.
 #}
 mutation ConnectReaderFriendships {
-  alice_grace: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Alice Johnson'}), (b:Person {table: 'readers', name: 'Grace Kim'}) MERGE (a)-[:FRIENDS_WITH {since: 2022}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2022}]->(a) RETURN count(*) as n") { rowCount }
-  alice_carol: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Alice Johnson'}), (b:Person {table: 'readers', name: 'Carol Williams'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
-  bob_david: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Bob Chen'}), (b:Person {table: 'readers', name: 'David Kumar'}) MERGE (a)-[:FRIENDS_WITH {since: 2022}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2022}]->(a) RETURN count(*) as n") { rowCount }
-  emma_bob: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Emma Thompson'}), (b:Person {table: 'readers', name: 'Bob Chen'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
-  henry_grace: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Henry Martinez'}), (b:Person {table: 'readers', name: 'Grace Kim'}) MERGE (a)-[:FRIENDS_WITH {since: 2024}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2024}]->(a) RETURN count(*) as n") { rowCount }
-  frank_david: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Person {table: 'readers', name: 'David Kumar'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
+  alice_grace: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Alice Johnson'}), (b:Person {table: 'readers', name: 'Grace Kim'}) MERGE (a)-[:FRIENDS_WITH {since: 2022}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2022}]->(a) RETURN count(*) as n") { rowCount }
+  alice_carol: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Alice Johnson'}), (b:Person {table: 'readers', name: 'Carol Williams'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
+  bob_david: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Bob Chen'}), (b:Person {table: 'readers', name: 'David Kumar'}) MERGE (a)-[:FRIENDS_WITH {since: 2022}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2022}]->(a) RETURN count(*) as n") { rowCount }
+  emma_bob: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Emma Thompson'}), (b:Person {table: 'readers', name: 'Bob Chen'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
+  henry_grace: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Henry Martinez'}), (b:Person {table: 'readers', name: 'Grace Kim'}) MERGE (a)-[:FRIENDS_WITH {since: 2024}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2024}]->(a) RETURN count(*) as n") { rowCount }
+  frank_david: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'readers', name: 'Frank Rodriguez'}), (b:Person {table: 'readers', name: 'David Kumar'}) MERGE (a)-[:FRIENDS_WITH {since: 2023}]->(b) MERGE (b)-[:FRIENDS_WITH {since: 2023}]->(a) RETURN count(*) as n") { rowCount }
 }
 
 ###> CONNECT AUTHORS AS LITERARY PEERS
@@ -253,10 +253,10 @@ mutation ConnectReaderFriendships {
 # space and literary era. Enables author-based discovery traversals.
 #}
 mutation ConnectAuthorPeers {
-  atwood_morrison: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Person {table: 'authors', name: 'Toni Morrison'}) MERGE (a)-[:PEER_OF {era: '1980s literary fiction', shared_genre: 'Literary Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1980s literary fiction', shared_genre: 'Literary Fiction'}]->(a) RETURN count(*) as n") { rowCount }
-  butler_gaiman: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Octavia Butler'}), (b:Person {table: 'authors', name: 'Neil Gaiman'}) MERGE (a)-[:PEER_OF {era: '1990s speculative fiction', shared_genre: 'Speculative Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1990s speculative fiction', shared_genre: 'Speculative Fiction'}]->(a) RETURN count(*) as n") { rowCount }
-  martin_gaiman: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'George R.R. Martin'}), (b:Person {table: 'authors', name: 'Neil Gaiman'}) MERGE (a)-[:PEER_OF {era: '1990s fantasy', shared_genre: 'Epic Fantasy'}]->(b) MERGE (b)-[:PEER_OF {era: '1990s fantasy', shared_genre: 'Epic Fantasy'}]->(a) RETURN count(*) as n") { rowCount }
-  atwood_butler: GraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Person {table: 'authors', name: 'Octavia Butler'}) MERGE (a)-[:PEER_OF {era: '1980s speculative fiction', shared_genre: 'Speculative Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1980s speculative fiction', shared_genre: 'Speculative Fiction'}]->(a) RETURN count(*) as n") { rowCount }
+  atwood_morrison: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Person {table: 'authors', name: 'Toni Morrison'}) MERGE (a)-[:PEER_OF {era: '1980s literary fiction', shared_genre: 'Literary Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1980s literary fiction', shared_genre: 'Literary Fiction'}]->(a) RETURN count(*) as n") { rowCount }
+  butler_gaiman: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Octavia Butler'}), (b:Person {table: 'authors', name: 'Neil Gaiman'}) MERGE (a)-[:PEER_OF {era: '1990s speculative fiction', shared_genre: 'Speculative Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1990s speculative fiction', shared_genre: 'Speculative Fiction'}]->(a) RETURN count(*) as n") { rowCount }
+  martin_gaiman: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'George R.R. Martin'}), (b:Person {table: 'authors', name: 'Neil Gaiman'}) MERGE (a)-[:PEER_OF {era: '1990s fantasy', shared_genre: 'Epic Fantasy'}]->(b) MERGE (b)-[:PEER_OF {era: '1990s fantasy', shared_genre: 'Epic Fantasy'}]->(a) RETURN count(*) as n") { rowCount }
+  atwood_butler: DbGraphMutate(graph: "book_club_social", cypher:"MATCH (a:Person {table: 'authors', name: 'Margaret Atwood'}), (b:Person {table: 'authors', name: 'Octavia Butler'}) MERGE (a)-[:PEER_OF {era: '1980s speculative fiction', shared_genre: 'Speculative Fiction'}]->(b) MERGE (b)-[:PEER_OF {era: '1980s speculative fiction', shared_genre: 'Speculative Fiction'}]->(a) RETURN count(*) as n") { rowCount }
 }
 
 ###> QUERY NODE TYPES
@@ -265,13 +265,13 @@ mutation ConnectAuthorPeers {
 # Lists all node categories across SQL-backed and graph-only entities.
 #}
 query AllNodeTypes {
-  PersonSQL: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NOT NULL RETURN {label: 'Person (SQL-backed)', table: n.table, name: n.name} as node ORDER BY n.table, n.name") { rowCount data }
-  Persongraph:GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NULL RETURN {label: 'Person (graph-only)', name: n.name} as node ORDER BY n.name") { rowCount data }
-  BookSQL: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Book) WHERE n.table IS NOT NULL RETURN {label: 'Book (SQL-backed)', name: n.name} as node ORDER BY n.name") { rowCount data }
-  Publishers: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Publisher) RETURN {name: n.name, country: n.country} as node ORDER BY n.name") { rowCount data }
-  Awards: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Award) RETURN {name: n.name} as node ORDER BY n.name") { rowCount data }
-  Genres: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Genre) RETURN {name: n.name, era: n.era} as node ORDER BY n.name") { rowCount data }
-  SeriesNodes: GraphQuery(graph: "book_club_social", cypher:"MATCH (n:Series) RETURN {name: n.name, complete: n.complete} as node ORDER BY n.name") { rowCount data }
+  PersonSQL: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NOT NULL RETURN {label: 'Person (SQL-backed)', table: n.table, name: n.name} as node ORDER BY n.table, n.name") { rowCount data }
+  Persongraph:DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NULL RETURN {label: 'Person (graph-only)', name: n.name} as node ORDER BY n.name") { rowCount data }
+  BookSQL: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Book) WHERE n.table IS NOT NULL RETURN {label: 'Book (SQL-backed)', name: n.name} as node ORDER BY n.name") { rowCount data }
+  Publishers: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Publisher) RETURN {name: n.name, country: n.country} as node ORDER BY n.name") { rowCount data }
+  Awards: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Award) RETURN {name: n.name} as node ORDER BY n.name") { rowCount data }
+  Genres: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Genre) RETURN {name: n.name, era: n.era} as node ORDER BY n.name") { rowCount data }
+  SeriesNodes: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Series) RETURN {name: n.name, complete: n.complete} as node ORDER BY n.name") { rowCount data }
 }
 
 ###> QUERY POWER TRAVERSALS
@@ -280,27 +280,27 @@ query AllNodeTypes {
 # Author-level traversals crossing SQL nodes, graph-only nodes, and edges.
 #}
 query PowerTraversals {
-  AwardWinners: GraphQuery(
+  AwardWinners: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(book:Book)-[:WON]->(award:Award) RETURN {author: auth.name, book: book.name, award: award.name} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  InfluenceChains: GraphQuery(
+  InfluenceChains: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[inf:INFLUENCED_BY]->(hist:Person) WHERE hist.table IS NULL RETURN {author: auth.name, influenced_by: hist.name, domain: inf.domain} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  PublisherPortfolios: GraphQuery(
+  PublisherPortfolios: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(book:Book)-[:PUBLISHED_BY]->(pub:Publisher) RETURN {publisher: pub.name, author: auth.name, book: book.name} as row ORDER BY pub.name, auth.name"
   ) { rowCount data }
 
-  AuthorPeerNetwork: GraphQuery(
+  AuthorPeerNetwork: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (a:Person {table: 'authors'})-[p:PEER_OF]->(b:Person {table: 'authors'}) WHERE a.name < b.name RETURN {author_a: a.name, author_b: b.name, era: p.era, shared_genre: p.shared_genre} as row ORDER BY p.shared_genre"
   ) { rowCount data }
 
-  SeriesProgress: GraphQuery(
+  SeriesProgress: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (book:Book)-[p:PART_OF]->(series:Series) RETURN {series: series.name, book: book.name, position: p.position, total: p.total_books, complete: series.complete} as row ORDER BY series.name, p.position"
   ) { rowCount data }
@@ -313,22 +313,22 @@ query PowerTraversals {
 # and genre preferences per reader.
 #}
 query ReaderTraversals {
-  ReadingActivity: GraphQuery(
+  ReadingActivity: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[rd:READ]->(b:Book) RETURN {reader: r.name, book: b.name, rating: rd.rating, year: rd.year} as row ORDER BY r.name, rd.rating DESC"
   ) { rowCount data }
 
-  FriendReadingOverlap: GraphQuery(
+  FriendReadingOverlap: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (a:Person {table: 'readers'})-[:FRIENDS_WITH]->(b:Person {table: 'readers'})-[:READ]->(book:Book)<-[:READ]-(a) WHERE a.name < b.name RETURN {reader_a: a.name, reader_b: b.name, shared_book: book.name} as row ORDER BY a.name"
   ) { rowCount data }
 
-  ReaderGenrePreferences: GraphQuery(
+  ReaderGenrePreferences: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[:READ]->(b:Book)-[:BELONGS_TO]->(g:Genre) WITH r.name as reader, g.name as genre, count(b) as book_count RETURN {reader: reader, preferred_genre: genre, book_count: book_count} as row ORDER BY reader, book_count DESC"
   ) { rowCount data }
 
-  TopRatedBooks: GraphQuery(
+  TopRatedBooks: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[rd:READ]->(b:Book) WITH b.name as book, avg(rd.rating) as avg_rating, count(r) as reader_count RETURN {book: book, avg_rating: avg_rating, readers: reader_count} as row ORDER BY avg_rating DESC"
   ) { rowCount data }
@@ -340,22 +340,22 @@ query ReaderTraversals {
 # Genre nodes enable recommendation-style traversals across the full graph.
 #}
 query GenreTraversals {
-  BooksByGenre: GraphQuery(
+  BooksByGenre: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (b:Book)-[:BELONGS_TO]->(g:Genre) RETURN {genre: g.name, book: b.name} as row ORDER BY g.name, b.name"
   ) { rowCount data }
 
-  GenreAwardOverlap: GraphQuery(
+  GenreAwardOverlap: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (b:Book)-[:BELONGS_TO]->(g:Genre), (b)-[:WON]->(a:Award) RETURN {genre: g.name, book: b.name, award: a.name} as row ORDER BY g.name"
   ) { rowCount data }
 
-  SpeculativeFictionAuthors: GraphQuery(
+  SpeculativeFictionAuthors: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(b:Book)-[:BELONGS_TO]->(g:Genre {name: 'Speculative Fiction'}) RETURN {author: auth.name, book: b.name} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  ReadersByGenre: GraphQuery(
+  ReadersByGenre: DbGraphQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[:READ]->(b:Book)-[:BELONGS_TO]->(g:Genre) WITH g.name as genre, r.name as reader, count(b) as books_read RETURN {genre: genre, reader: reader, books_read: books_read} as row ORDER BY genre, books_read DESC"
   ) { rowCount data }

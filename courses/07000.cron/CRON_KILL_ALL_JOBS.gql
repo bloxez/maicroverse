@@ -9,12 +9,12 @@
 #   - cleanup
 #---
 
-###> STEP 1 - DELETE ALL CRON JOBS
+###> DELETE ALL CRON JOBS
 #{
 # Removes all cron jobs visible to the caller.
 #
 # For admins, this deletes all jobs in the project.
 #}
-mutation Step1_DeleteAllCronJobs {
+mutation DeleteAllCronJobs {
   CronJobDeleteAll
 }

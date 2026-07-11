@@ -12,11 +12,11 @@
 # intent: Show how to shape extraction output into analysis-friendly JSON.
 #---
 
-###> STEP 1 - STRUCTURED DOM SNAPSHOT
+###> STRUCTURED DOM SNAPSHOT
 #{
 # Extracts title, heading text, and link count from example.com.
 #}
-mutation Step1_EvaluateDom {
+mutation EvaluateDom {
   demo: X4m(
     pipeline: "BROWSER_OPEN(headless:true, executablePath:'/usr/bin/google-chrome') | BROWSER_GOTO(url:'https://example.com') | BROWSER_EVALUATE(expression:'(() => ({ title: document.title, h1: document.querySelector(\"h1\")?.textContent?.trim(), links: Array.from(document.querySelectorAll(\"a\")).length }))()')"
     runtime: { input: "" }

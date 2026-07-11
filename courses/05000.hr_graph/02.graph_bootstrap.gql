@@ -12,7 +12,7 @@
 # Safe to call multiple times — completely idempotent.
 #}
 mutation EnableCypher {
-  DbEnableGraph {
+  EnableGraphs {
     age_extension
     status
   }
@@ -26,7 +26,7 @@ mutation EnableCypher {
 # `ifExists: true` makes this safe on first run when no graph exists yet.
 #}
 mutation DropGraph {
-  GraphDrop(name: "hr_graph", cascade: true, ifExists: true)
+  DbDropGraph(name: "hr_graph", cascade: true, ifExists: true)
 }
 
 ###> CREATE GRAPH
@@ -37,7 +37,7 @@ mutation DropGraph {
 # no stale data can accumulate across repeated runs.
 #}
 mutation CreateGraph {
-  GraphCreate(name: "hr_graph", ifNotExists: true)
+  DbGraphCreate(name: "hr_graph", ifNotExists: true)
 }
 
 ###> RELOAD SCHEMA

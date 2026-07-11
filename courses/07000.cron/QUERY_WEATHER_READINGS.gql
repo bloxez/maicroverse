@@ -10,11 +10,11 @@
 #   - database
 #---
 
-###> STEP 1 - LIST RECENT READINGS
+###> LIST RECENT READINGS
 #{
 # Shows recently inserted weather rows from the cron worker.
 #}
-query Step1_ListWeatherReadings {
+query ListWeatherReadings {
   weather_readings(page: { page: 1, items: 100 }) {
     id
     location

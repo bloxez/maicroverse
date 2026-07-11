@@ -1,0 +1,121 @@
+#!maicro
+#---
+# title: Create and Execute Typed Signatures
+# description: Creates production-style signatures whose schemas align with supporting custom type contracts, then executes them.
+# difficulty: intermediate
+# estimated_time: 3m
+# tags:
+#   - signatures
+#   - ai
+#   - execution
+#   - contracts
+#---
+
+###> CHECK PROVIDER STATUS
+#{
+# Confirms AI provider readiness before execution.
+#}
+query GetProviderStatus {
+  GetProviderStatus
+}
+
+###> CREATE CLASSIFICATION SIGNATURE
+#{
+# Signature focus: strongly-defined input/output schema for support triage.
+#
+# Contract mapping:
+# - input schema mirrors Sig12001TicketInput
+# - output schema mirrors Sig12001TicketClassification
+#}
+mutation CreateClassificationSignature {
+  AxCreateSignature(
+    id: "sig12001_classify_support"
+    name: "Typed Support Classifier"
+    description: "Classify customer support tickets with a stable typed contract"
+    category: "classification"
+    inputSchema: {
+      type: "object"
+      properties: {
+        ticketText: { type: "string" }
+        customerId: { type: "string" }
+        channel: { type: "string" }
+        productArea: { type: "string" }
+      }
+      required: ["ticketText", "channel", "productArea"]
+    }
+    outputSchema: {
+      type: "object"
+      properties: {
+        category: { type: "string", enum: ["billing", "technical", "account", "general"] }
+        urgency: { type: "string", enum: ["low", "medium", "high", "critical"] }
+        summary: { type: "string" }
+        confidence: { type: "number" }
+      }
+      required: ["category", "urgency", "summary"]
+    }
+    modelHint: "simple"
+  )
+}
+
+###> CREATE INVOICE EXTRACTION SIGNATURE
+#{
+# Second signature shows richer typed output expectations.
+# Contract mapping mirrors Sig12001InvoiceData.
+#}
+mutation CreateInvoiceSignature {
+  AxCreateSignature(
+    id: "sig12001_extract_invoice"
+    name: "Typed Invoice Extractor"
+    description: "Extract structured invoice data with a stable typed contract"
+    category: "extraction"
+    inputSchema: {
+      type: "object"
+      properties: {
+        invoiceText: { type: "string" }
+      }
+      required: ["invoiceText"]
+    }
+    outputSchema: {
+      type: "object"
+      properties: {
+        vendorName: { type: "string" }
+        invoiceNumber: { type: "string" }
+        invoiceDate: { type: "string" }
+        totalAmount: { type: "number" }
+        currency: { type: "string" }
+        lineItems: { type: "array", items: { type: "object" } }
+      }
+      required: ["vendorName", "totalAmount"]
+    }
+    modelHint: "complex"
+  )
+}
+
+###> EXECUTE CLASSIFICATION SIGNATURE
+#{
+# Real invocation with contract-aligned input fields.
+#}
+mutation ExecuteClassification {
+  ExecuteSignature(
+    signatureId: "sig12001_classify_support"
+    input: {
+      ticketText: "Our API dashboard is timing out for enterprise users after the latest deploy."
+      customerId: "CUST-12001-A"
+      channel: "chat"
+      productArea: "API"
+    }
+  )
+}
+
+###> EXECUTE INVOICE SIGNATURE
+#{
+# Real invocation with extraction payload.
+#}
+mutation ExecuteInvoice {
+  ExecuteSignature(
+    signatureId: "sig12001_extract_invoice"
+    input: {
+      invoiceText: "Invoice INV-2026-884 from Northwind Supplies dated 2026-06-20. Total USD 1480.50."
+    }
+  )
+}

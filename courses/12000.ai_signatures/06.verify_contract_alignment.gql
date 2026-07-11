@@ -1,0 +1,73 @@
+#!maicro
+#---
+# title: Verify Contract Alignment
+# description: Validates happy-path execution and demonstrates contract enforcement with an intentional invalid input.
+# difficulty: intermediate
+# estimated_time: 2m
+# tags:
+#   - signatures
+#   - validation
+#   - contracts
+#---
+
+###> HAPPY PATH EXECUTION
+#{
+# A valid payload aligned with required schema fields.
+#}
+mutation ExecuteValidPayload {
+  ExecuteSignature(
+    signatureId: "sig12001_classify_support"
+    input: {
+      ticketText: "Customer cannot access billing statements from the portal."
+      customerId: "CUST-12001-B"
+      channel: "email"
+      productArea: "Billing"
+    }
+  )
+}
+
+###> SWITCH TO CONTINUE MODE FOR EXPECTED FAILURE DEMO
+#{
+# Allows the next step to surface a contract error without aborting the lesson.
+#}
+mutation EnableContinueMode {
+  OnError(continueOnError: true) {
+    success
+    mode
+    message
+  }
+}
+
+###> INTENTIONAL INVALID PAYLOAD (EXPECTED ERROR)
+#{
+# Intentionally omits required fields (`channel`, `productArea`) to show
+# contract validation behavior. The script continues by design.
+#}
+mutation ExecuteInvalidPayload {
+  ExecuteSignature(
+    signatureId: "sig12001_classify_support"
+    input: {
+      ticketText: "The app crashed after login."
+    }
+  )
+}
+
+###> INSPECT LAST ERROR RECORD
+#{
+# Captures the expected validation failure details from script state.
+#}
+query InspectLastError {
+  LastError
+}
+
+###> RETURN TO FAIL-FAST MODE
+#{
+# Restores strict behavior for subsequent scripts.
+#}
+mutation DisableContinueMode {
+  OnError(continueOnError: false) {
+    success
+    mode
+    message
+  }
+}

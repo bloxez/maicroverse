@@ -1,0 +1,87 @@
+#!maicro
+#---
+# title: AI Signatures + Types Unified Setup
+# description: End-to-end guided setup that unifies signature lifecycle operations with supporting custom type contracts.
+# difficulty: intermediate
+# estimated_time: 10m
+# tags:
+#   - signatures
+#   - custom-types
+#   - ai
+#   - contracts
+# intent: Keep the learning focus on signatures while proving the value of stable, explicit type contracts.
+#---
+
+###> RESET TO A REPEATABLE BASELINE
+#{
+# Clears demo signatures and supporting custom types from earlier runs.
+#}
+mutation Reset {
+  DbExecute(path: "scripts/courses/12001.ai_signatures/02.reset_signatures_and_types.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> REGISTER SUPPORTING TYPE CONTRACTS
+#{
+# Creates the explicit contract layer used by the signatures in this course.
+#}
+mutation RegisterTypes {
+  DbExecute(path: "scripts/courses/12001.ai_signatures/03.register_supporting_types.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> CREATE AND EXECUTE SIGNATURES
+#{
+# Creates two signatures and executes them with real payloads.
+#}
+mutation CreateAndExecute {
+  DbExecute(path: "scripts/courses/12001.ai_signatures/04.create_and_execute_signatures.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> INSPECT AND EVOLVE SIGNATURES
+#{
+# Demonstrates observability and lifecycle management for signatures.
+#}
+mutation InspectAndEvolve {
+  DbExecute(path: "scripts/courses/12001.ai_signatures/05.inspect_and_evolve_signatures.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> VERIFY CONTRACT ALIGNMENT
+#{
+# Runs a success case and a controlled failure case to show schema contract enforcement.
+#}
+mutation VerifyAlignment {
+  DbExecute(path: "scripts/courses/12001.ai_signatures/06.verify_contract_alignment.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> FINAL SNAPSHOT
+#{
+# Final state view. Run cleanup script separately if you want teardown.
+#}
+query FinalSnapshot {
+  signatures: ListSignatures {
+    id
+    name
+    category
+  }
+  inTypeSdl: GetTypeSDL(name: "Sig12001TicketInput")
+  outTypeSdl: GetTypeSDL(name: "Sig12001TicketClassification")
+}

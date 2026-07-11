@@ -9,7 +9,7 @@
 #   - team-isolation
 #---
 
-###> STEP 1 - TEAM B NOTE VIEW
+###> TEAM B NOTE VIEW
 #{
 # Purpose:
 # Demonstrate row-level isolation for Team B in an interactive user session.
@@ -49,7 +49,7 @@ query TeamB_View {
   }
 }
 
-###> STEP 2 - ASSERT TEAM B SEGREGATION
+###> ASSERT TEAM B SEGREGATION
 #{
 # Purpose:
 # Fail fast if Team B visibility is incorrect.

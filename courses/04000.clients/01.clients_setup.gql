@@ -11,14 +11,12 @@
 #   - clients
 #---
 
-###> STEP 1 - CLEAR CLIENT DATA
+###> CLEAR CLIENT DATA
 #{
 # ## Reset Data
 # Clears any prior client rows and resets the linked drivers license file so the demo can be rerun cleanly.
-#
-# stepinto: 02.clear_client_data.gql
 #}
-mutation Step1_ClearClientData {
+mutation ClearClientData {
   DbExecute(path: "scripts/courses/04000.clients/02.clear_client_data.gql") {
     success
     message
@@ -26,14 +24,11 @@ mutation Step1_ClearClientData {
   }
 }
 
-###> STEP 2 - CREATE CLIENTS TABLE
+###> CREATE CLIENT TABLE
 #{
-# ## Create Schema
 # Creates the `clients` table and reloads GraphQL schema so generated CRUD APIs are immediately available.
-#
-# stepinto: 03.create_clients_table.gql
 #}
-mutation Step2_CreateClientsTable {
+mutation CreateClientsTable {
   DbExecute(path: "scripts/courses/04000.clients/03.create_clients_table.gql") {
     success
     message
@@ -41,14 +36,12 @@ mutation Step2_CreateClientsTable {
   }
 }
 
-###> STEP 3 - SEED CLIENT RECORDS
+###> SEED CLIENT RECORDS
 #{
 # ## Seed Data
 # Inserts realistic demo clients that can be referenced by forms and documents later.
-#
-# stepinto: 04.seed_clients.gql
 #}
-mutation Step3_SeedClients {
+mutation SeedClients {
   DbExecute(path: "scripts/courses/04000.clients/04.seed_clients.gql") {
     success
     message
@@ -56,14 +49,12 @@ mutation Step3_SeedClients {
   }
 }
 
-###> STEP 4 - VERIFY CLIENT SETUP
+###> VERIFY CLIENT SETUP
 #{
 # ## Validate Setup
 # Confirms `clients` exists and returns a sample of seeded rows.
-#
-# stepinto: 05.verify_clients.gql
 #}
-mutation Step4_Verify {
+mutation Verify {
   DbExecute(path: "scripts/courses/04000.clients/05.verify_clients.gql") {
     success
     message
@@ -71,14 +62,12 @@ mutation Step4_Verify {
   }
 }
 
-###> STEP 5 - RUN DRIVERS LICENSE DOCUMENT DEMO
+###> RUN DRIVERS LICENSE DOCUMENT DEMO
 #{
 # ## Document Relationship Demo
 # Configures the DriversLicense type, links document 82 to the first client, rebuilds AI output, and verifies typed traversal.
-#
-# stepinto: 09.clients_documents_demo.gql
 #}
-mutation Step5_RunDriversLicenseDemo {
+mutation RunDriversLicenseDemo {
   DbExecute(path: "scripts/courses/04000.clients/06.clients_documents_demo.gql") {
     success
     message

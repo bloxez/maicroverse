@@ -10,21 +10,21 @@
 #   - ingest
 #---
 
-###> STEP 1 - FETCH PERTH WEATHER
+###> FETCH PERTH WEATHER
 #{
 # Calls `GetWeather` for Perth and stores the response in script memory.
 #}
-query Step1_FetchPerth {
+query FetchPerth {
   perth: GetWeather(latitude: -31.9505, longitude: 115.8605, current: "temperature_2m") {
     current
   }
 }
 
-###> STEP 2 - SAVE PERTH READING
+###> SAVE PERTH READING
 #{
 # Inserts Perth reading into `weather_readings`.
 #}
-mutation Step2_SavePerth {
+mutation SavePerth {
   weather_readingAdd(
     data: {
       location: "Perth"
@@ -36,21 +36,21 @@ mutation Step2_SavePerth {
   }
 }
 
-###> STEP 3 - FETCH ADELAIDE WEATHER
+###> FETCH ADELAIDE WEATHER
 #{
 # Calls `GetWeather` for Adelaide.
 #}
-query Step3_FetchAdelaide {
+query FetchAdelaide {
   adelaide: GetWeather(latitude: -34.9285, longitude: 138.6007, current: "temperature_2m") {
     current
   }
 }
 
-###> STEP 4 - SAVE ADELAIDE READING
+###> SAVE ADELAIDE READING
 #{
 # Inserts Adelaide reading into `weather_readings`.
 #}
-mutation Step4_SaveAdelaide {
+mutation SaveAdelaide {
   weather_readingAdd(
     data: {
       location: "Adelaide"
@@ -62,21 +62,21 @@ mutation Step4_SaveAdelaide {
   }
 }
 
-###> STEP 5 - FETCH SYDNEY WEATHER
+###> FETCH SYDNEY WEATHER
 #{
 # Calls `GetWeather` for Sydney.
 #}
-query Step5_FetchSydney {
+query FetchSydney {
   sydney: GetWeather(latitude: -33.8688, longitude: 151.2093, current: "temperature_2m") {
     current
   }
 }
 
-###> STEP 6 - SAVE SYDNEY READING
+###> SAVE SYDNEY READING
 #{
 # Inserts Sydney reading into `weather_readings`.
 #}
-mutation Step6_SaveSydney {
+mutation SaveSydney {
   weather_readingAdd(
     data: {
       location: "Sydney"

@@ -10,7 +10,7 @@
 #   - analytics
 #---
 
-###> STEP 1 - DASHBOARD PAYLOAD + DATA
+###> DASHBOARD PAYLOAD + DATA
 #{
 # Returns one unified JSON payload block plus all chart datasets.
 # Uses `readersLookup { id label }` so UI dropdowns can directly consume clean options.
@@ -131,7 +131,7 @@ query BookClubDashboard {
   }
 }
 
-###> STEP 2 - QUICK VALIDATION
+###> QUICK VALIDATION
 #{
 # Confirms this script returns dashboard + at least one chart dataset.
 #}

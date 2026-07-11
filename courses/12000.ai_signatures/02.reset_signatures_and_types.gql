@@ -1,0 +1,31 @@
+#!maicro
+#---
+# title: Reset Signatures and Types
+# description: Removes demo signatures and custom types used by the unified signatures course.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - signatures
+#   - custom-types
+#   - cleanup
+#   - repeatability
+#---
+
+###> DELETE DEMO SIGNATURES
+#{
+# Deletes the signatures created by this course when present.
+#}
+mutation DeleteSignatures {
+  DeleteClassifySupport: DeleteSignature(id: "sig12001_classify_support", failIfNotFound: false) { success message }
+  DeleteExtractInvoice: DeleteSignature(id: "sig12001_extract_invoice", failIfNotFound: false) { success message }
+}
+
+###> DELETE SUPPORTING CUSTOM TYPES
+#{
+# Removes custom type contracts used by this course.
+#}
+mutation DeleteTypes {
+  DeleteTicketInput: DeleteType(name: "Sig12001TicketInput", failIfNotFound: false) { success message }
+  DeleteTicketClassification: DeleteType(name: "Sig12001TicketClassification", failIfNotFound: false) { success message }
+  DeleteInvoiceData: DeleteType(name: "Sig12001InvoiceData", failIfNotFound: false) { success message }
+}

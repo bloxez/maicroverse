@@ -12,12 +12,11 @@
 # intent: Provide one command that executes the complete course bundle repeatably.
 #---
 
-###> STEP 1 - RUN RAW FETCH LESSON
+###> RUN RAW FETCH LESSON
 #{
 # Executes the first practical lesson that retrieves raw market JSON.
-# stepinto: scripts/courses/10000.asx_watcher/02.multi_stock_raw.gql
 #}
-mutation Step1_RunRawFetch {
+mutation RunRawFetch {
   step02: DbExecute(path: "scripts/courses/10000.asx_watcher/02.multi_stock_raw.gql") {
     success
     status
@@ -26,12 +25,11 @@ mutation Step1_RunRawFetch {
   }
 }
 
-###> STEP 2 - RUN SINGLE MARKDOWN LESSON
+###> RUN SINGLE MARKDOWN LESSON
 #{
 # Converts one ticker payload into markdown so learners can inspect format quality.
-# stepinto: scripts/courses/10000.asx_watcher/03.single_stock_md.gql
 #}
-mutation Step2_RunSingleMarkdown {
+mutation RunSingleMarkdown {
   step03: DbExecute(path: "scripts/courses/10000.asx_watcher/03.single_stock_md.gql") {
     success
     status
@@ -40,12 +38,11 @@ mutation Step2_RunSingleMarkdown {
   }
 }
 
-###> STEP 3 - RUN MULTI MARKDOWN LESSON
+###> RUN MULTI MARKDOWN LESSON
 #{
 # Expands markdown conversion to two tickers for side-by-side comparison.
-# stepinto: scripts/courses/10000.asx_watcher/04.multi_stock_md.gql
 #}
-mutation Step3_RunMultiMarkdown {
+mutation RunMultiMarkdown {
   step04: DbExecute(path: "scripts/courses/10000.asx_watcher/04.multi_stock_md.gql") {
     success
     status
@@ -54,12 +51,11 @@ mutation Step3_RunMultiMarkdown {
   }
 }
 
-###> STEP 4 - RUN BROWSER INTRO LESSON
+###> RUN BROWSER INTRO LESSON
 #{
 # Demonstrates browser open -> navigate -> extract -> cleanup in one lesson.
-# stepinto: scripts/courses/10000.asx_watcher/05.browser_intro.gql
 #}
-mutation Step4_RunBrowserIntro {
+mutation RunBrowserIntro {
   step05: DbExecute(path: "scripts/courses/10000.asx_watcher/05.browser_intro.gql") {
     success
     status
@@ -68,12 +64,11 @@ mutation Step4_RunBrowserIntro {
   }
 }
 
-###> STEP 5 - RUN BROWSER ADVANCED LESSON
+###> RUN BROWSER ADVANCED LESSON
 #{
 # Runs advanced browser actions and challenge-awareness checks.
-# stepinto: scripts/courses/10000.asx_watcher/06.browser_advanced.gql
 #}
-mutation Step5_RunBrowserAdvanced {
+mutation RunBrowserAdvanced {
   step06: DbExecute(path: "scripts/courses/10000.asx_watcher/06.browser_advanced.gql") {
     success
     status

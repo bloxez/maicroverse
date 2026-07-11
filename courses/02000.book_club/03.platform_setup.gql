@@ -21,17 +21,17 @@
 # Each feature creates its own system tables when enabled.
 #}
 mutation EnableFeatures {
-  DbEnableFilestorage {
+  EnableFileStorage {
     files_table
     chunks_table
   }
 
-  DbEnableSearch {
+  EnableSearch {
     status 
     text_chunks_table
   }
 
-  DbEnableAsyncJobs {
+  EnableAsyncJobs {
     jobs_table
     status
   }

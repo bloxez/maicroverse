@@ -9,11 +9,11 @@
 #   - diagnostics
 #---
 
-###> STEP 1 - LIST CRON JOBS
+###> LIST CRON JOBS
 #{
 # Lists recent cron jobs with status, next run, and error details.
 #}
-query Step1_ListCronJobs {
+query ListCronJobs {
   CronJobs(limit: 50) {
     id
     name
