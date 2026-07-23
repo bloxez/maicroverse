@@ -20,7 +20,7 @@
 # edge with the start date of the incoming role, creating a gapless audit trail.
 #}
 mutation RegisterAddFullTimeEmployer {
-  DbGraphWrap(
+  GraphWrap(
     name: "AddFullTimeEmployer"
     graph: "hr_graph"
     operation: "MUTATION"
@@ -46,7 +46,7 @@ mutation RegisterAddFullTimeEmployer {
 # Multiple concurrent part-time roles are allowed when there is no active full-time.
 #}
 mutation RegisterAddPartTimeEmployer {
-  DbGraphWrap(
+  GraphWrap(
     name: "AddPartTimeEmployer"
     graph: "hr_graph"
     operation: "MUTATION"
@@ -70,7 +70,7 @@ mutation RegisterAddPartTimeEmployer {
 # Registers as a QUERY wrapper so it appears as a GraphQL query, not a mutation.
 #}
 mutation RegisterGetCurrentEmployers {
-  DbGraphWrap(
+  GraphWrap(
     name: "GetCurrentEmployers"
     graph: "hr_graph"
     operation: "QUERY"

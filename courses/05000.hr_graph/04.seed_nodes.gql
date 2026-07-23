@@ -11,74 +11,74 @@
 # ## Alice Chen (Person)
 # Senior Engineer — full-time track (Axiom Labs → BluePeak Tech).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Alice Chen'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Alice Chen'}) RETURN p.name AS result") { rowCount } }
 
 ###> Bob Okafor
 #{
 # ## Bob Okafor (Person)
 # Head of Product — full-time track (Cornerstone → DeltaCore).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Bob Okafor'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Bob Okafor'}) RETURN p.name AS result") { rowCount } }
 
 ###> Carmen Silva
 #{
 # ## Carmen Silva (Person)
 # Freelancer — part-time only, multiple concurrent gigs (Axiom → Ember + BluePeak).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Carmen Silva'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Carmen Silva'}) RETURN p.name AS result") { rowCount } }
 
 ###> David Park
 #{
 # ## David Park (Person)
 # Platform Lead — full-time track (BluePeak Tech → Axiom Labs).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'David Park'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'David Park'}) RETURN p.name AS result") { rowCount } }
 
 ###> Emma Johansson
 #{
 # ## Emma Johansson (Person)
 # Freelance designer — part-time only, multiple concurrent gigs (Cornerstone → DeltaCore + Ember).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Emma Johansson'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Emma Johansson'}) RETURN p.name AS result") { rowCount } }
 
 ###> Femi Adeyemi
 #{
 # ## Femi Adeyemi (Person)
 # Engineering Manager — full-time track (Axiom → Cornerstone → Ember Systems).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Femi Adeyemi'}) RETURN p.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (p:Person {name: 'Femi Adeyemi'}) RETURN p.name AS result") { rowCount } }
 
 ###> Axiom Labs
 #{
 # ## Axiom Labs (Company)
 # Mid-size tech company — employs Alice (past), David (current), Femi (past).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Axiom Labs'}) RETURN c.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Axiom Labs'}) RETURN c.name AS result") { rowCount } }
 
 ###> BluePeak Tech
 #{
 # ## BluePeak Tech (Company)
 # Software company — employs Alice (current), David (past), Carmen (part-time active).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'BluePeak Tech'}) RETURN c.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'BluePeak Tech'}) RETURN c.name AS result") { rowCount } }
 
 ###> Cornerstone
 #{
 # ## Cornerstone (Company)
 # Consulting firm — employs Bob (past), Femi (past), Emma (part-time past).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Cornerstone'}) RETURN c.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Cornerstone'}) RETURN c.name AS result") { rowCount } }
 
 ###> DeltaCore
 #{
 # ## DeltaCore (Company)
 # Product-led startup — employs Bob (current), Emma (part-time active).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'DeltaCore'}) RETURN c.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'DeltaCore'}) RETURN c.name AS result") { rowCount } }
 
 ###> Ember Systems
 #{
 # ## Ember Systems (Company)
 # Deep-tech company — employs Femi (current), Carmen (part-time active), Emma (part-time active).
 #}
-mutation { DbGraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Ember Systems'}) RETURN c.name AS result") { rowCount } }
+mutation { GraphMutate(graph: "hr_graph", cypher: "MERGE (c:Company {name: 'Ember Systems'}) RETURN c.name AS result") { rowCount } }
