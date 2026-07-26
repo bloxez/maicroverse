@@ -21,7 +21,7 @@ query FirstClient {
 
 ###> GET TARGET DRIVERS LICENSE FILE (DOC 82)
 query TargetDriversLicenseFile {
-  target_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
+  target_file: File(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
     metadata {
       id
       path

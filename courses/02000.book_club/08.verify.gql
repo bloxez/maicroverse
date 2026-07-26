@@ -36,7 +36,7 @@ query DbState {
     description
   }
 
-  PrjStoresList
+  PrjStores
 }
 
 ###> GET DATABASE SCHEMA DETAILS
@@ -59,7 +59,7 @@ query DatabaseSchema {
 # Lists registered SQL wrappers and their contract details.
 #}
 query SqlWraps {
-  SqlWrapList {
+  SqlWrappers {
     name
     operation
     sql
@@ -76,7 +76,7 @@ query SqlWraps {
 # Lists registered API wrappers and their HTTP mapping metadata.
 #}
 query ApiWraps {
-  ApiWrapList {
+  ApiWrappers {
     name
     operation
     endpoint
