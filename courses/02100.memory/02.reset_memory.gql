@@ -1,0 +1,52 @@
+#!maicro
+#---
+# title: Reset Memory
+# description: Clear all persistent memory blocks for a clean baseline.
+# difficulty: beginner
+# estimated_time: 20s
+# tags:
+#   - memory
+#   - reset
+#---
+
+###> FULL MEMORY RESET
+#{
+# `Forget()` with no id clears every memory block in the project instance.
+#}
+mutation ResetAllMemory {
+  Forget
+}
+
+###> PROBE THAT TARGET BLOCKS ARE ABSENT
+#{
+# Attempting to delete absent blocks should return false.
+#}
+mutation ProbeResetState {
+  LearnerDeleteAttempt: Forget(id: "learner_profile")
+  SessionDeleteAttempt: Forget(id: "active_session")
+}
+
+###> ASSERT CLEAN STATE
+#{
+# Confirms target blocks are absent after reset.
+#}
+query AssertResetState {
+  AssertLearnerGone: AssertOrThrow(
+    actual: "{{LearnerDeleteAttempt}}"
+    op: "eq"
+    expected: "false"
+    message: "learner_profile should not exist after reset"
+  ) {
+    success
+    message
+  }
+  AssertSessionGone: AssertOrThrow(
+    actual: "{{SessionDeleteAttempt}}"
+    op: "eq"
+    expected: "false"
+    message: "active_session should not exist after reset"
+  ) {
+    success
+    message
+  }
+}

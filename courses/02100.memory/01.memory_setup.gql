@@ -1,0 +1,100 @@
+#!maicro
+#---
+# title: Memory Course Full Setup
+# intent: Learn persistent script memory patterns with Remember, Recall, and Forget.
+# description: Runs the complete memory lesson flow including reset, seed, read, update, delete, and final verification.
+# difficulty: beginner
+# estimated_time: 8m
+# tags:
+#   - memory
+#   - scripting
+#   - assertions
+# resources:
+#   - type: docs
+#     url: /help/reference/graphql
+#     title: GraphQL Reference
+#---
+
+###> RESET MEMORY
+#{
+# ## Start Clean
+# Removes all memory blocks to make this course safely repeatable.
+# stepinto: scripts/courses/02100.memory/02.reset_memory.gql
+#}
+mutation ResetMemory {
+  DbExecute(path: "scripts/courses/02100.memory/02.reset_memory.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> CREATE BLOCKS
+#{
+# ## Seed Initial Context
+# Creates two memory blocks with starter JSON data.
+# stepinto: scripts/courses/02100.memory/03.create_blocks.gql
+#}
+mutation CreateBlocks {
+  DbExecute(path: "scripts/courses/02100.memory/03.create_blocks.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> READ AND ASSERT
+#{
+# ## Read Data Back
+# Demonstrates full-block and path-level recall with validations.
+# stepinto: scripts/courses/02100.memory/04.read_and_assert.gql
+#}
+mutation ReadAndAssert {
+  DbExecute(path: "scripts/courses/02100.memory/04.read_and_assert.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> UPDATE PATHS
+#{
+# ## Path Updates
+# Writes specific paths inside existing blocks and checks expected values.
+# stepinto: scripts/courses/02100.memory/05.update_paths.gql
+#}
+mutation UpdatePaths {
+  DbExecute(path: "scripts/courses/02100.memory/05.update_paths.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> FORGET MODES
+#{
+# ## Remove Path and Block
+# Demonstrates deleting one path and deleting one full block.
+# stepinto: scripts/courses/02100.memory/06.forget_examples.gql
+#}
+mutation ForgetModes {
+  DbExecute(path: "scripts/courses/02100.memory/06.forget_examples.gql") {
+    success
+    message
+    result
+  }
+}
+
+###> FINAL VERIFY AND RESET
+#{
+# ## End-State Validation
+# Confirms expected state, then resets all blocks and verifies clean completion.
+# stepinto: scripts/courses/02100.memory/07.verify_and_reset.gql
+#}
+mutation FinalVerifyAndReset {
+  DbExecute(path: "scripts/courses/02100.memory/07.verify_and_reset.gql") {
+    success
+    message
+    result
+  }
+}

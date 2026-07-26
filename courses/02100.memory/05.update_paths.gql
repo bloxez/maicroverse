@@ -1,0 +1,49 @@
+#!maicro
+#---
+# title: Update Memory Paths
+# description: Update specific JSON paths in existing memory blocks.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - memory
+#   - update
+#---
+
+###> WRITE PATH UPDATES
+#{
+# Updates counters and status without replacing full JSON blocks.
+#}
+mutation UpdateMemoryPaths {
+  SetCompleted: Remember(id: "active_session", path: "completed_steps", value: "3")
+  SetStatus: Remember(id: "active_session", path: "status", value: "checkpointed")
+  SetTheme: Remember(id: "learner_profile", path: "ui_theme", value: "sunrise")
+}
+
+###> READ UPDATED PATHS
+#{
+# Pulls just the changed values for focused validation.
+#}
+query ReadUpdatedPaths {
+  CompletedSteps: Recall(id: "active_session", path: "completed_steps")
+  SessionStatus: Recall(id: "active_session", path: "status")
+  UiTheme: Recall(id: "learner_profile", path: "ui_theme")
+}
+
+###> ASSERT UPDATED VALUES
+#{
+# Confirms path-level writes persisted expected values.
+#}
+query AssertUpdatedValues {
+  AssertCompleted: AssertOrThrow(actual: "{{CompletedSteps}}", op: "eq", expected: "3") {
+    success
+    message
+  }
+  AssertStatus: AssertOrThrow(actual: "{{SessionStatus}}", op: "eq", expected: "checkpointed") {
+    success
+    message
+  }
+  AssertTheme: AssertOrThrow(actual: "{{UiTheme}}", op: "eq", expected: "sunrise") {
+    success
+    message
+  }
+}

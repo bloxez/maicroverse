@@ -1,0 +1,65 @@
+#!maicro
+#---
+# title: Create Memory Blocks
+# description: Seed persistent memory blocks with starter JSON objects.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - memory
+#   - seed
+#---
+
+###> CREATE LEARNER PROFILE
+#{
+# Creates a block with learner identity and current focus topics.
+#}
+mutation CreateLearnerProfile {
+  Learner: Remember(
+    id: "learner_profile"
+    json: {
+      name: "Ava"
+      role: "builder"
+      experience_level: 1
+      focus: ["graphql", "automation"]
+    }
+  )
+}
+
+###> CREATE ACTIVE SESSION
+#{
+# Creates a second block for in-progress session state.
+#}
+mutation CreateActiveSession {
+  Session: Remember(
+    id: "active_session"
+    json: {
+      goal: "Learn memory primitives"
+      completed_steps: 0
+      status: "started"
+    }
+  )
+}
+
+###> READ CREATED VALUES
+#{
+# Reads back key fields from each block for assertion.
+#}
+query ReadCreatedValues {
+  LearnerName: Recall(id: "learner_profile", path: "name")
+  SessionStatus: Recall(id: "active_session", path: "status")
+}
+
+###> ASSERT BLOCK CREATION
+#{
+# Validates both blocks were created with expected values.
+#}
+query AssertCreated {
+  AssertLearnerName: AssertOrThrow(actual: "{{LearnerName}}", op: "eq", expected: "Ava") {
+    success
+    message
+  }
+  AssertSessionStatus: AssertOrThrow(actual: "{{SessionStatus}}", op: "eq", expected: "started") {
+    success
+    message
+  }
+}

@@ -1,0 +1,40 @@
+#!maicro
+#---
+# title: Read And Assert Memory
+# description: Read memory block values and validate specific paths.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - memory
+#   - read
+#   - assertions
+#---
+
+###> RECALL BLOCKS AND PATHS
+#{
+# Reads complete block plus specific fields via path access.
+#}
+query ReadMemoryValues {
+  Learner: Recall(id: "learner_profile")
+  LearnerName: Recall(id: "learner_profile", path: "name")
+  SessionGoal: Recall(id: "active_session", path: "goal")
+}
+
+###> ASSERT READ RESULTS
+#{
+# Confirms baseline seed values are retrievable and correct.
+#}
+query AssertReadResults {
+  AssertLearnerExists: AssertOrThrow(actual: "{{Learner.role}}", op: "exists", expected: "true") {
+    success
+    message
+  }
+  AssertName: AssertOrThrow(actual: "{{LearnerName}}", op: "eq", expected: "Ava") {
+    success
+    message
+  }
+  AssertGoal: AssertOrThrow(actual: "{{SessionGoal}}", op: "contains", expected: "memory") {
+    success
+    message
+  }
+}

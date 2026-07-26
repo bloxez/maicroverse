@@ -1,0 +1,64 @@
+#!maicro
+#---
+# title: Forget Path And Block
+# description: Demonstrate path-level and block-level deletion behavior.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - memory
+#   - delete
+#---
+
+###> DELETE ONE PATH
+#{
+# Removes only `ui_theme` from learner_profile while preserving other fields.
+#}
+mutation DeletePath {
+  DeleteUiTheme: Forget(id: "learner_profile", path: "ui_theme")
+}
+
+###> READ BLOCK AFTER PATH DELETE
+#{
+# Fetches a known field to prove the block still exists.
+#}
+query ReadAfterPathDelete {
+  LearnerNameAfterPathDelete: Recall(id: "learner_profile", path: "name")
+}
+
+###> ASSERT BLOCK STILL EXISTS
+#{
+# Path delete should not remove the full learner_profile block.
+#}
+query AssertBlockStillExists {
+  BlockStillPresent: AssertOrThrow(actual: "{{LearnerNameAfterPathDelete}}", op: "eq", expected: "Ava") {
+    success
+    message
+  }
+}
+
+###> DELETE ONE BLOCK
+#{
+# Removes the full active_session memory block.
+#}
+mutation DeleteBlock {
+  DeleteSession: Forget(id: "active_session")
+}
+
+###> DELETE SAME BLOCK AGAIN
+#{
+# A second delete should return false because block is already gone.
+#}
+mutation DeleteBlockAgain {
+  DeleteSessionAgain: Forget(id: "active_session")
+}
+
+###> ASSERT BLOCK IS ABSENT
+#{
+# This proves block-level deletion took effect.
+#}
+query AssertBlockAbsent {
+  BlockMissing: AssertOrThrow(actual: "{{DeleteSessionAgain}}", op: "eq", expected: "false") {
+    success
+    message
+  }
+}

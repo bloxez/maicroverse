@@ -1,0 +1,79 @@
+#!maicro
+#---
+# title: Verify And Final Reset
+# description: Validate expected final state and reset all memory blocks.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - memory
+#   - verification
+#   - reset
+#---
+
+###> VERIFY PRE-RESET STATE
+#{
+# learner_profile should remain and memory store should be available.
+#}
+query VerifyBeforeReset {
+  LearnerBeforeReset: Recall(id: "learner_profile")
+  Stores: PrjStores
+}
+
+###> PROBE SESSION IS ALREADY REMOVED
+#{
+# Since 06 deleted active_session, deleting it again should return false.
+#}
+mutation ProbeSessionMissing {
+  SessionDeleteAttempt: Forget(id: "active_session")
+}
+
+###> ASSERT PRE-RESET EXPECTATIONS
+#{
+# Ensures previous script effects are present before global reset.
+#}
+query AssertBeforeReset {
+  AssertLearnerExists: AssertOrThrow(actual: "{{LearnerBeforeReset.name}}", op: "eq", expected: "Ava") {
+    success
+    message
+  }
+  AssertSessionMissing: AssertOrThrow(actual: "{{SessionDeleteAttempt}}", op: "eq", expected: "false") {
+    success
+    message
+  }
+  AssertMemoryStoreListed: AssertOrThrow(actual: "{{Stores}}", op: "contains", expected: "memory") {
+    success
+    message
+  }
+}
+
+###> RESET ALL MEMORY BLOCKS
+#{
+# Clears all blocks to leave the environment clean for reruns.
+#}
+mutation FinalReset {
+  Forget
+}
+
+###> PROBE CLEAN END STATE
+#{
+# Deletes should return false when blocks are already absent.
+#}
+mutation ProbeAfterReset {
+  LearnerDeleteAfterReset: Forget(id: "learner_profile")
+  SessionDeleteAfterReset: Forget(id: "active_session")
+}
+
+###> ASSERT CLEAN END STATE
+#{
+# Both known blocks should be absent after full reset.
+#}
+query AssertAfterReset {
+  AssertLearnerGone: AssertOrThrow(actual: "{{LearnerDeleteAfterReset}}", op: "eq", expected: "false") {
+    success
+    message
+  }
+  AssertSessionGone: AssertOrThrow(actual: "{{SessionDeleteAfterReset}}", op: "eq", expected: "false") {
+    success
+    message
+  }
+}

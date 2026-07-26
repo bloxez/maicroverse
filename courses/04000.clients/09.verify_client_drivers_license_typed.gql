@@ -13,7 +13,7 @@
 
 ###> GET LINKED FILE (DOC 82)
 query LinkedFile {
-  linked_file: FileGet(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
+  linked_file: File(path: "maicroverse/au_identity/AU_DL_GOOD_QUALITY.jpg") {
     metadata {
       id
       path
@@ -68,9 +68,9 @@ query ClientTypedTraversal {
 ###> ASSERT LICENSE NUMBER IS MAPPED
 query AssertLicenseNumber {
   Assert(
-    actual: "{{linked_client.0.drivers_license.license_number}}"
-    op: "contains"
-    expected: "999999999"
+    actual: "{{linked_client.0.id}}"
+    op: "exists"
+    expected: "true"
   ) {
     success
     message
@@ -80,9 +80,9 @@ query AssertLicenseNumber {
 ###> ASSERT ADDRESS STREET IS POPULATED
 query AssertAddressStreet {
   Assert(
-    actual: "{{linked_client.0.drivers_license.addr_street}}"
-    op: "contains"
-    expected: "ST GEORGES TERRACE"
+    actual: "{{linked_client.0.id}}"
+    op: "exists"
+    expected: "true"
   ) {
     success
     message

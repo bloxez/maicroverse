@@ -91,7 +91,7 @@ mutation SetRelationship {
             parent_key_field: "id"
             cardinality: "one_to_one"
             graphql_type: "DriversLicense"
-            ai_results_key: "drivers_license"
+            ai_results_key: "drivers_license.output"
           }
         ]
       }
