@@ -2,12 +2,12 @@
   "$about": "Initial CLI config. Refer to mAIcroverse repo for more help.",
   "baseUrl": "http://localhost:4321",
   "repoBaseUrl": "https://github.com/bloxez/maicroverse/tree/main/project",
-  "defaultProject": "maicro",
-  "defaultProjectKey": "your_default_project_key",
+  "defaultInstance": "maicro",
+  "defaultInstanceKey": "your_default_instance_key",
   "projects": {
     "maicro": ""
   },
-  "defaultProjectConfig": {
+  "defaultInstanceConfig": {
     "apiKeys": [
       {
         "key": "OPENROUTER_API_KEY",

@@ -163,7 +163,7 @@ Each script includes documentation explaining what it does and why.
 
 Try these modifications:
 
-1. **Add new tables** — Use `DbCreateTable` to add `discussions`, `reading_lists`, or `recommendations`
+1. **Add new tables** — Use `DbTableAdd` to add `discussions`, `reading_lists`, or `recommendations`
 2. **New filter templates** — Create `AuthorFilter` to limit visibility by author nationality
 3. **Custom operations** — Write GraphQL wrappers around business logic (e.g., "recommend 5 books similar to this one")
 4. **Webhooks** — Trigger external systems when reviews are posted or new authors join
