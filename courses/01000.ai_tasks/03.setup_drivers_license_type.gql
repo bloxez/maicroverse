@@ -12,7 +12,7 @@ mutation ReloadAfterRemoval {
 
 ###> CREATE DRIVERSLICENSE TYPE
 mutation RegisterDriversLicenseType {
-  RegisterType(
+  TypeAdd(
     name: "DriversLicense"
     description: "Structured extraction payload for Australian drivers license records."
     fields: [

@@ -21,17 +21,17 @@
 # Each feature creates its own system tables when enabled.
 #}
 mutation EnableFeatures {
-  EnableFileStorage {
+  FileStorageEnable {
     files_table
     chunks_table
   }
 
-  EnableSearch {
+  SearchEnable {
     status 
     text_chunks_table
   }
 
-  EnableAsyncJobs {
+  AsyncJobsEnable {
     jobs_table
     status
   }
@@ -54,7 +54,7 @@ mutation EnableFeatures {
 # ```
 #}
 mutation CreateFilterTemplates {
-  TeamFilter: FilterTemplateCreate(input: {
+  TeamFilter: FilterTemplateAdd(input: {
     name: "TeamIsolation"
     description: "Restricts access based on user's team - rows are only visible to members of the same team"
     column_definition: {

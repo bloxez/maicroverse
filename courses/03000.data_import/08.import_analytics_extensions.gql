@@ -18,10 +18,10 @@ query LoadImportRoot {
 
 ###> DropExtensionTables
 mutation DropExtensionTables {
-  d1: DbDropTable(name: "returns")
-  d2: DbDropTable(name: "order_fulfillment_events")
-  d3: DbDropTable(name: "customer_touchpoints")
-  d4: DbDropTable(name: "customer_segments")
+  d1: DbTableDelete(name: "returns")
+  d2: DbTableDelete(name: "order_fulfillment_events")
+  d3: DbTableDelete(name: "customer_touchpoints")
+  d4: DbTableDelete(name: "customer_segments")
 }
 
 ###> ImportCustomerSegments

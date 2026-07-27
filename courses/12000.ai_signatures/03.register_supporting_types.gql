@@ -15,7 +15,7 @@
 # This input contract models the support ticket payload our signature expects.
 #}
 mutation RegisterInputType {
-  RegisterType(
+  TypeAdd(
     name: "Sig12001TicketInput"
     description: "Typed contract for support ticket classification input"
     kind: "input"
@@ -38,7 +38,7 @@ mutation RegisterInputType {
 # This output contract models what the classifier should return.
 #}
 mutation RegisterOutputType {
-  RegisterType(
+  TypeAdd(
     name: "Sig12001TicketClassification"
     description: "Typed contract for support ticket classification output"
     fields: [
@@ -60,7 +60,7 @@ mutation RegisterOutputType {
 # A richer extraction type used by the invoice signature.
 #}
 mutation RegisterInvoiceType {
-  RegisterType(
+  TypeAdd(
     name: "Sig12001InvoiceData"
     description: "Typed contract for invoice extraction output"
     fields: [

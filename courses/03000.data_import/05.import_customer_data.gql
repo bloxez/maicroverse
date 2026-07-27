@@ -19,11 +19,11 @@ query LoadImportRoot {
 
 ###> DropAll
 mutation DropAll {
-  d1: DbDropTable(name: "invoices")
-  d2: DbDropTable(name: "order_items")
-  d3: DbDropTable(name: "orders")
-  d4: DbDropTable(name: "products")
-  d5: DbDropTable(name: "customers")
+  d1: DbTableDelete(name: "invoices")
+  d2: DbTableDelete(name: "order_items")
+  d3: DbTableDelete(name: "orders")
+  d4: DbTableDelete(name: "products")
+  d5: DbTableDelete(name: "customers")
 }
 
 ###> ImportCustomers

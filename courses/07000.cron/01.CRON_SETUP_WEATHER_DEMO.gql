@@ -74,7 +74,7 @@ mutation CreateWeatherWrapper {
 # remain deterministic.
 #}
 mutation DropWeatherTable {
-  DbDropTable(name: "weather_readings")
+  DbTableDelete(name: "weather_readings")
 }
 
 ###> CREATE WEATHER TABLE
@@ -85,7 +85,7 @@ mutation DropWeatherTable {
 # Each cron execution inserts one row per city.
 #}
 mutation CreateWeatherTable {
-  DbCreateTable(
+  DbTableAdd(
     name: "weather_readings"
     description: "Stores periodic weather readings from scheduled jobs"
     fields: [

@@ -61,12 +61,12 @@ query LoadImportRoot {
 ###> DropWeather
 #{
 # ## Drop Existing Table
-# Removes the weather_readings table if it exists. DbDropTable is a
+# Removes the weather_readings table if it exists. DbTableDelete is a
 # no-op when the table does not exist, making this step safe on the
 # very first run.
 #}
 mutation DropWeather {
-  DbDropTable(name: "weather_readings")
+  DbTableDelete(name: "weather_readings")
 }
 
 ###> ImportWeatherReadings

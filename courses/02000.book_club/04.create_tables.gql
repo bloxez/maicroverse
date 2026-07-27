@@ -11,7 +11,7 @@
 
 ###> CREATE TABLES
 mutation CreateTables {
-  readers: DbCreateTable(
+  readers: DbTableAdd(
     name: "readers"
     icon: "users"
     metadata: { group_name: "people" }
@@ -31,7 +31,7 @@ mutation CreateTables {
     ]
   )
 
-  authors: DbCreateTable(
+  authors: DbTableAdd(
     name: "authors"
     icon: "user-edit"
     metadata: { group_name: "people" }
@@ -46,7 +46,7 @@ mutation CreateTables {
     ]
   )
 
-  books: DbCreateTable(
+  books: DbTableAdd(
     name: "books"
     icon: "book"
     metadata: { group_name: "catalog" }
@@ -62,7 +62,7 @@ mutation CreateTables {
     ]
   )
 
-  reviews: DbCreateTable(
+  reviews: DbTableAdd(
     name: "reviews"
     icon: "thumbs-up-fill"
     metadata: { group_name: "engagement" }
@@ -77,7 +77,7 @@ mutation CreateTables {
     ]
   )
 
-  team_notes: DbCreateTable(
+  team_notes: DbTableAdd(
     name: "team_notes"
     icon: "address-book"
     metadata: { group_name: "operations" }

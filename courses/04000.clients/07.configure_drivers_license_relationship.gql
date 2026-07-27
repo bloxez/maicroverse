@@ -50,7 +50,7 @@ mutation ReloadAfterDelete {
 
 ###> CREATE DRIVERSLICENSE TYPE (CANONICAL TARGET STRUCTURE)
 mutation RegisterDriversLicenseType {
-  RegisterType(
+  TypeAdd(
     name: "DriversLicense"
     description: "Structured extraction payload for Australian drivers license records."
     fields: [

@@ -23,7 +23,7 @@
 # - both role IDs are available for assignment in later steps.
 #}
 mutation CreateRoles {
-  memberRole: AuthCreateRole(
+  memberRole: AuthRoleAdd(
     input: {
       name: "book_club_member"
       description: "Book club team member"
@@ -42,7 +42,7 @@ mutation CreateRoles {
     description
   }
 
-  moderatorRole: AuthCreateRole(
+  moderatorRole: AuthRoleAdd(
     input: {
       name: "book_club_moderator"
       description: "Book club team moderator"
@@ -75,7 +75,7 @@ mutation CreateRoles {
 # - two team IDs are available for membership assignment.
 #}
 mutation CreateTeams {
-  teamA: AuthCreateTeam(input: {
+  teamA: AuthTeamCreate(input: {
     name: "teama"
     description: "Book Club Team A - Fiction discussion and member support"
   }) {
@@ -84,7 +84,7 @@ mutation CreateTeams {
     description
   }
 
-  teamB: AuthCreateTeam(input: {
+  teamB: AuthTeamCreate(input: {
     name: "teamb"
     description: "Book Club Team B - Operations and weekly reading tasks"
   }) {
@@ -108,7 +108,7 @@ mutation CreateTeams {
 # - both user IDs are available for team and role assignment.
 #}
 mutation CreateUsers {
-  userA: AuthCreateUser(input: {
+  userA: AuthUserAdd(input: {
     email: "maicro1@maicro.ai"
     name: "Book Club Team A User"
     password: "maicrog2a"
@@ -118,7 +118,7 @@ mutation CreateUsers {
     name
   }
 
-  userB: AuthCreateUser(input: {
+  userB: AuthUserAdd(input: {
     email: "maicro2@maicro.ai"
     name: "Book Club Team B User"
     password: "maicrog2a"
@@ -142,7 +142,7 @@ mutation CreateUsers {
 # - AuthUserTeams for each user contains only its team ID.
 #}
 mutation AssignTeams {
-  teamAssignA: AuthAssignTeamsToUser(
+  teamAssignA: AuthUserTeamsAdd(
     userId: "{{@@.userA.user_id}}"
     teamIds: ["{{@@.teamA.id}}"]
   ) {
@@ -150,7 +150,7 @@ mutation AssignTeams {
     team_ids
   }
 
-  teamAssignB: AuthAssignTeamsToUser(
+  teamAssignB: AuthUserTeamsAdd(
     userId: "{{@@.userB.user_id}}"
     teamIds: ["{{@@.teamB.id}}"]
   ) {
@@ -172,7 +172,7 @@ mutation AssignTeams {
 # - role assignment payloads return expected role lists.
 #}
 mutation AssignRoles {
-  roleAssignA: AuthAssignRolesToUser(
+  roleAssignA: AuthUserRolesAdd(
     userId: "{{@@.userA.user_id}}"
     roleIds: ["{{@@.memberRole.id}}", "{{@@.moderatorRole.id}}"]
   ) {
@@ -183,7 +183,7 @@ mutation AssignRoles {
     }
   }
 
-  roleAssignB: AuthAssignRolesToUser(
+  roleAssignB: AuthUserRolesAdd(
     userId: "{{@@.userB.user_id}}"
     roleIds: ["{{@@.memberRole.id}}"]
   ) {

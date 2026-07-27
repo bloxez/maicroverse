@@ -17,7 +17,7 @@
 # ## Create DriversLicense Type
 # Creates the user-defined GraphQL type that the AI task references.
 #}
-mutation RegisterType {
+mutation TypeAdd {
   DbExecute(path: "scripts/courses/01000.ai_tasks/03.setup_drivers_license_type.gql") {
     success
     message

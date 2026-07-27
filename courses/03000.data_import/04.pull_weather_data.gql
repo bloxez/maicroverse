@@ -43,7 +43,7 @@ query LoadImportRoot {
 # The mutation returns the list of files that were saved.
 #}
 mutation PullWeatherData {
-  FetchFolderFromUrl(
+  FolderFetchFromUrl(
     url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/weather"
     path: "{{importRoot}}/weather"
     overwrite: true

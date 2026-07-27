@@ -34,7 +34,7 @@ query GetRootPath {
 
 ###> FETCH DRIVERS LICENSE IMAGE
 mutation PullDriversLicense {
-  FetchFolderFromUrl(
+  FolderFetchFromUrl(
     url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/au_identity"
     path: "{{import_root}}/au_identity"
     overwrite: true

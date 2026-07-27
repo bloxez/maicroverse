@@ -12,7 +12,7 @@
 
 ###> CREATE CLIENTS TABLE
 mutation CreateClientsTable {
-  clients: DbCreateTable(
+  clients: DbTableAdd(
     name: "clients"
     icon: "users"
     metadata: { group_name: "people" }

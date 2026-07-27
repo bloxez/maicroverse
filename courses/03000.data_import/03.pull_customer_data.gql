@@ -50,7 +50,7 @@ query LoadImportRoot {
 # The mutation returns the list of files that were saved.
 #}
 mutation PullCustomerOrders {
-  FetchFolderFromUrl(
+  FolderFetchFromUrl(
     url: "https://github.com/bloxez/maicroverse/tree/main/file_storage/customer_orders"
     path: "{{importRoot}}/customer_orders"
     overwrite: true
