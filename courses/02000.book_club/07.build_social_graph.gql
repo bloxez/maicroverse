@@ -265,13 +265,13 @@ mutation ConnectAuthorPeers {
 # Lists all node categories across SQL-backed and graph-only entities.
 #}
 query AllNodeTypes {
-  PersonSQL: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NOT NULL RETURN {label: 'Person (SQL-backed)', table: n.table, name: n.name} as node ORDER BY n.table, n.name") { rowCount data }
-  Persongraph:DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NULL RETURN {label: 'Person (graph-only)', name: n.name} as node ORDER BY n.name") { rowCount data }
-  BookSQL: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Book) WHERE n.table IS NOT NULL RETURN {label: 'Book (SQL-backed)', name: n.name} as node ORDER BY n.name") { rowCount data }
-  Publishers: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Publisher) RETURN {name: n.name, country: n.country} as node ORDER BY n.name") { rowCount data }
-  Awards: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Award) RETURN {name: n.name} as node ORDER BY n.name") { rowCount data }
-  Genres: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Genre) RETURN {name: n.name, era: n.era} as node ORDER BY n.name") { rowCount data }
-  SeriesNodes: DbGraphQuery(graph: "book_club_social", cypher:"MATCH (n:Series) RETURN {name: n.name, complete: n.complete} as node ORDER BY n.name") { rowCount data }
+  PersonSQL: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NOT NULL RETURN {label: 'Person (SQL-backed)', table: n.table, name: n.name} as node ORDER BY n.table, n.name") { rowCount data }
+  Persongraph:DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Person) WHERE n.table IS NULL RETURN {label: 'Person (graph-only)', name: n.name} as node ORDER BY n.name") { rowCount data }
+  BookSQL: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Book) WHERE n.table IS NOT NULL RETURN {label: 'Book (SQL-backed)', name: n.name} as node ORDER BY n.name") { rowCount data }
+  Publishers: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Publisher) RETURN {name: n.name, country: n.country} as node ORDER BY n.name") { rowCount data }
+  Awards: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Award) RETURN {name: n.name} as node ORDER BY n.name") { rowCount data }
+  Genres: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Genre) RETURN {name: n.name, era: n.era} as node ORDER BY n.name") { rowCount data }
+  SeriesNodes: DbCypherQuery(graph: "book_club_social", cypher:"MATCH (n:Series) RETURN {name: n.name, complete: n.complete} as node ORDER BY n.name") { rowCount data }
 }
 
 ###> QUERY POWER TRAVERSALS
@@ -280,27 +280,27 @@ query AllNodeTypes {
 # Author-level traversals crossing SQL nodes, graph-only nodes, and edges.
 #}
 query PowerTraversals {
-  AwardWinners: DbGraphQuery(
+  AwardWinners: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(book:Book)-[:WON]->(award:Award) RETURN {author: auth.name, book: book.name, award: award.name} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  InfluenceChains: DbGraphQuery(
+  InfluenceChains: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[inf:INFLUENCED_BY]->(hist:Person) WHERE hist.table IS NULL RETURN {author: auth.name, influenced_by: hist.name, domain: inf.domain} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  PublisherPortfolios: DbGraphQuery(
+  PublisherPortfolios: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(book:Book)-[:PUBLISHED_BY]->(pub:Publisher) RETURN {publisher: pub.name, author: auth.name, book: book.name} as row ORDER BY pub.name, auth.name"
   ) { rowCount data }
 
-  AuthorPeerNetwork: DbGraphQuery(
+  AuthorPeerNetwork: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (a:Person {table: 'authors'})-[p:PEER_OF]->(b:Person {table: 'authors'}) WHERE a.name < b.name RETURN {author_a: a.name, author_b: b.name, era: p.era, shared_genre: p.shared_genre} as row ORDER BY p.shared_genre"
   ) { rowCount data }
 
-  SeriesProgress: DbGraphQuery(
+  SeriesProgress: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (book:Book)-[p:PART_OF]->(series:Series) RETURN {series: series.name, book: book.name, position: p.position, total: p.total_books, complete: series.complete} as row ORDER BY series.name, p.position"
   ) { rowCount data }
@@ -313,22 +313,22 @@ query PowerTraversals {
 # and genre preferences per reader.
 #}
 query ReaderTraversals {
-  ReadingActivity: DbGraphQuery(
+  ReadingActivity: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[rd:READ]->(b:Book) RETURN {reader: r.name, book: b.name, rating: rd.rating, year: rd.year} as row ORDER BY r.name, rd.rating DESC"
   ) { rowCount data }
 
-  FriendReadingOverlap: DbGraphQuery(
+  FriendReadingOverlap: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (a:Person {table: 'readers'})-[:FRIENDS_WITH]->(b:Person {table: 'readers'})-[:READ]->(book:Book)<-[:READ]-(a) WHERE a.name < b.name RETURN {reader_a: a.name, reader_b: b.name, shared_book: book.name} as row ORDER BY a.name"
   ) { rowCount data }
 
-  ReaderGenrePreferences: DbGraphQuery(
+  ReaderGenrePreferences: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[:READ]->(b:Book)-[:BELONGS_TO]->(g:Genre) WITH r.name as reader, g.name as genre, count(b) as book_count RETURN {reader: reader, preferred_genre: genre, book_count: book_count} as row ORDER BY reader, book_count DESC"
   ) { rowCount data }
 
-  TopRatedBooks: DbGraphQuery(
+  TopRatedBooks: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[rd:READ]->(b:Book) WITH b.name as book, avg(rd.rating) as avg_rating, count(r) as reader_count RETURN {book: book, avg_rating: avg_rating, readers: reader_count} as row ORDER BY avg_rating DESC"
   ) { rowCount data }
@@ -340,22 +340,22 @@ query ReaderTraversals {
 # Genre nodes enable recommendation-style traversals across the full graph.
 #}
 query GenreTraversals {
-  BooksByGenre: DbGraphQuery(
+  BooksByGenre: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (b:Book)-[:BELONGS_TO]->(g:Genre) RETURN {genre: g.name, book: b.name} as row ORDER BY g.name, b.name"
   ) { rowCount data }
 
-  GenreAwardOverlap: DbGraphQuery(
+  GenreAwardOverlap: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (b:Book)-[:BELONGS_TO]->(g:Genre), (b)-[:WON]->(a:Award) RETURN {genre: g.name, book: b.name, award: a.name} as row ORDER BY g.name"
   ) { rowCount data }
 
-  SpeculativeFictionAuthors: DbGraphQuery(
+  SpeculativeFictionAuthors: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (auth:Person {table: 'authors'})-[:WROTE]->(b:Book)-[:BELONGS_TO]->(g:Genre {name: 'Speculative Fiction'}) RETURN {author: auth.name, book: b.name} as row ORDER BY auth.name"
   ) { rowCount data }
 
-  ReadersByGenre: DbGraphQuery(
+  ReadersByGenre: DbCypherQuery(
     graph:"book_club_social"
     cypher:"MATCH (r:Person {table: 'readers'})-[:READ]->(b:Book)-[:BELONGS_TO]->(g:Genre) WITH g.name as genre, r.name as reader, count(b) as books_read RETURN {genre: genre, reader: reader, books_read: books_read} as row ORDER BY genre, books_read DESC"
   ) { rowCount data }

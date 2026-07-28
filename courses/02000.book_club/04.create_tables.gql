@@ -18,7 +18,6 @@ mutation CreateTables {
     description: "Readers write reviews of books"
     label: "label"
     fields: [
-      { name: "sequence", type: Int, sequence_for: "GLOBAL", description: "Sequence of readers" }
       { name: "username", type: String, is_required: true, description: "Unique system user id" }
       { name: "password", type: String, is_required: true, is_sensitive: true, description: "Encrypted password" }
       { name: "first_name", type: String, is_required: true, description: "Reader first name" }
