@@ -1,0 +1,268 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+INSTANCE_ID="maicroverse"
+INSTANCE_KEY="maicrog2a"
+REPO_URL="https://github.com/bloxez/maicroverse.git"
+REPO_BRANCH="main"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="${SCRIPT_DIR}/config"
+
+log() {
+  printf "[create-mv] %s\n" "$*"
+}
+
+fail() {
+  printf "[create-mv] ERROR: %s\n" "$*" >&2
+  exit 1
+}
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || fail "Required command not found: $1"
+}
+
+escape_graphql_string() {
+  node -e 'const fs=require("fs"); const s=fs.readFileSync(0,"utf8"); process.stdout.write(JSON.stringify(s).slice(1,-1));'
+}
+
+extract_cli_json() {
+  awk 'BEGIN { capture = 0 } /^\{/ { capture = 1 } capture == 1 { print }'
+}
+
+resolve_mc_cmd() {
+  if command -v mc >/dev/null 2>&1; then
+    MC=(mc)
+    return
+  fi
+
+  if command -v maicro-cli >/dev/null 2>&1; then
+    MC=(maicro-cli)
+    return
+  fi
+
+  if [[ -x "/workspaces/maicro/cli/bin/maicro-cli" ]]; then
+    MC=("/workspaces/maicro/cli/bin/maicro-cli")
+    return
+  fi
+
+  if [[ -f "/workspaces/maicro/cli/src/main.ts" ]]; then
+    require_cmd deno
+    MC=(
+      deno run --config /workspaces/maicro/deno.json --allow-env --allow-net --allow-read --allow-write
+      /workspaces/maicro/cli/src/main.ts
+    )
+    return
+  fi
+
+  fail "Could not find mAIcro CLI. Expected one of: mc, maicro-cli, /workspaces/maicro/cli/bin/maicro-cli"
+}
+
+mc_run() {
+  "${MC[@]}" "$@"
+}
+
+load_local_env() {
+  if [[ -f "/workspaces/maicro/.env" ]]; then
+    # Load ROOT_INSTANCE and ROOT_KEY when running inside the standard mAIcro dev container.
+    set -a
+    # shellcheck disable=SC1091
+    source /workspaces/maicro/.env
+    set +a
+  fi
+}
+
+ensure_project() {
+  local create_output
+
+  set +e
+  create_output="$(mc_run project create --id "${INSTANCE_ID}" --key "${INSTANCE_KEY}" 2>&1)"
+  local create_rc=$?
+  set -e
+
+  if [[ ${create_rc} -eq 0 ]]; then
+    log "Created instance '${INSTANCE_ID}'."
+  elif printf '%s' "${create_output}" | grep -qiE "already exists|duplicate|exists"; then
+    log "Instance '${INSTANCE_ID}' already exists. Continuing."
+  else
+    printf '%s\n' "${create_output}" >&2
+    fail "Could not create instance '${INSTANCE_ID}'."
+  fi
+
+  mc_run project set-key --id "${INSTANCE_ID}" --key "${INSTANCE_KEY}" >/dev/null
+  mc_run config default-instance --action set --project "${INSTANCE_ID}" >/dev/null || true
+  log "Configured local CLI key/default instance for '${INSTANCE_ID}'."
+}
+
+read_openrouter_key() {
+  local existing_key="${OPENROUTER_API_KEY:-}"
+  local entered=""
+
+  if [[ -n "${existing_key}" ]]; then
+    printf "Enter OPENROUTER_API_KEY (press Enter to keep current environment value): "
+  else
+    printf "Enter OPENROUTER_API_KEY: "
+  fi
+
+  read -r -s entered
+  printf "\n"
+
+  if [[ -n "${entered}" ]]; then
+    OPENROUTER_API_KEY_VALUE="${entered}"
+  else
+    OPENROUTER_API_KEY_VALUE="${existing_key}"
+  fi
+
+  [[ -n "${OPENROUTER_API_KEY_VALUE}" ]] || fail "OPENROUTER_API_KEY is required."
+}
+
+sync_courses() {
+  local source_root="$1"
+  local courses_root="${source_root}/courses"
+
+  [[ -d "${courses_root}" ]] || fail "Missing courses folder in cloned repository."
+
+  log "Syncing courses -> scripts/courses (create or overwrite)."
+
+  while IFS= read -r -d '' dir; do
+    local rel="${dir#"${courses_root}/"}"
+    [[ "${rel}" == "${dir}" ]] && continue
+    [[ -z "${rel}" ]] && continue
+    mc_run script mkdir --project "${INSTANCE_ID}" --path "scripts/courses/${rel}" >/dev/null 2>&1 || true
+  done < <(find "${courses_root}" -type d -print0)
+
+  local count=0
+  while IFS= read -r -d '' file; do
+    local rel="${file#"${courses_root}/"}"
+    mc_run script upload --project "${INSTANCE_ID}" --path "scripts/courses/${rel}" --file "${file}" >/dev/null
+    count=$((count + 1))
+  done < <(find "${courses_root}" -type f -print0)
+
+  log "Synced ${count} course file(s)."
+}
+
+sync_file_storage() {
+  local source_root="$1"
+  local storage_root="${source_root}/file_storage"
+
+  [[ -d "${storage_root}" ]] || fail "Missing file_storage folder in cloned repository."
+
+  log "Syncing file_storage -> maicroverse/* (overwrite enabled)."
+  local count=0
+
+  while IFS= read -r -d '' file; do
+    local rel="${file#"${storage_root}/"}"
+    local remote_path="maicroverse/${rel}"
+    mc_run file upload --project "${INSTANCE_ID}" --file "${file}" --path "${remote_path}" --overwrite >/dev/null
+    count=$((count + 1))
+  done < <(find "${storage_root}" -type f -print0)
+
+  log "Synced ${count} storage file(s)."
+}
+
+load_config_sections() {
+  local providers_file="${CONFIG_DIR}/providers.json"
+  local models_file="${CONFIG_DIR}/models.json"
+
+  if [[ -f "${providers_file}" ]]; then
+    PROVIDERS_JSON="$(cat "${providers_file}")"
+  else
+    PROVIDERS_JSON='{"openrouter":{"enabled":true,"baseUrl":"https://openrouter.ai/api/v1","apiKeySecretName":"OPENROUTER_API_KEY"}}'
+  fi
+
+  if [[ -f "${models_file}" ]]; then
+    MODELS_JSON="$(cat "${models_file}")"
+  else
+    MODELS_JSON='{"vision":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"ocr":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"embedding":{"provider":"openrouter","model":"openai/text-embedding-3-small","dimensions":1536,"cost_prompt":0.02,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17"},"completion":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"transcribe":{"provider":"openrouter","model":"openai/whisper-1","cost_prompt":6,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17","cost_audio_per_minute":0.006}}'
+  fi
+
+  printf '%s' "${PROVIDERS_JSON}" | node -e 'const fs=require("fs"); JSON.parse(fs.readFileSync(0,"utf8"));' >/dev/null
+  printf '%s' "${MODELS_JSON}" | node -e 'const fs=require("fs"); JSON.parse(fs.readFileSync(0,"utf8"));' >/dev/null
+}
+
+configure_openrouter() {
+  local escaped_key
+  escaped_key="$(printf '%s' "${OPENROUTER_API_KEY_VALUE}" | escape_graphql_string)"
+
+  local secret_mutation
+  secret_mutation="mutation { SecretUpdate(key: \"OPENROUTER_API_KEY\", value: \"${escaped_key}\", service: \"OpenRouter\", description: \"AI models\") { success message } }"
+  mc_run gql run --project "${INSTANCE_ID}" --gql "${secret_mutation}" >/dev/null
+  log "Stored OPENROUTER_API_KEY in instance secrets."
+
+  local config_out config_json current_maiql merged_maiql merged_escaped config_mutation
+
+  config_out="$(mc_run gql run --project "${INSTANCE_ID}" --gql 'query { ConfigOptions(domain: "project") { key value } }')"
+  config_json="$(printf '%s\n' "${config_out}" | extract_cli_json)"
+
+  current_maiql="$(printf '%s' "${config_json}" | node -e '
+    const fs = require("fs");
+    const payload = JSON.parse(fs.readFileSync(0, "utf8"));
+    const entries = Array.isArray(payload.ConfigOptions) ? payload.ConfigOptions : [];
+    const found = entries.find((entry) => entry && entry.key === "maiql");
+    if (!found || typeof found.value !== "string") {
+      process.stdout.write("{}");
+      process.exit(0);
+    }
+    try {
+      const parsed = JSON.parse(found.value);
+      process.stdout.write(JSON.stringify(parsed && typeof parsed === "object" ? parsed : {}));
+    } catch {
+      process.stdout.write("{}");
+    }
+  ')"
+
+  merged_maiql="$(printf '%s' "${current_maiql}" | node -e '
+    const fs = require("fs");
+    const current = JSON.parse(fs.readFileSync(0, "utf8"));
+    const providers = JSON.parse(process.argv[1]);
+    const models = JSON.parse(process.argv[2]);
+    const next = current && typeof current === "object" ? current : {};
+    next.providers = providers;
+    next.models = models;
+    process.stdout.write(JSON.stringify(next));
+  ' "${PROVIDERS_JSON}" "${MODELS_JSON}")"
+
+  merged_escaped="$(printf '%s' "${merged_maiql}" | escape_graphql_string)"
+  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
+
+  mc_run gql run --project "${INSTANCE_ID}" --gql "${config_mutation}" >/dev/null
+  log "Updated 'maiql.providers' and 'maiql.models' in instance config."
+}
+
+main() {
+  require_cmd git
+  require_cmd node
+  load_local_env
+  resolve_mc_cmd
+
+  : "${ROOT_INSTANCE:?ROOT_INSTANCE is required (source /workspaces/maicro/.env or export manually)}"
+  : "${ROOT_KEY:?ROOT_KEY is required (source /workspaces/maicro/.env or export manually)}"
+
+  log "Using CLI command: ${MC[*]}"
+
+  log "Checking backend health and auto-detecting base URL if needed."
+  mc_run system health >/dev/null
+
+  ensure_project
+  read_openrouter_key
+  load_config_sections
+
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+  trap 'rm -rf "${tmpdir}"' EXIT
+
+  log "Cloning ${REPO_URL} (${REPO_BRANCH}) with sparse checkout (courses + file_storage)."
+  git clone --depth 1 --branch "${REPO_BRANCH}" --filter=blob:none --sparse "${REPO_URL}" "${tmpdir}/maicroverse" >/dev/null 2>&1
+  (
+    cd "${tmpdir}/maicroverse"
+    git sparse-checkout set courses file_storage >/dev/null
+  )
+
+  sync_courses "${tmpdir}/maicroverse"
+  sync_file_storage "${tmpdir}/maicroverse"
+  configure_openrouter
+
+  log "Completed. Instance '${INSTANCE_ID}' is ready."
+}
+
+main "$@"

@@ -1,0 +1,44 @@
+{
+  "vision": {
+    "provider": "openrouter",
+    "model": "google/gemma-4-26b-a4b-it",
+    "cost_prompt": 0.06,
+    "cost_completion": 0.33,
+    "pricing_source": "openrouter",
+    "pricing_fetched_at": "2026-07-10"
+  },
+  "ocr": {
+    "provider": "openrouter",
+    "model": "google/gemma-4-26b-a4b-it",
+    "cost_prompt": 0.06,
+    "cost_completion": 0.33,
+    "pricing_source": "openrouter",
+    "pricing_fetched_at": "2026-07-10"
+  },
+  "embedding": {
+    "provider": "openrouter",
+    "model": "openai/text-embedding-3-small",
+    "dimensions": 1536,
+    "cost_prompt": 0.02,
+    "cost_completion": 0,
+    "pricing_source": "openrouter",
+    "pricing_fetched_at": "2026-06-17"
+  },
+  "completion": {
+    "provider": "openrouter",
+    "model": "google/gemma-4-26b-a4b-it",
+    "cost_prompt": 0.06,
+    "cost_completion": 0.33,
+    "pricing_source": "openrouter",
+    "pricing_fetched_at": "2026-07-10"
+  },
+  "transcribe": {
+    "provider": "openrouter",
+    "model": "openai/whisper-1",
+    "cost_prompt": 6,
+    "cost_completion": 0,
+    "pricing_source": "openrouter",
+    "pricing_fetched_at": "2026-06-17",
+    "cost_audio_per_minute": 0.006
+  }
+}
