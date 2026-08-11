@@ -151,14 +151,14 @@ configure_openrouter() {
   escaped_key="$(printf '%s' "${OPENROUTER_API_KEY_VALUE}" | escape_graphql_string)"
 
   local secret_mutation
-  secret_mutation="mutation { SecretUpdate(key: \"OPENROUTER_API_KEY\", value: \"${escaped_key}\", service: \"OpenRouter\", description: \"AI models\") { success message } }"
+  secret_mutation="mutation { SecretUpdate(key: \"OPENROUTER_API_KEY\", value: \"${escaped_key}\", service: \"OpenRouter\", description: \"AI models\") }"
   mc_run gql run --project "${INSTANCE_ID}" --gql "${secret_mutation}" >/dev/null
   log "Stored OPENROUTER_API_KEY in instance secrets."
 
   local maiql_json merged_escaped config_mutation
   maiql_json="{\"providers\":${PROVIDERS_JSON},\"models\":${MODELS_JSON}}"
   merged_escaped="$(printf '%s' "${maiql_json}" | escape_graphql_string)"
-  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
+  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") }"
 
   mc_run gql run --project "${INSTANCE_ID}" --gql "${config_mutation}" >/dev/null
   log "Updated 'maiql.providers' and 'maiql.models' in instance config."
@@ -185,7 +185,7 @@ main() {
 
   local tmpdir archive_path source_root
   tmpdir="$(mktemp -d)"
-  trap 'rm -rf "${tmpdir}"' EXIT
+  trap "rm -rf '${tmpdir}'" EXIT
 
   archive_path="${tmpdir}/maicroverse.tar.gz"
   log "Downloading ${REPO_BRANCH} archive from ${REPO_TARBALL_URL}."
