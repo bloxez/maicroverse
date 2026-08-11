@@ -69,32 +69,18 @@ ensure_project() {
 }
 
 read_openrouter_key() {
-  local existing_key="${OPENROUTER_API_KEY:-}"
-  local entered=""
+  [[ -r /dev/tty ]] || fail "Interactive prompt requires a TTY. Run this from an interactive terminal."
 
-  if [[ ! -t 0 ]]; then
-    OPENROUTER_API_KEY_VALUE="${existing_key}"
-    [[ -n "${OPENROUTER_API_KEY_VALUE}" ]] || fail "OPENROUTER_API_KEY is required for non-interactive runs. Export it before running curl | bash."
-    log "Using OPENROUTER_API_KEY from environment (non-interactive mode)."
-    return
-  fi
+  while true; do
+    IFS= read -r -s -p "Enter OPENROUTER_API_KEY: " OPENROUTER_API_KEY_VALUE < /dev/tty
+    printf "\n" > /dev/tty
 
-  if [[ -n "${existing_key}" ]]; then
-    printf "Enter OPENROUTER_API_KEY (press Enter to keep current environment value): "
-  else
-    printf "Enter OPENROUTER_API_KEY: "
-  fi
+    if [[ -n "${OPENROUTER_API_KEY_VALUE}" ]]; then
+      break
+    fi
 
-  read -r -s entered
-  printf "\n"
-
-  if [[ -n "${entered}" ]]; then
-    OPENROUTER_API_KEY_VALUE="${entered}"
-  else
-    OPENROUTER_API_KEY_VALUE="${existing_key}"
-  fi
-
-  [[ -n "${OPENROUTER_API_KEY_VALUE}" ]] || fail "OPENROUTER_API_KEY is required."
+    printf "[create-mv] OPENROUTER_API_KEY cannot be empty.\n" > /dev/tty
+  done
 }
 
 sync_courses() {
