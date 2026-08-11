@@ -6,7 +6,13 @@ INSTANCE_KEY="maicrog2a"
 REPO_URL="https://github.com/bloxez/maicroverse.git"
 REPO_BRANCH="main"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_SOURCE="${BASH_SOURCE[0]:-}"
+if [[ -n "${SCRIPT_SOURCE}" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_SOURCE}")" && pwd)"
+else
+  # When executed via curl | bash, BASH_SOURCE is unset; use cwd as fallback.
+  SCRIPT_DIR="$(pwd)"
+fi
 CONFIG_DIR="${SCRIPT_DIR}/config"
 
 log() {
@@ -23,39 +29,19 @@ require_cmd() {
 }
 
 escape_graphql_string() {
-  node -e 'const fs=require("fs"); const s=fs.readFileSync(0,"utf8"); process.stdout.write(JSON.stringify(s).slice(1,-1));'
-}
-
-extract_cli_json() {
-  awk 'BEGIN { capture = 0 } /^\{/ { capture = 1 } capture == 1 { print }'
+  local s
+  s="$(cat)"
+  s=${s//\\/\\\\}
+  s=${s//"/\\"}
+  s=${s//$'\n'/\\n}
+  s=${s//$'\r'/\\r}
+  s=${s//$'\t'/\\t}
+  printf '%s' "${s}"
 }
 
 resolve_mc_cmd() {
-  if command -v mc >/dev/null 2>&1; then
-    MC=(mc)
-    return
-  fi
-
-  if command -v maicro-cli >/dev/null 2>&1; then
-    MC=(maicro-cli)
-    return
-  fi
-
-  if [[ -x "/workspaces/maicro/cli/bin/maicro-cli" ]]; then
-    MC=("/workspaces/maicro/cli/bin/maicro-cli")
-    return
-  fi
-
-  if [[ -f "/workspaces/maicro/cli/src/main.ts" ]]; then
-    require_cmd deno
-    MC=(
-      deno run --config /workspaces/maicro/deno.json --allow-env --allow-net --allow-read --allow-write
-      /workspaces/maicro/cli/src/main.ts
-    )
-    return
-  fi
-
-  fail "Could not find mAIcro CLI. Expected one of: mc, maicro-cli, /workspaces/maicro/cli/bin/maicro-cli"
+  require_cmd maicro-cli
+  MC=(maicro-cli)
 }
 
 mc_run() {
@@ -97,6 +83,13 @@ ensure_project() {
 read_openrouter_key() {
   local existing_key="${OPENROUTER_API_KEY:-}"
   local entered=""
+
+  if [[ ! -t 0 ]]; then
+    OPENROUTER_API_KEY_VALUE="${existing_key}"
+    [[ -n "${OPENROUTER_API_KEY_VALUE}" ]] || fail "OPENROUTER_API_KEY is required for non-interactive runs. Export it before running curl | bash."
+    log "Using OPENROUTER_API_KEY from environment (non-interactive mode)."
+    return
+  fi
 
   if [[ -n "${existing_key}" ]]; then
     printf "Enter OPENROUTER_API_KEY (press Enter to keep current environment value): "
@@ -176,8 +169,6 @@ load_config_sections() {
     MODELS_JSON='{"vision":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"ocr":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"embedding":{"provider":"openrouter","model":"openai/text-embedding-3-small","dimensions":1536,"cost_prompt":0.02,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17"},"completion":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"transcribe":{"provider":"openrouter","model":"openai/whisper-1","cost_prompt":6,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17","cost_audio_per_minute":0.006}}'
   fi
 
-  printf '%s' "${PROVIDERS_JSON}" | node -e 'const fs=require("fs"); JSON.parse(fs.readFileSync(0,"utf8"));' >/dev/null
-  printf '%s' "${MODELS_JSON}" | node -e 'const fs=require("fs"); JSON.parse(fs.readFileSync(0,"utf8"));' >/dev/null
 }
 
 configure_openrouter() {
@@ -189,41 +180,10 @@ configure_openrouter() {
   mc_run gql run --project "${INSTANCE_ID}" --gql "${secret_mutation}" >/dev/null
   log "Stored OPENROUTER_API_KEY in instance secrets."
 
-  local config_out config_json current_maiql merged_maiql merged_escaped config_mutation
-
-  config_out="$(mc_run gql run --project "${INSTANCE_ID}" --gql 'query { ConfigOptions(domain: "project") { key value } }')"
-  config_json="$(printf '%s\n' "${config_out}" | extract_cli_json)"
-
-  current_maiql="$(printf '%s' "${config_json}" | node -e '
-    const fs = require("fs");
-    const payload = JSON.parse(fs.readFileSync(0, "utf8"));
-    const entries = Array.isArray(payload.ConfigOptions) ? payload.ConfigOptions : [];
-    const found = entries.find((entry) => entry && entry.key === "maiql");
-    if (!found || typeof found.value !== "string") {
-      process.stdout.write("{}");
-      process.exit(0);
-    }
-    try {
-      const parsed = JSON.parse(found.value);
-      process.stdout.write(JSON.stringify(parsed && typeof parsed === "object" ? parsed : {}));
-    } catch {
-      process.stdout.write("{}");
-    }
-  ')"
-
-  merged_maiql="$(printf '%s' "${current_maiql}" | node -e '
-    const fs = require("fs");
-    const current = JSON.parse(fs.readFileSync(0, "utf8"));
-    const providers = JSON.parse(process.argv[1]);
-    const models = JSON.parse(process.argv[2]);
-    const next = current && typeof current === "object" ? current : {};
-    next.providers = providers;
-    next.models = models;
-    process.stdout.write(JSON.stringify(next));
-  ' "${PROVIDERS_JSON}" "${MODELS_JSON}")"
-
-  merged_escaped="$(printf '%s' "${merged_maiql}" | escape_graphql_string)"
-  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
+    local maiql_json merged_escaped config_mutation
+    maiql_json="{\"providers\":${PROVIDERS_JSON},\"models\":${MODELS_JSON}}"
+    merged_escaped="$(printf '%s' "${maiql_json}" | escape_graphql_string)"
+    config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
 
   mc_run gql run --project "${INSTANCE_ID}" --gql "${config_mutation}" >/dev/null
   log "Updated 'maiql.providers' and 'maiql.models' in instance config."
@@ -231,7 +191,6 @@ configure_openrouter() {
 
 main() {
   require_cmd git
-  require_cmd node
   load_local_env
   resolve_mc_cmd
 
