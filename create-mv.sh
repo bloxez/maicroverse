@@ -147,18 +147,14 @@ load_config_sections() {
 }
 
 configure_openrouter() {
-  local escaped_key
-  escaped_key="$(printf '%s' "${OPENROUTER_API_KEY_VALUE}" | escape_graphql_string)"
-
   local secret_mutation
-  secret_mutation="mutation { SecretUpdate(key: \"OPENROUTER_API_KEY\", value: \"${escaped_key}\", service: \"OpenRouter\", description: \"AI models\") }"
+  secret_mutation="mutation { SecretUpdate(key: \"OPENROUTER_API_KEY\", value: \"\"\"${OPENROUTER_API_KEY_VALUE}\"\"\", service: \"OpenRouter\", description: \"AI models\") }"
   mc_run gql run --project "${INSTANCE_ID}" --gql "${secret_mutation}" >/dev/null
   log "Stored OPENROUTER_API_KEY in instance secrets."
 
-  local maiql_json merged_escaped config_mutation
+  local maiql_json config_mutation
   maiql_json="{\"providers\":${PROVIDERS_JSON},\"models\":${MODELS_JSON}}"
-  merged_escaped="$(printf '%s' "${maiql_json}" | escape_graphql_string)"
-  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") }"
+  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"\"\"${maiql_json}\"\"\") }"
 
   mc_run gql run --project "${INSTANCE_ID}" --gql "${config_mutation}" >/dev/null
   log "Updated 'maiql.providers' and 'maiql.models' in instance config."
