@@ -3,17 +3,11 @@ set -euo pipefail
 
 INSTANCE_ID="maicroverse"
 INSTANCE_KEY="maicrog2a"
-REPO_URL="https://github.com/bloxez/maicroverse.git"
+REPO_TARBALL_URL="https://github.com/bloxez/maicroverse/archive/refs/heads/main.tar.gz"
 REPO_BRANCH="main"
 
-SCRIPT_SOURCE="${BASH_SOURCE[0]:-}"
-if [[ -n "${SCRIPT_SOURCE}" ]]; then
-  SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_SOURCE}")" && pwd)"
-else
-  # When executed via curl | bash, BASH_SOURCE is unset; use cwd as fallback.
-  SCRIPT_DIR="$(pwd)"
-fi
-CONFIG_DIR="${SCRIPT_DIR}/config"
+MAICRO_CLI_CONFIG="${MAICRO_CLI_CONFIG:-/tmp/maicro-cli.config.json}"
+export MAICRO_CLI_CONFIG
 
 log() {
   printf "[create-mv] %s\n" "$*"
@@ -40,22 +34,16 @@ escape_graphql_string() {
 }
 
 resolve_mc_cmd() {
-  require_cmd maicro-cli
-  MC=(maicro-cli)
+  command -v maicro-cli >/dev/null 2>&1 && {
+    MC=(maicro-cli)
+    return
+  }
+
+  fail "maicro-cli was not found in this runtime. Run this inside the maicro container shell."
 }
 
 mc_run() {
   "${MC[@]}" "$@"
-}
-
-load_local_env() {
-  if [[ -f "/workspaces/maicro/.env" ]]; then
-    # Load ROOT_INSTANCE and ROOT_KEY when running inside the standard mAIcro dev container.
-    set -a
-    # shellcheck disable=SC1091
-    source /workspaces/maicro/.env
-    set +a
-  fi
 }
 
 ensure_project() {
@@ -154,21 +142,8 @@ sync_file_storage() {
 }
 
 load_config_sections() {
-  local providers_file="${CONFIG_DIR}/providers.json"
-  local models_file="${CONFIG_DIR}/models.json"
-
-  if [[ -f "${providers_file}" ]]; then
-    PROVIDERS_JSON="$(cat "${providers_file}")"
-  else
-    PROVIDERS_JSON='{"openrouter":{"enabled":true,"baseUrl":"https://openrouter.ai/api/v1","apiKeySecretName":"OPENROUTER_API_KEY"}}'
-  fi
-
-  if [[ -f "${models_file}" ]]; then
-    MODELS_JSON="$(cat "${models_file}")"
-  else
-    MODELS_JSON='{"vision":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"ocr":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"embedding":{"provider":"openrouter","model":"openai/text-embedding-3-small","dimensions":1536,"cost_prompt":0.02,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17"},"completion":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"transcribe":{"provider":"openrouter","model":"openai/whisper-1","cost_prompt":6,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17","cost_audio_per_minute":0.006}}'
-  fi
-
+  PROVIDERS_JSON='{"openrouter":{"enabled":true,"baseUrl":"https://openrouter.ai/api/v1","apiKeySecretName":"OPENROUTER_API_KEY"}}'
+  MODELS_JSON='{"vision":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"ocr":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"embedding":{"provider":"openrouter","model":"openai/text-embedding-3-small","dimensions":1536,"cost_prompt":0.02,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17"},"completion":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"transcribe":{"provider":"openrouter","model":"openai/whisper-1","cost_prompt":6,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17","cost_audio_per_minute":0.006}}'
 }
 
 configure_openrouter() {
@@ -180,22 +155,24 @@ configure_openrouter() {
   mc_run gql run --project "${INSTANCE_ID}" --gql "${secret_mutation}" >/dev/null
   log "Stored OPENROUTER_API_KEY in instance secrets."
 
-    local maiql_json merged_escaped config_mutation
-    maiql_json="{\"providers\":${PROVIDERS_JSON},\"models\":${MODELS_JSON}}"
-    merged_escaped="$(printf '%s' "${maiql_json}" | escape_graphql_string)"
-    config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
+  local maiql_json merged_escaped config_mutation
+  maiql_json="{\"providers\":${PROVIDERS_JSON},\"models\":${MODELS_JSON}}"
+  merged_escaped="$(printf '%s' "${maiql_json}" | escape_graphql_string)"
+  config_mutation="mutation { ConfigOptionSet(key: \"maiql\", value: \"${merged_escaped}\") { success key domain } }"
 
   mc_run gql run --project "${INSTANCE_ID}" --gql "${config_mutation}" >/dev/null
   log "Updated 'maiql.providers' and 'maiql.models' in instance config."
 }
 
 main() {
-  require_cmd git
-  load_local_env
+  require_cmd curl
+  require_cmd tar
+  require_cmd find
+  require_cmd awk
   resolve_mc_cmd
 
-  : "${ROOT_INSTANCE:?ROOT_INSTANCE is required (source /workspaces/maicro/.env or export manually)}"
-  : "${ROOT_KEY:?ROOT_KEY is required (source /workspaces/maicro/.env or export manually)}"
+  : "${ROOT_INSTANCE:?ROOT_INSTANCE is required in this runtime}"
+  : "${ROOT_KEY:?ROOT_KEY is required in this runtime}"
 
   log "Using CLI command: ${MC[*]}"
 
@@ -206,19 +183,20 @@ main() {
   read_openrouter_key
   load_config_sections
 
-  local tmpdir
+  local tmpdir archive_path source_root
   tmpdir="$(mktemp -d)"
   trap 'rm -rf "${tmpdir}"' EXIT
 
-  log "Cloning ${REPO_URL} (${REPO_BRANCH}) with sparse checkout (courses + file_storage)."
-  git clone --depth 1 --branch "${REPO_BRANCH}" --filter=blob:none --sparse "${REPO_URL}" "${tmpdir}/maicroverse" >/dev/null 2>&1
-  (
-    cd "${tmpdir}/maicroverse"
-    git sparse-checkout set courses file_storage >/dev/null
-  )
+  archive_path="${tmpdir}/maicroverse.tar.gz"
+  log "Downloading ${REPO_BRANCH} archive from ${REPO_TARBALL_URL}."
+  curl -fsSL "${REPO_TARBALL_URL}" -o "${archive_path}"
+  tar -xzf "${archive_path}" -C "${tmpdir}"
 
-  sync_courses "${tmpdir}/maicroverse"
-  sync_file_storage "${tmpdir}/maicroverse"
+  source_root="$(find "${tmpdir}" -mindepth 1 -maxdepth 1 -type d | head -n1)"
+  [[ -n "${source_root}" ]] || fail "Could not resolve extracted repository folder."
+
+  sync_courses "${source_root}"
+  sync_file_storage "${source_root}"
   configure_openrouter
 
   log "Completed. Instance '${INSTANCE_ID}' is ready."
