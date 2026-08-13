@@ -347,7 +347,12 @@ if [ "$READY" -eq 1 ]; then
     fi
     case "$CREATE_MV" in
         y|Y|yes|YES)
-            docker exec -i "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh' < /dev/tty
+            printf "Enter OPENROUTER_API_KEY: " > /dev/tty
+            stty -echo < /dev/tty
+            read -r OPENROUTER_API_KEY < /dev/tty
+            stty echo < /dev/tty
+            printf "\n" > /dev/tty
+            docker exec -e "OPENROUTER_API_KEY=${OPENROUTER_API_KEY}" -i "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh' < /dev/tty
             ;;
         *)
             echo "Skipped. You can create one later with:"

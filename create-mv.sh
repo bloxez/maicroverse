@@ -69,6 +69,11 @@ ensure_project() {
 }
 
 read_openrouter_key() {
+  if [[ -n "${OPENROUTER_API_KEY:-}" ]]; then
+    OPENROUTER_API_KEY_VALUE="${OPENROUTER_API_KEY}"
+    return
+  fi
+
   while true; do
     IFS= read -r -s -p "Enter OPENROUTER_API_KEY: " OPENROUTER_API_KEY_VALUE
     printf "\n"
