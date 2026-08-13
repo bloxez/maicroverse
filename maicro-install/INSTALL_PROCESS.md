@@ -13,4 +13,4 @@ git commit -m "fix: update installer"
 git push origin main
 ```
 
-The public installation commands use the raw `maicroverse` URLs documented in `README.md`. Once the changes are pushed, they are available immediately.
+The public installation commands use the raw `maicroverse` URLs documented in [the install guide](../readme/install.md). Once the changes are pushed, they are available immediately.
