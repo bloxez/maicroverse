@@ -310,7 +310,7 @@ docker run -d \
 printf "${YELLOW}Waiting for mAIcro to start...${NC}\n"
 READY=0
 for _ in $(seq 1 30); do
-    if docker exec "$CONTAINER_NAME" curl -fsS http://localhost:3456/api/health > /dev/null 2>&1; then
+    if curl -fsS "http://localhost:${PORT}/health" > /dev/null 2>&1; then
         READY=1
         break
     fi
