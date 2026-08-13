@@ -330,6 +330,18 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
     printf "  Logs:    ${YELLOW}docker logs -f maicro${NC}\n"
     printf "  Force Remove: ${YELLOW}docker rm -f maicro${NC}\n"
     echo ""
+
+    printf "🌌 Would you like to create a maicroverse instance now? [y/N]: "
+    read -r CREATE_MV
+    case "$CREATE_MV" in
+        y|Y|yes|YES)
+            docker exec -it "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
+            ;;
+        *)
+            echo "Skipped. You can create one later with:"
+            printf "  ${YELLOW}docker exec -it maicro bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'${NC}\n"
+            ;;
+    esac
 else
     printf "${RED}❌ Failed to start mAIcro${NC}\n"
     echo "Check logs with: docker logs $CONTAINER_NAME"

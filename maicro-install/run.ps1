@@ -312,6 +312,14 @@ if ($running) {
     Write-Host "  Logs:    " -NoNewline; Write-Host "docker logs -f maicro" -ForegroundColor Yellow
     Write-Host "  Force Remove: " -NoNewline; Write-Host "docker rm -f maicro" -ForegroundColor Yellow
     Write-Host ""
+
+    $createMv = Read-Host "🌌 Would you like to create a maicroverse instance now? [y/N]"
+    if ($createMv -in @("y", "Y", "yes", "YES")) {
+        docker exec -it $ContainerName bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
+    } else {
+        Write-Host "Skipped. You can create one later with:"
+        Write-Host "  docker exec -it maicro bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'" -ForegroundColor Yellow
+    }
 } else {
     Write-Host "❌ Failed to start mAIcro" -ForegroundColor Red
     Write-Host "Check logs with: docker logs $ContainerName"
