@@ -69,17 +69,15 @@ ensure_project() {
 }
 
 read_openrouter_key() {
-  [[ -r /dev/tty ]] || fail "Interactive prompt requires a TTY. Run this from an interactive terminal."
-
   while true; do
-    IFS= read -r -s -p "Enter OPENROUTER_API_KEY: " OPENROUTER_API_KEY_VALUE < /dev/tty
-    printf "\n" > /dev/tty
+    IFS= read -r -s -p "Enter OPENROUTER_API_KEY: " OPENROUTER_API_KEY_VALUE
+    printf "\n"
 
     if [[ -n "${OPENROUTER_API_KEY_VALUE}" ]]; then
       break
     fi
 
-    printf "[create-mv] OPENROUTER_API_KEY cannot be empty.\n" > /dev/tty
+    printf "[create-mv] OPENROUTER_API_KEY cannot be empty.\n"
   done
 }
 

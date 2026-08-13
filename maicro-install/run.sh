@@ -340,7 +340,7 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
     fi
     case "$CREATE_MV" in
         y|Y|yes|YES)
-            docker exec -it "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash' < /dev/tty
+            docker exec -i "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh' < /dev/tty
             ;;
         *)
             echo "Skipped. You can create one later with:"
