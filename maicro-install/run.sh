@@ -331,8 +331,13 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
     printf "  Force Remove: ${YELLOW}docker rm -f maicro${NC}\n"
     echo ""
 
-    printf "Would you like to create a maicroverse instance now? [y/N]: "
-    read -r CREATE_MV
+    CREATE_MV=""
+    if [ -r /dev/tty ]; then
+        printf "Would you like to create a maicroverse instance now? [y/N]: " > /dev/tty
+        read -r CREATE_MV < /dev/tty || CREATE_MV=""
+    else
+        echo "No interactive terminal detected; skipping maicroverse setup."
+    fi
     case "$CREATE_MV" in
         y|Y|yes|YES)
             docker exec -it "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
