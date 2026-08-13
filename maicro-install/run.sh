@@ -347,10 +347,15 @@ if [ "$READY" -eq 1 ]; then
     fi
     case "$CREATE_MV" in
         y|Y|yes|YES)
-            printf "Enter OPENROUTER_API_KEY: " > /dev/tty
-            stty -echo < /dev/tty
+            if ! stty -echo < /dev/tty; then
+                printf "${RED}ERROR: Could not hide terminal input for OPENROUTER_API_KEY${NC}\n" > /dev/tty
+                exit 1
+            fi
+            trap 'stty echo < /dev/tty' 0 1 2 3 15
+            printf "\nEnter OPENROUTER_API_KEY (input hidden): " > /dev/tty
             read -r OPENROUTER_API_KEY < /dev/tty
             stty echo < /dev/tty
+            trap - 0 1 2 3 15
             printf "\n" > /dev/tty
             docker exec -e "OPENROUTER_API_KEY=${OPENROUTER_API_KEY}" -i "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh' < /dev/tty
             ;;
