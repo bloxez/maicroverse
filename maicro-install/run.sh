@@ -357,6 +357,11 @@ if [ "$READY" -eq 1 ]; then
             stty echo < /dev/tty
             trap - 0 1 2 3 15
             printf "\n" > /dev/tty
+            if [ -z "$OPENROUTER_API_KEY" ]; then
+                printf "${RED}ERROR: OPENROUTER_API_KEY cannot be empty${NC}\n" > /dev/tty
+                exit 1
+            fi
+            printf "OPENROUTER_API_KEY received (%s characters).\n" "$(printf %s "$OPENROUTER_API_KEY" | wc -c | tr -d ' ')" > /dev/tty
             docker exec -e "OPENROUTER_API_KEY=${OPENROUTER_API_KEY}" -i "$CONTAINER_NAME" bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh' < /dev/tty
             ;;
         *)
