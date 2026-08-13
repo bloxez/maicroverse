@@ -306,12 +306,19 @@ docker run -d \
     --restart unless-stopped \
     "$IMAGE" > /dev/null
 
-# Wait for startup
+# Wait for the application to become ready
 printf "${YELLOW}Waiting for mAIcro to start...${NC}\n"
-sleep 3
+READY=0
+for _ in $(seq 1 30); do
+    if docker exec "$CONTAINER_NAME" curl -fsS http://localhost:3456/api/health > /dev/null 2>&1; then
+        READY=1
+        break
+    fi
+    sleep 1
+done
 
-# Check if running
-if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
+# Check if mAIcro is ready
+if [ "$READY" -eq 1 ]; then
     echo ""
     printf "${GREEN}OK: mAIcro is running!${NC}\n"
     echo ""
@@ -348,7 +355,7 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
             ;;
     esac
 else
-    printf "${RED}ERROR: Failed to start mAIcro${NC}\n"
+    printf "${RED}ERROR: mAIcro did not become ready${NC}\n"
     echo "Check logs with: docker logs $CONTAINER_NAME"
     exit 1
 fi
