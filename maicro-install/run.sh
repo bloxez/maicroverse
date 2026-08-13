@@ -39,7 +39,7 @@ APP_DATA_DIR=""
 
 # Check Docker is installed
 if ! command -v docker > /dev/null 2>&1; then
-    printf "${RED}❌ Docker is not installed.${NC}\n"
+    printf "${RED}ERROR: Docker is not installed.${NC}\n"
     echo ""
     echo "Install Docker:"
     echo "  Linux:       https://docs.docker.com/engine/install/"
@@ -67,21 +67,21 @@ if ! docker info > /dev/null 2>&1; then
         printf "  Setting up Docker permissions for your user...\n"
         sudo usermod -aG docker "$USER"
         # Apply group change immediately via sg and re-run this script
-        printf "${GREEN}  ✅ Done! Re-running setup with new permissions...${NC}\n"
+        printf "${GREEN}  OK: Re-running setup with new permissions...${NC}\n"
         echo ""
         sg docker -c "sh $0 $*"
         exit $?
     fi
 fi
 
-printf "${GREEN}✅ Docker is running${NC}\n"
+printf "${GREEN}OK: Docker is running${NC}\n"
 
 # Resolve to absolute path
 DATA_DIR=$(cd "$(dirname "$DATA_DIR")" 2>/dev/null && pwd)/$(basename "$DATA_DIR") || DATA_DIR="$DEFAULT_DATA_DIR"
 APP_DATA_DIR="${DATA_DIR}/data"
 
 # Create data directory
-printf "${YELLOW}📁 Data directory: ${DATA_DIR}${NC}\n"
+printf "${YELLOW}Data directory: ${DATA_DIR}${NC}\n"
 mkdir -p "$DATA_DIR"
 mkdir -p "$APP_DATA_DIR"
 mkdir -p "${DATA_DIR}/config"
@@ -89,11 +89,11 @@ mkdir -p "${DATA_DIR}/config"
 # Create platform config file from the published template (only if it doesn't already exist)
 CONFIG_FILE="${DATA_DIR}/config/config.platform.json"
 if [ -f "$CONFIG_FILE" ]; then
-    printf "${GREEN}✅ Platform config already exists, skipping download${NC}\n"
+    printf "${GREEN}OK: Platform config already exists, skipping download${NC}\n"
 else
-    printf "${YELLOW}🧩 Downloading platform config template...${NC}\n"
+    printf "${YELLOW}Downloading platform config template...${NC}\n"
     if ! curl -fsSL "$CONFIG_TEMPLATE_URL" -o "$CONFIG_FILE"; then
-        printf "${RED}❌ Failed to download config template from:${NC} %s\n" "$CONFIG_TEMPLATE_URL"
+        printf "${RED}ERROR: Failed to download config template from:${NC} %s\n" "$CONFIG_TEMPLATE_URL"
         exit 1
     fi
 fi
@@ -120,19 +120,19 @@ for arg in "$@"; do
     esac
 done
 
-echo "🔍 Checking for updates..."
+echo "Checking for updates..."
 
 # Download config template only if it doesn't exist, or -f flag is set
 CONFIG_CHANGED=0
 if [ "$FORCE_CONFIG" -eq 1 ]; then
-    echo "🧩 Force-updating platform config template..."
+    echo "Force-updating platform config template..."
     if ! curl -fsSL "$CONFIG_TEMPLATE_URL" -o "$CONFIG_PATH"; then
         echo "ERROR: Failed to download config template from ${CONFIG_TEMPLATE_URL}"
         exit 1
     fi
     CONFIG_CHANGED=1
 elif [ ! -f "$CONFIG_PATH" ]; then
-    echo "🧩 Downloading platform config template (first time)..."
+    echo "Downloading platform config template (first time)..."
     mkdir -p "$(dirname "$CONFIG_PATH")"
     if ! curl -fsSL "$CONFIG_TEMPLATE_URL" -o "$CONFIG_PATH"; then
         echo "ERROR: Failed to download config template from ${CONFIG_TEMPLATE_URL}"
@@ -140,14 +140,14 @@ elif [ ! -f "$CONFIG_PATH" ]; then
     fi
     CONFIG_CHANGED=1
 else
-    echo "✅ Platform config exists, preserving local customisations (use -f to overwrite)"
+    echo "OK: Platform config exists, preserving local customisations (use -f to overwrite)"
 fi
 
 # Get current image digest
 CURRENT_DIGEST=$(docker inspect --format='{{.Image}}' "$CONTAINER_NAME" 2>/dev/null || echo "")
 
 # Pull latest
-echo "📦 Pulling latest image..."
+echo "Pulling latest image..."
 docker pull "$IMAGE"
 
 # Get new image digest
@@ -155,16 +155,16 @@ NEW_DIGEST=$(docker inspect --format='{{.Id}}' "$IMAGE" 2>/dev/null || echo "")
 
 if [ "$CURRENT_DIGEST" = "$NEW_DIGEST" ]; then
         if [ "$CONFIG_CHANGED" -eq 1 ]; then
-            echo "✅ Image unchanged, but config template updated. Restarting container..."
+            echo "OK: Image unchanged, but config template updated. Restarting container..."
             docker stop "$CONTAINER_NAME" 2>/dev/null || true
             docker rm "$CONTAINER_NAME" 2>/dev/null || true
         else
-    echo "✅ Already on latest version"
+    echo "OK: Already on latest version"
     exit 0
         fi
 fi
 
-echo "🔄 New version available, updating..."
+echo "New version available, updating..."
 
 # Stop and remove old container
 docker stop "$CONTAINER_NAME" 2>/dev/null || true
@@ -175,7 +175,7 @@ PORT="${MAICRO_PORT:-4321}"
 HTTPS_PORT="${MAICRO_HTTPS_PORT:-443}"
 
 # Restart with same settings
-echo "🚀 Starting updated container..."
+echo "Starting updated container..."
 docker run -d \
     --name "$CONTAINER_NAME" \
     -p "${PORT}:3456" \
@@ -199,11 +199,11 @@ docker run -d \
 sleep 2
 
 if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
-    echo "✅ Update complete!"
-    echo "🌐 mAIcro: http://localhost:${PORT}/ide"
-    echo "🔒 mAIcro HTTPS: https://localhost:${HTTPS_PORT}/ide"
+    echo "OK: Update complete!"
+    echo "mAIcro: http://localhost:${PORT}/ide"
+    echo "mAIcro HTTPS: https://localhost:${HTTPS_PORT}/ide"
 else
-    echo "❌ Failed to start updated container"
+    echo "ERROR: Failed to start updated container"
     docker logs "$CONTAINER_NAME"
     exit 1
 fi
@@ -226,7 +226,7 @@ if [ "${1:-}" = "-f" ] || [ "${1:-}" = "--force" ]; then
     FORCE=1
 fi
 
-echo "⚠️  This will remove the mAIcro container: ${CONTAINER_NAME}"
+echo "WARNING: This will remove the mAIcro container: ${CONTAINER_NAME}"
 if [ "$FORCE" -eq 1 ]; then
     CONFIRM_CONTAINER="y"
 else
@@ -236,7 +236,7 @@ fi
 
 case "$CONFIRM_CONTAINER" in
     y|Y|yes|YES)
-        echo "🛑 Stopping and removing container..."
+        echo "Stopping and removing container..."
         docker stop "$CONTAINER_NAME" 2>/dev/null || true
         docker rm "$CONTAINER_NAME" 2>/dev/null || true
         ;;
@@ -246,7 +246,7 @@ case "$CONFIRM_CONTAINER" in
         ;;
 esac
 
-echo "✅ Container removed (or was not present)."
+echo "OK: Container removed (or was not present)."
 echo ""
 echo "Persisted data directory: ${DATA_DIR}"
 if [ "$FORCE" -eq 1 ]; then
@@ -258,12 +258,12 @@ fi
 
 case "$CONFIRM_DATA" in
     y|Y|yes|YES)
-        echo "🗑️  Removing persisted data..."
+        echo "Removing persisted data..."
         find "$DATA_DIR" -mindepth 1 -maxdepth 1 \
             ! -name "update.sh" \
             ! -name "remove.sh" \
             -exec rm -rf {} +
-        echo "✅ Persisted data removed."
+        echo "OK: Persisted data removed."
         ;;
     *)
         echo "Data kept at: ${DATA_DIR}"
@@ -275,17 +275,17 @@ chmod +x "${DATA_DIR}/remove.sh"
 
 # Stop and remove existing container if it exists
 if docker ps -aq -f name="$CONTAINER_NAME" | grep -q .; then
-    printf "${YELLOW}🛑 Stopping existing mAIcro container...${NC}\n"
+    printf "${YELLOW}Stopping existing mAIcro container...${NC}\n"
     docker stop "$CONTAINER_NAME" > /dev/null 2>&1 || true
     docker rm "$CONTAINER_NAME" > /dev/null 2>&1 || true
 fi
 
 # Pull latest image
-printf "${YELLOW}📦 Pulling mAIcro image...${NC}\n"
+printf "${YELLOW}Pulling mAIcro image...${NC}\n"
 docker pull "$IMAGE"
 
 # Run container
-printf "${YELLOW}🚀 Starting mAIcro...${NC}\n"
+printf "${YELLOW}Starting mAIcro...${NC}\n"
 docker run -d \
     --name "$CONTAINER_NAME" \
     -p "${PORT}:3456" \
@@ -307,20 +307,20 @@ docker run -d \
     "$IMAGE" > /dev/null
 
 # Wait for startup
-printf "${YELLOW}⏳ Waiting for mAIcro to start...${NC}\n"
+printf "${YELLOW}Waiting for mAIcro to start...${NC}\n"
 sleep 3
 
 # Check if running
 if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
     echo ""
-    printf "${GREEN}✅ mAIcro is running!${NC}\n"
+    printf "${GREEN}OK: mAIcro is running!${NC}\n"
     echo ""
-    printf "  🌐 IDE:      ${CYAN}http://localhost:${PORT}/ide${NC}\n"
-    printf "  📊 GraphQL:  ${CYAN}http://localhost:${PORT}/graphql${NC}\n"
-    printf "  🔒 IDE:      ${CYAN}https://localhost:${HTTPS_PORT}/ide${NC}\n"
-    printf "  🔒 GraphQL:  ${CYAN}https://localhost:${HTTPS_PORT}/graphql${NC}\n"
-    echo "  📁 Data:     ${DATA_DIR}"
-    echo "  🗄️  DB Data:  ${APP_DATA_DIR}"
+    printf "  IDE:      ${CYAN}http://localhost:${PORT}/ide${NC}\n"
+    printf "  GraphQL:  ${CYAN}http://localhost:${PORT}/graphql${NC}\n"
+    printf "  IDE:      ${CYAN}https://localhost:${HTTPS_PORT}/ide${NC}\n"
+    printf "  GraphQL:  ${CYAN}https://localhost:${HTTPS_PORT}/graphql${NC}\n"
+    echo "  Data:     ${DATA_DIR}"
+    echo "  DB Data:  ${APP_DATA_DIR}"
     echo ""
     echo "Commands:"
     printf "  Update:  ${YELLOW}${DATA_DIR}/update.sh${NC}\n"
@@ -331,7 +331,7 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
     printf "  Force Remove: ${YELLOW}docker rm -f maicro${NC}\n"
     echo ""
 
-    printf "🌌 Would you like to create a maicroverse instance now? [y/N]: "
+    printf "Would you like to create a maicroverse instance now? [y/N]: "
     read -r CREATE_MV
     case "$CREATE_MV" in
         y|Y|yes|YES)
@@ -343,7 +343,7 @@ if docker ps -q -f name="$CONTAINER_NAME" | grep -q .; then
             ;;
     esac
 else
-    printf "${RED}❌ Failed to start mAIcro${NC}\n"
+    printf "${RED}ERROR: Failed to start mAIcro${NC}\n"
     echo "Check logs with: docker logs $CONTAINER_NAME"
     exit 1
 fi
