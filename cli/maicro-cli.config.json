@@ -20,7 +20,7 @@
     "configOptions": [
       {
         "key": "AsyncJobConcurrency",
-        "value": "10"
+        "value": 10
       },
       {
         "key": "AsyncJobTriggers",
@@ -42,22 +42,6 @@
         "key": "Features",
         "value": {
           "fetchAllowedHosts": ["marketindex.com.au"],
-          "document_types": {
-            "drivers_license": {
-              "key": "drivers_license",
-              "label": "Driver's License",
-              "description": "Driver's license documentation",
-              "tags": ["id", "drivers_license", "government"],
-              "customFields": []
-            },
-            "medicare_card": {
-              "key": "medicare_card",
-              "label": "Medicare Card",
-              "description": "Medicare health insurance card",
-              "tags": ["medical", "healthcare", "government"],
-              "customFields": []
-            }
-          },
           "analysis": {
             "_description": "Configuration for AI file analysis features (summarise, observations)",
             "_version": "1.0",
@@ -158,7 +142,8 @@
             "axllm": {
               "enabled": true
             }
-          }
+          },
+          "document_types": {}
         }
       }
     ]
