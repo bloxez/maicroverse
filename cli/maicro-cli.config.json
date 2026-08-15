@@ -41,7 +41,7 @@
       {
         "key": "Features",
         "value": {
-          "fetchAllowedHosts": ["marketindex.com.au"],
+          "fetchAllowedHosts": "*",
           "analysis": {
             "_description": "Configuration for AI file analysis features (summarise, observations)",
             "_version": "1.0",

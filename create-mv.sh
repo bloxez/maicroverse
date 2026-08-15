@@ -3,8 +3,10 @@ set -euo pipefail
 
 INSTANCE_ID="maicroverse"
 INSTANCE_KEY="maicrog2a"
-REPO_TARBALL_URL="https://github.com/bloxez/maicroverse/archive/refs/heads/main.tar.gz"
+REPO_URL="https://github.com/bloxez/maicroverse"
 REPO_BRANCH="main"
+COURSES_URL="${REPO_URL}/tree/${REPO_BRANCH}/courses"
+FILE_STORAGE_URL="${REPO_URL}/tree/${REPO_BRANCH}/file_storage"
 
 MAICRO_CLI_CONFIG="${MAICRO_CLI_CONFIG:-/tmp/maicro-cli.config.json}"
 export MAICRO_CLI_CONFIG
@@ -87,52 +89,38 @@ read_openrouter_key() {
 }
 
 sync_courses() {
-  local source_root="$1"
-  local courses_root="${source_root}/courses"
+  log "Importing courses from ${COURSES_URL} -> scripts/courses."
 
-  [[ -d "${courses_root}" ]] || fail "Missing courses folder in cloned repository."
+  local mutation
+  mutation="mutation { PrjImportFolderFromUrl(url: \"${COURSES_URL}\", targetFolder: \"scripts/courses\") }"
+  mc_run gql run --project "${INSTANCE_ID}" --gql "${mutation}" >/dev/null
 
-  log "Syncing courses -> scripts/courses (create or overwrite)."
-
-  while IFS= read -r -d '' dir; do
-    local rel="${dir#"${courses_root}/"}"
-    [[ "${rel}" == "${dir}" ]] && continue
-    [[ -z "${rel}" ]] && continue
-    mc_run script mkdir --project "${INSTANCE_ID}" --path "scripts/courses/${rel}" >/dev/null 2>&1 || true
-  done < <(find "${courses_root}" -type d -print0)
-
-  local count=0
-  while IFS= read -r -d '' file; do
-    local rel="${file#"${courses_root}/"}"
-    mc_run script upload --project "${INSTANCE_ID}" --path "scripts/courses/${rel}" --file "${file}" >/dev/null
-    count=$((count + 1))
-  done < <(find "${courses_root}" -type f -print0)
-
-  log "Synced ${count} course file(s)."
+  log "Imported courses (a .git marker was written to scripts/courses for future sync)."
 }
 
 sync_file_storage() {
-  local source_root="$1"
-  local storage_root="${source_root}/file_storage"
+  log "Importing file_storage from ${FILE_STORAGE_URL} -> maicroverse/*."
 
-  [[ -d "${storage_root}" ]] || fail "Missing file_storage folder in cloned repository."
+  local mutation
+  mutation="mutation { FolderFetchFromUrl(url: \"${FILE_STORAGE_URL}\", path: \"maicroverse\", overwrite: true) { id path } }"
+  mc_run gql run --project "${INSTANCE_ID}" --gql "${mutation}" >/dev/null
 
-  log "Syncing file_storage -> maicroverse/* (overwrite enabled)."
-  local count=0
-
-  while IFS= read -r -d '' file; do
-    local rel="${file#"${storage_root}/"}"
-    local remote_path="maicroverse/${rel}"
-    mc_run file upload --project "${INSTANCE_ID}" --file "${file}" --path "${remote_path}" --overwrite >/dev/null
-    count=$((count + 1))
-  done < <(find "${storage_root}" -type f -print0)
-
-  log "Synced ${count} storage file(s)."
+  log "Imported storage files."
 }
 
 load_config_sections() {
   PROVIDERS_JSON='{"openrouter":{"enabled":true,"baseUrl":"https://openrouter.ai/api/v1","apiKeySecretName":"OPENROUTER_API_KEY"}}'
   MODELS_JSON='{"vision":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"ocr":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"embedding":{"provider":"openrouter","model":"openai/text-embedding-3-small","dimensions":1536,"cost_prompt":0.02,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17"},"completion":{"provider":"openrouter","model":"google/gemma-4-26b-a4b-it","cost_prompt":0.06,"cost_completion":0.33,"pricing_source":"openrouter","pricing_fetched_at":"2026-07-10"},"transcribe":{"provider":"openrouter","model":"openai/whisper-1","cost_prompt":6,"cost_completion":0,"pricing_source":"openrouter","pricing_fetched_at":"2026-06-17","cost_audio_per_minute":0.006}}'
+}
+
+configure_features() {
+  # Imports run server-side, so the instance allowlist must permit outbound fetch before syncing.
+  local features_json='{"fetchAllowedHosts":"*"}'
+  local mutation
+  mutation="mutation { ConfigOptionSet(key: \"Features\", value: \"\"\"${features_json}\"\"\") }"
+
+  mc_run gql run --project "${INSTANCE_ID}" --gql "${mutation}" >/dev/null
+  log "Set 'Features.fetchAllowedHosts' to '*' for '${INSTANCE_ID}'."
 }
 
 configure_openrouter() {
@@ -151,8 +139,6 @@ configure_openrouter() {
 
 main() {
   require_cmd curl
-  require_cmd tar
-  require_cmd find
   require_cmd awk
   resolve_mc_cmd
 
@@ -167,21 +153,10 @@ main() {
   ensure_project
   read_openrouter_key
   load_config_sections
+  configure_features
 
-  local tmpdir archive_path source_root
-  tmpdir="$(mktemp -d)"
-  trap "rm -rf '${tmpdir}'" EXIT
-
-  archive_path="${tmpdir}/maicroverse.tar.gz"
-  log "Downloading ${REPO_BRANCH} archive from ${REPO_TARBALL_URL}."
-  curl -fsSL "${REPO_TARBALL_URL}" -o "${archive_path}"
-  tar -xzf "${archive_path}" -C "${tmpdir}"
-
-  source_root="$(find "${tmpdir}" -mindepth 1 -maxdepth 1 -type d | head -n1)"
-  [[ -n "${source_root}" ]] || fail "Could not resolve extracted repository folder."
-
-  sync_courses "${source_root}"
-  sync_file_storage "${source_root}"
+  sync_courses
+  sync_file_storage
   configure_openrouter
 
   log "Completed. Instance '${INSTANCE_ID}' is ready."
