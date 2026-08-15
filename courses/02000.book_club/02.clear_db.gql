@@ -17,6 +17,5 @@
 # graphs (if Cypher is enabled). System tables are recreated on next `DbReload`.
 #}
 mutation ClearDatabase {
-  DbFullReset
+  DbFullReset(clearFileStorage: false)
 }
-
