@@ -28,7 +28,7 @@
 # This makes the script safe to re-run at any time.
 #}
 mutation Clear {
-  DbExecute(path: "scripts/courses/02000.book_club/02.clear_db.gql") {
+  DbExecute(path: "./02.clear_db.gql") {
     success message result
   }
 }
@@ -40,7 +40,7 @@ mutation Clear {
 # `TeamIsolation` filter template for row-level security.
 #}
 mutation PlatformSetup {
-  DbExecute(path: "scripts/courses/02000.book_club/03.platform_setup.gql") {
+  DbExecute(path: "./03.platform_setup.gql") {
     success message result
   }
 }
@@ -53,7 +53,7 @@ mutation PlatformSetup {
 # makes the new types immediately available.
 #}
 mutation CreateTables {
-  DbExecute(path: "scripts/courses/02000.book_club/04.create_tables.gql") {
+  DbExecute(path: "./04.create_tables.gql") {
     success message result
   }
 }
@@ -68,7 +68,7 @@ mutation CreateTables {
 # automatically creates a matching graph node.
 #}
 mutation GraphBootstrap {
-  DbExecute(path: "scripts/courses/02000.book_club/05.graph_bootstrap.gql") {
+  DbExecute(path: "./05.graph_bootstrap.gql") {
     success message result
   }
 }
@@ -81,7 +81,7 @@ mutation GraphBootstrap {
 # a SQL-backed graph node automatically — no extra code required.
 #}
 mutation SeedData {
-  DbExecute(path: "scripts/courses/02000.book_club/06.seed_data.gql") {
+  DbExecute(path: "./06.seed_data.gql") {
     success message result
   }
 }
@@ -97,7 +97,7 @@ mutation SeedData {
 # - Power traversal queries demonstrating SQL + Cypher integration
 #}
 mutation BuildSocialGraph {
-  DbExecute(path: "scripts/courses/02000.book_club/07.build_social_graph.gql") {
+  DbExecute(path: "./07.build_social_graph.gql") {
     success message result
   }
 }
@@ -109,7 +109,7 @@ mutation BuildSocialGraph {
 # team-scoped notes so row-level isolation is ready to test immediately in IDE.
 #}
 mutation TeamDemoSetup {
-  DbExecute(path: "scripts/courses/02000.book_club/20.teams_setup.gql") {
+  DbExecute(path: "./20.teams_setup.gql") {
     success message result
   }
 }
@@ -121,7 +121,7 @@ mutation TeamDemoSetup {
 # Tests vector embeddings and semantic search.
 #}
 mutation Verify {
-  DbExecute(path: "scripts/courses/02000.book_club/08.verify.gql") {
+  DbExecute(path: "./08.verify.gql") {
     success message result
   }
 }

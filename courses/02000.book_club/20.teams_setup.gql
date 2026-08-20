@@ -26,7 +26,7 @@
 # - memberships/roles are assigned for both users.
 #}
 mutation CreateTeamsAndUsers {
-  setup: DbExecute(path: "scripts/courses/02000.book_club/21.create_teams.gql") {
+  setup: DbExecute(path: "./21.create_teams.gql") {
     success
     message
     executionTime
@@ -48,7 +48,7 @@ mutation CreateTeamsAndUsers {
 # - each note has an explicit team_label of teama or teamb.
 #}
 mutation CreateNotes {
-  seed: DbExecute(path: "scripts/courses/02000.book_club/22.create_notes.gql") {
+  seed: DbExecute(path: "./22.create_notes.gql") {
     success
     message
     executionTime
