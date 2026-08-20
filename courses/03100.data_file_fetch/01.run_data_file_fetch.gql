@@ -1,0 +1,36 @@
+#!maicro
+#---
+# title: Run Data File Fetch Demonstration
+# description: Fetches the complete orders JSONL and products CSV datasets from file storage.
+# difficulty: beginner
+# estimated_time: 1m
+# tags:
+#   - files
+#   - datasets
+#   - csv
+#   - jsonl
+# intent: Demonstrate file-backed datasets as GraphQL query results.
+# resources:
+#   - maicroverse/customer_orders/orders.jsonl
+#   - maicroverse/customer_orders/products.csv
+#---
+
+###> FETCH ORDERS
+#{
+# ## Fetch Orders Dataset
+# Reads the complete orders JSONL file and returns its records as a GraphQL JSON result.
+# stepinto: 02.fetch_orders.gql
+#}
+query FetchOrdersStep {
+  orders: FileDataset(path: "maicroverse/customer_orders/orders.jsonl")
+}
+
+###> FETCH PRODUCTS
+#{
+# ## Fetch Products Dataset
+# Reads the complete products CSV file and returns objects keyed by the CSV header row.
+# stepinto: 03.fetch_products.gql
+#}
+query FetchProductsStep {
+  products: FileDataset(path: "maicroverse/customer_orders/products.csv")
+}

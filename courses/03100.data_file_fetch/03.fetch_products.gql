@@ -1,0 +1,24 @@
+#!maicro
+#---
+# title: Fetch Products CSV Dataset
+# description: Returns every record from the products CSV file as a GraphQL query result.
+# difficulty: beginner
+# estimated_time: 20s
+# tags:
+#   - files
+#   - dataset
+#   - csv
+# intent: Read complete product records from file storage.
+# resources:
+#   - maicroverse/customer_orders/products.csv
+#---
+
+###> READ PRODUCTS
+#{
+# ## Read Complete Products Dataset
+# FileDataset uses the CSV header row as object keys and returns every subsequent
+# row. The query fails if a row does not match the header column count.
+#}
+query FetchProducts {
+  FileDataset(path: "maicroverse/customer_orders/products.csv")
+}

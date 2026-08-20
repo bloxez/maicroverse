@@ -1,0 +1,24 @@
+#!maicro
+#---
+# title: Fetch Orders JSONL Dataset
+# description: Returns every record from the orders JSONL file as a GraphQL query result.
+# difficulty: beginner
+# estimated_time: 20s
+# tags:
+#   - files
+#   - dataset
+#   - jsonl
+# intent: Read complete order records from file storage.
+# resources:
+#   - maicroverse/customer_orders/orders.jsonl
+#---
+
+###> READ ORDERS
+#{
+# ## Read Complete Orders Dataset
+# FileDataset parses each JSONL line as one object. The query succeeds only when
+# the complete file can be read and every non-empty line is a JSON object.
+#}
+query FetchOrders {
+  FileDataset(path: "maicroverse/customer_orders/orders.jsonl")
+}
