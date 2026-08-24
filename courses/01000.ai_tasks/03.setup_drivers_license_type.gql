@@ -55,3 +55,36 @@ mutation RegisterDriversLicenseType {
 mutation ReloadAfterCreated {
   DbReload
 }
+
+###> DELETE DRIVER LICENSE DOCUMENT TYPE
+mutation RemoveDriversLicenseDocumentType {
+  DocumentTypeDelete(key: "drivers_license", failIfNotFound: false) {
+    success
+    key
+    message
+  }
+}
+
+###> CREATE DRIVER LICENSE DOCUMENT TYPE
+mutation AddDriversLicenseDocumentType {
+  DocumentTypeAdd(
+    key: "drivers_license"
+    documentType: {
+      tags: ["drivers_license", "government_id", "australia"]
+      graphql_type: "DriversLicense"
+      custom_fields: [{ name: "reader_id", type: "ID" }]
+    }
+  ) {
+    success
+    key
+    message
+    documentType {
+      key
+      graphql_type
+      custom_fields {
+        name
+        type
+      }
+    }
+  }
+}
