@@ -71,6 +71,7 @@ mutation AddDriversLicenseDocumentType {
     key: "drivers_license"
     documentType: {
       tags: ["drivers_license", "government_id", "australia"]
+      ai_task: "json_extraction"
       graphql_type: "DriversLicense"
       custom_fields: [{ name: "reader_id", type: "ID" }]
     }

@@ -25,15 +25,7 @@ mutation RegisterDriversLicenseType {
   }
 }
 
-###> ADD AI TASK
-#{
-# ## Create test_drivers_license Task
-# Adds the AI task into maiql.ai_tasks using the new AiTaskAdd resolver.
-#}
-mutation AddDriversLicenseTask {
-  DbExecute(path: "scripts/courses/01000.ai_tasks/04.add_drivers_license_task.gql") {
-    success
-    message
-    result
-  }
-}
+
+
+
+

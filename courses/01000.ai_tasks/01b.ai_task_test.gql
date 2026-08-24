@@ -12,65 +12,15 @@
 #   - graphql
 #---
 
-###> REGISTER GRAPHQL TYPE
+###> CONFIGURE DOCUMENT TYPE
 #{
-# ## Create DriversLicense Type
-# Creates the user-defined GraphQL type that the AI task references.
+# ## Configure Drivers License Analysis
+# Creates the `DriversLicense` GraphQL type and the `drivers_license` document
+# type. The document type delegates extraction to the reusable
+# `json_extraction` AI task.
 #}
-mutation TypeAdd {
+mutation ConfigureDriversLicenseDocumentType {
   DbExecute(path: "scripts/courses/01000.ai_tasks/03.setup_drivers_license_type.gql") {
-    success
-    message
-    result
-  }
-}
-
-###> ADD AI TASK
-#{
-# ## Create test_drivers_license Task
-# Adds the AI task into maiql.ai_tasks using the new AiTaskAdd resolver.
-#}
-mutation AddTask {
-  DbExecute(path: "scripts/courses/01000.ai_tasks/04.add_drivers_license_task.gql") {
-    success
-    message
-    result
-  }
-}
-
-###> LIST AND FETCH TASK
-#{
-# ## Read Back Task State
-# Lists tasks and fetches the specific task to confirm persisted config.
-#}
-mutation ListAndGet {
-  DbExecute(path: "scripts/courses/01000.ai_tasks/05.list_get_drivers_license_task.gql") {
-    success
-    message
-    result
-  }
-}
-
-###> UPDATE TASK
-#{
-# ## Modify Task Definition
-# Updates the task description and missing_value token.
-#}
-mutation UpdateTask {
-  DbExecute(path: "scripts/courses/01000.ai_tasks/06.update_drivers_license_task.gql") {
-    success
-    message
-    result
-  }
-}
-
-###> DELETE TASK
-#{
-# ## Cleanup
-# Deletes the demo task from maiql.ai_tasks.
-#}
-mutation DeleteTask {
-  DbExecute(path: "scripts/courses/01000.ai_tasks/07.delete_drivers_license_task.gql") {
     success
     message
     result
