@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Openai Api Wrapper Test
+# description: Test the OpenAI API wrapper mutations.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - openai
+#---
 # Test OpenAI API resolvers
 
 ###> Test 1: Simple chat completion

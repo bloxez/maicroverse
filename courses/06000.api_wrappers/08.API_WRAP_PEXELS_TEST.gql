@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Pexels Api Wrapper Test
+# description: Test the Pexels API wrapper queries.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - pexels
+#---
 # Test Pexels API resolvers
 
 ###> Test 1: Search for nature photos

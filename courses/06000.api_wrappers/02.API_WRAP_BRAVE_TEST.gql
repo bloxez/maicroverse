@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Brave Api Wrapper Test
+# description: Test the Brave Search API wrapper queries.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - brave
+#---
 # Test Brave Search API resolvers
 
 ###> Test 1: Search for latest AI developments

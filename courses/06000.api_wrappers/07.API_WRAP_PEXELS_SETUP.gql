@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Pexels Api Wrapper Setup
+# description: Create Pexels API GraphQL wrappers.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - pexels
+#---
 # Pexels API - High-quality stock photos and videos
 # Requires: PEXELS_API_KEY in .env file
 

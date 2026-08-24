@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Brave Api Wrapper Setup
+# description: Create Brave Search API GraphQL wrappers.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - brave
+#---
 # Brave Search API - Web search with rich results
 # Requires: BRAVE_API_KEY in .env file
 

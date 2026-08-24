@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Update Drivers License Task
+# description: Update the drivers license AI task configuration and missing-value behavior.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - tasks
+#---
 ###> UPDATE AI TASK
 mutation UpdateDriversLicenseTask {
   AiTaskUpdate(

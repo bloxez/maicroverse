@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Aged Care Intake Form
+# description: Define the aged care intake form schema used by demos and tests.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - forms
+#   - schema
+#---
 ###> script_overview
 # Purpose: Define/upsert the aged care intake form schema used by demo and test flows.
 # Contract: Canonical model with responses[] and response payloads (no legacy fallback).

@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Jsonplaceholder Api Wrapper Setup
+# description: Create JSONPlaceholder API GraphQL wrappers.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - jsonplaceholder
+#---
 # API Wrap Examples - Create custom API-based GraphQL resolvers
 # Using JSONPlaceholder (https://jsonplaceholder.typicode.com/) - a free fake REST API for testing
 

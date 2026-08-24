@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Setup Drivers License Type
+# description: Register the DriversLicense GraphQL type used by the AI extraction task.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - schema
+#---
 ###> DELETE DRIVERSLICENSE TYPE
 mutation RemoveDriversLicenseType {
   DeleteType(name: "DriversLicense", failIfNotFound: false) {

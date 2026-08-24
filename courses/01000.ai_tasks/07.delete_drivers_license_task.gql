@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Delete Drivers License Task
+# description: Remove the drivers license AI task and related type.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - cleanup
+#---
 ###> DELETE AI TASK
 mutation DeleteDriversLicenseTask {
   AiTaskDelete(key: "drivers_license") {

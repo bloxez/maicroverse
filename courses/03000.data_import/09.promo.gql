@@ -1,40 +1,15 @@
-# !maicro
-# ---
-# title: Product Promo Pricing Demo (10% Off)
-# description: >
-#   Demonstrates typed virtual-field calculations using `_v` with `CALC`.
-#   Reads imported `products` rows and computes promo values at query time.
-#
-#   Prerequisite:
-#     - Run 05.import_customer_data.gql first (creates and seeds `products`).
-#
-#   This demo shows three values side-by-side:
-#     1) original price (real DB column)
-#     2) discount percent (virtual field via `_v`)
-#     3) discounted price (virtual field via `CALC`, returned as a number)
-#
-#   Calculation pattern used here:
-#     @.price * 0.9
-#
-#   Meaning:
-#     - `@.price` = price from the current product row
-#     - `* 0.9` = keep 90% (apply 10% discount)
+#!maicro
+#---
+# title: Product Promo Pricing Demo
+# description: Demonstrate typed virtual-field calculations for product promo pricing.
 # difficulty: beginner
-# estimated_time: 20s
+# estimated_time: 2m
 # tags:
 #   - database
 #   - products
 #   - virtual-fields
 #   - interpolation
-#   - pricing
-#   - calc
-# intent: demo
-# resources:
-#   - type: docs
-#     url: /reference/data-operations
-#     title: Data Operations Reference
-# ---
-
+#---
 ### > PromoPreview
 # {
 # ## Promo Query With Typed Virtual Calculations

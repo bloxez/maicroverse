@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Test Missing Type
+# description: Show the failure returned when an AI task references a type before it exists.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - validation
+#---
 ###> NEGATIVE CASE - TASK BEFORE TYPE EXISTS
 mutation RejectMissingDriversLicenseType {
   AiTaskAdd(

@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Add Drivers License Task
+# description: Create the AI task that extracts structured drivers license data.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - tasks
+#---
 ###> DELETE AI TASK
 mutation DeleteAitask {
   AiTaskDelete(key:"drivers_license") {

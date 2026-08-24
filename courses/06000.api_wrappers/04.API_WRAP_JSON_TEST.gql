@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Jsonplaceholder Api Wrapper Test
+# description: Test the JSONPlaceholder API wrapper queries.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - jsonplaceholder
+#---
 # API Wrap Tests - Verify all API resolvers work correctly
 # These tests call the wrapped APIs created in DB_WRAP_API_SETUP.gql
 # All tests use JSONPlaceholder - a free fake REST API for testing

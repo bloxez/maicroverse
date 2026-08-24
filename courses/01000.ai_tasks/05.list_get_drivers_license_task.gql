@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: List And Get Drivers License Task
+# description: List AI tasks and fetch the drivers license task definition.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - ai
+#   - tasks
+#---
 ###> LIST AND FETCH AI TASKS
 query ListAndFetchDriversLicenseTask {
   AiTasks {

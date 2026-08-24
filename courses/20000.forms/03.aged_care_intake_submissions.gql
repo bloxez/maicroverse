@@ -1,3 +1,13 @@
+#!maicro
+#---
+# title: Aged Care Intake Submissions
+# description: Seed deterministic aged care intake form submissions.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - forms
+#   - data
+#---
 ###> script_overview
 # Purpose: Reset demo submission rows, then seed deterministic aged care submissions.
 # Safety: Existing rows for aged_care_intake_v1 are deleted before inserts to avoid duplicates.

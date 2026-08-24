@@ -1,4 +1,14 @@
 #!maicro
+#---
+# title: Openai Api Wrapper Setup
+# description: Create OpenAI API GraphQL wrappers.
+# difficulty: beginner
+# estimated_time: 2m
+# tags:
+#   - api
+#   - wrappers
+#   - openai
+#---
 # OpenAI API - AI completions and chat
 # Requires: OPENAI_API_KEY in .env file
 
