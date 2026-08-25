@@ -1,0 +1,60 @@
+#!maicro
+#---
+# title: mAIql Default Tasks Setup
+# intent: Create the baseline mAIql AI tasks used by fresh instances.
+# description: Recreates describe_image and text_json tasks in a deterministic way.
+# tags:
+#   - ai
+#   - maiql
+#   - setup
+#---
+
+###> RESET TARGET TASKS
+mutation ResetDefaultAiTasks {
+  removeDescribeImage: AiTaskDelete(key: "describe_image", failIfNotFound: false) {
+    success
+    message
+  }
+  removeTextJson: AiTaskDelete(key: "text_json", failIfNotFound: false) {
+    success
+    message
+  }
+}
+
+###> CREATE describe_image
+mutation CreateDescribeImageTask {
+  AiTaskAdd(
+    key: "describe_image"
+    task: {
+      label: "Describe Image"
+      description: "Generate a detailed plain-text description of an image."
+      model: "vision"
+      sources: ["image"]
+      output_mode: "text"
+      prompt: "You are an expert visual analyst. Describe this image in rich detail as plain text. Cover scene layout, visible objects, people, actions, text in the image, colors, lighting, context clues, and notable ambiguities. Do not return JSON, markdown, or bullet points. Return a single detailed paragraph."
+    }
+  ) {
+    success
+    key
+    message
+  }
+}
+
+###> CREATE text_json
+mutation CreateTextJsonTask {
+  AiTaskAdd(
+    key: "text_json"
+    task: {
+      label: "Text to JSON"
+      description: "Extract structured JSON from text or OCR markdown using taxonomy GraphQL type schema."
+      model: "completion"
+      sources: ["text"]
+      output_mode: "json"
+      prompt: "You are a precise data extraction engine.\nReturn ONLY one valid JSON object.\nDo not return markdown, code fences, or explanations.\nUse this output template exactly:\n{output_template}\nIf a value is missing, use an empty string.\nContent to extract from:\n````text\n{content}\n````"
+    }
+  ) {
+    success
+    key
+    message
+  }
+}
