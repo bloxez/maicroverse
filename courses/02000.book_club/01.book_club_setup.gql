@@ -45,6 +45,19 @@ mutation PlatformSetup {
   }
 }
 
+
+###> AI TASK SETUP
+#{
+# ## Useful AI Tasks
+# These AI tasks are broadly useful for supporting things like vector embedding and extracting information from documents and images.
+# We must run this for the Book Club, as we use vector embeddings to search for books where the synopsis matches user interests.
+#}
+mutation PlatformSetup {
+  DbExecute(path: "./03a.ai_task_setup.gql") {
+    success message result
+  }
+}
+
 ###> CREATE TABLES
 #{
 # ## Database Schema
