@@ -11,6 +11,10 @@
 
 ###> RESET TARGET TASKS
 mutation ResetDefaultAiTasks {
+  removeAudioTranscriptionDocumentType: DocumentTypeDelete(key: "audio_transcription", failIfNotFound: false) {
+    success
+    message
+  }
   removeDescribeImage: AiTaskDelete(key: "describe_image", failIfNotFound: false) {
     success
     message
@@ -142,11 +146,35 @@ mutation CreateTranscribeAudioTask {
       model: "transcribe"
       sources: ["audio"]
       output_mode: "text"
+      process: [{ do: "AI_ANALYZE_FILE", args: { task: "@@.task.key", fileId: "@@.file.id", postProcess: { toTextChunks: true, embed: true, smartChunk: false } } }]
+      chunk_task_output: true
+      embed_task_output: true
+      smart_chunk_task_output: false
       prompt: "You are a high-accuracy audio transcription engine. Transcribe all spoken words from the provided audio. Do not identify or label speakers. Do not infer names, roles, or speaker turns. Preserve punctuation and paragraph breaks where clear. If a word is unclear, use [inaudible]. Return plain text only."
     }
   ) {
     success
     key
     message
+  }
+}
+
+###> CREATE audio_transcription document type
+mutation CreateAudioTranscriptionDocumentType {
+  DocumentTypeAdd(
+    key: "audio_transcription"
+    documentType: {
+      tags: ["audio", "transcription", "speech_to_text"]
+      ai_task: "transcribe_audio"
+    }
+  ) {
+    success
+    key
+    message
+    documentType {
+      key
+      ai_task
+      tags
+    }
   }
 }
