@@ -7,6 +7,8 @@ param(
     [int]$Port = 4321
 )
 
+$ErrorActionPreference = "Stop"
+
 # Configuration
 $Image = "bloxez/maicro-g2a:latest"
 $ContainerName = "maicro"
