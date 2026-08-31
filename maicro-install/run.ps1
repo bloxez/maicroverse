@@ -328,7 +328,22 @@ if ($running) {
 
     $createMv = Read-Host "Would you like to create a maicroverse instance now? [y/N]"
     if ($createMv -in @("y", "Y", "yes", "YES")) {
-        docker exec -it $ContainerName bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
+        $openRouterSecureKey = Read-Host "Enter OPENROUTER_API_KEY (input hidden)" -AsSecureString
+        $openRouterKeyPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($openRouterSecureKey)
+        try {
+            $setupOpenRouterKey = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($openRouterKeyPointer)
+        } finally {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($openRouterKeyPointer)
+        }
+
+        if ([string]::IsNullOrWhiteSpace($setupOpenRouterKey)) {
+            Write-Host "ERROR: OPENROUTER_API_KEY cannot be empty" -ForegroundColor Red
+            exit 1
+        }
+
+        Write-Host "OPENROUTER_API_KEY received ($($setupOpenRouterKey.Length) characters)."
+        docker exec -e "OPENROUTER_API_KEY=$setupOpenRouterKey" -i $ContainerName bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh -o /tmp/create-mv.sh && bash /tmp/create-mv.sh'
+        $setupOpenRouterKey = $null
     } else {
         Write-Host "Skipped. You can create one later with:"
         Write-Host "  docker exec -it maicro bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'" -ForegroundColor Yellow
