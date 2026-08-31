@@ -167,8 +167,8 @@ $DockerJwtSigningKey = if ($env:JWT_SECRET_INTERNAL_SIGNING_KEY) {
 } else {
     "maicro-first-boot"
 }
-$DockerRootInstance = if ($env:ROOT_INSTANCE) { $env:ROOT_INSTANCE } else { "" }
-$DockerRootKey = if ($env:ROOT_KEY) { $env:ROOT_KEY } else { "" }
+$DockerRootInstance = if ($env:ROOT_INSTANCE) { $env:ROOT_INSTANCE } else { "root" }
+$DockerRootKey = if ($env:ROOT_KEY) { $env:ROOT_KEY } else { "rootg2a" }
 
 if ($DockerAdminKey) { $dockerArgs += @("-e", "MAICRO_ADMIN_KEY=$DockerAdminKey") }
 if ($DockerJwtSigningKey) { $dockerArgs += @("-e", "JWT_SECRET_INTERNAL_SIGNING_KEY=$DockerJwtSigningKey") }
@@ -274,8 +274,8 @@ $DockerJwtSigningKey = if ($env:JWT_SECRET_INTERNAL_SIGNING_KEY) {
 } else {
     "maicro-first-boot"
 }
-$DockerRootInstance = if ($env:ROOT_INSTANCE) { $env:ROOT_INSTANCE } else { "" }
-$DockerRootKey = if ($env:ROOT_KEY) { $env:ROOT_KEY } else { "" }
+$DockerRootInstance = if ($env:ROOT_INSTANCE) { $env:ROOT_INSTANCE } else { "root" }
+$DockerRootKey = if ($env:ROOT_KEY) { $env:ROOT_KEY } else { "rootg2a" }
 
 if ($DockerAdminKey) { $dockerArgs += @("-e", "MAICRO_ADMIN_KEY=$DockerAdminKey") }
 if ($DockerJwtSigningKey) { $dockerArgs += @("-e", "JWT_SECRET_INTERNAL_SIGNING_KEY=$DockerJwtSigningKey") }
