@@ -63,7 +63,7 @@ if (-not (Test-Path "$DataDir\config")) {
 }
 
 # Create platform config file from published template
-$configPath = Join-Path $DataDir "config" "config.platform.json"
+$configPath = Join-Path (Join-Path $DataDir "config") "config.platform.json"
 Write-Host "Downloading platform config template..." -ForegroundColor Yellow
 try {
         Invoke-WebRequest -UseBasicParsing -Uri $ConfigTemplateUrl -OutFile $configPath
@@ -82,7 +82,7 @@ $Image = "bloxez/maicro-g2a:latest"
 $ContainerName = "maicro"
 $Port = if ($env:MAICRO_PORT) { $env:MAICRO_PORT } else { 4321 }
 $AppDataDir = Join-Path $PSScriptRoot "data"
-$ConfigPath = Join-Path $PSScriptRoot "config" "config.platform.json"
+$ConfigPath = Join-Path (Join-Path $PSScriptRoot "config") "config.platform.json"
 $ConfigTemplateUrl = if ($env:MAICRO_CONFIG_TEMPLATE_URL) {
     $env:MAICRO_CONFIG_TEMPLATE_URL
 } else {
