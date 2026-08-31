@@ -148,7 +148,17 @@ main() {
   log "Using CLI command: ${MC[*]}"
 
   log "Checking backend health and auto-detecting base URL if needed."
-  mc_run system health >/dev/null
+  local attempt
+  for attempt in $(seq 1 15); do
+    if mc_run system health >/dev/null 2>&1; then
+      break
+    fi
+    if [[ ${attempt} -eq 15 ]]; then
+      fail "Backend did not become healthy in time."
+    fi
+    log "Backend not ready yet, retrying (${attempt}/15)..."
+    sleep 2
+  done
 
   ensure_project
   read_openrouter_key

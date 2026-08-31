@@ -286,12 +286,28 @@ $dockerArgs += $Image
 
 docker @dockerArgs | Out-Null
 
-# Wait for startup
+# Wait for startup: poll the health endpoint instead of a fixed sleep so the
+# maicroverse prompt below doesn't race the backend's actual readiness.
 Write-Host "Waiting for mAIcro to start..." -ForegroundColor Yellow
-Start-Sleep -Seconds 3
+$healthy = $false
+for ($i = 0; $i -lt 30; $i++) {
+    try {
+        $healthResponse = Invoke-WebRequest -UseBasicParsing -Uri "http://localhost:${Port}/health" -TimeoutSec 2
+        if ($healthResponse.StatusCode -eq 200) {
+            $healthy = $true
+            break
+        }
+    } catch {
+        # not ready yet
+    }
+    Start-Sleep -Seconds 2
+}
 
 # Check if running
 $running = docker ps -q -f "name=$ContainerName"
+if ($running -and -not $healthy) {
+    Write-Host "WARNING: Container is running but health check did not pass in time. Continuing anyway..." -ForegroundColor Yellow
+}
 if ($running) {
     Write-Host ""
     Write-Host "OK: mAIcro is running!" -ForegroundColor Green
