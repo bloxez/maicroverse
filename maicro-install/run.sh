@@ -286,13 +286,13 @@ if [ "$READY" -eq 1 ]; then
 
     CREATE_MV=""
     if [ -r /dev/tty ]; then
-        printf "Would you like to create a maicroverse instance now? [y/N]: " > /dev/tty
+        printf "Would you like to create a maicroverse instance now? [Y/n]: " > /dev/tty
         read -r CREATE_MV < /dev/tty || CREATE_MV=""
     else
         echo "No interactive terminal detected; skipping maicroverse setup."
     fi
     case "$CREATE_MV" in
-        y|Y|yes|YES)
+        ""|y|Y|yes|YES)
             if ! stty -echo < /dev/tty; then
                 printf "${RED}ERROR: Could not hide terminal input for OPENROUTER_API_KEY${NC}\n" > /dev/tty
                 exit 1

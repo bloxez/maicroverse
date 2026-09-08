@@ -19,6 +19,16 @@ The setup script:
 3. Installs the courses, scripts, and data files.
 4. Configures mAIql with suitable OpenRouter models.
 
+## Install It Later
+
+If you skipped mAIcroverse during the initial mAIcro installation, run the same command whenever you are ready:
+
+```bash
+docker exec -it maicro bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
+```
+
+The command works from PowerShell, Command Prompt, macOS, Linux, and WSL as long as Docker Desktop or Docker Engine is running and the `maicro` container is available. It prompts for your OpenRouter API key and can be run again safely if the instance already exists.
+
 ![mAIcroverse content installed in the IDE](maicroverse-ide-content.png)
 
 ## Connect

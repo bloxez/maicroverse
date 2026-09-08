@@ -318,16 +318,16 @@ if ($running) {
     Write-Host "  DB Data:  $AppDataDir"
     Write-Host ""
     Write-Host "Commands:" -ForegroundColor White
-    Write-Host "  Update:  " -NoNewline; Write-Host "powershell $DataDir\update.ps1" -ForegroundColor Yellow
-    Write-Host "  Remove:  " -NoNewline; Write-Host "powershell $DataDir\remove.ps1" -ForegroundColor Yellow
+    Write-Host "  Update:  " -NoNewline; Write-Host "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$DataDir\update.ps1`"" -ForegroundColor Yellow
+    Write-Host "  Remove:  " -NoNewline; Write-Host "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$DataDir\remove.ps1`"" -ForegroundColor Yellow
     Write-Host "  Stop:    " -NoNewline; Write-Host "docker stop maicro" -ForegroundColor Yellow
     Write-Host "  Start:   " -NoNewline; Write-Host "docker start maicro" -ForegroundColor Yellow
     Write-Host "  Logs:    " -NoNewline; Write-Host "docker logs -f maicro" -ForegroundColor Yellow
     Write-Host "  Force Remove: " -NoNewline; Write-Host "docker rm -f maicro" -ForegroundColor Yellow
     Write-Host ""
 
-    $createMv = Read-Host "Would you like to create a maicroverse instance now? [y/N]"
-    if ($createMv -in @("y", "Y", "yes", "YES")) {
+    $createMv = Read-Host "Would you like to create a maicroverse instance now? [Y/n]"
+    if ([string]::IsNullOrWhiteSpace($createMv) -or $createMv -in @("y", "Y", "yes", "YES")) {
         $openRouterSecureKey = Read-Host "Enter OPENROUTER_API_KEY (input hidden)" -AsSecureString
         $openRouterKeyPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($openRouterSecureKey)
         try {

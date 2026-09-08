@@ -86,7 +86,19 @@ docker rm -f maicro
 Windows PowerShell:
 
 ```powershell
-powershell $env:USERPROFILE\maicro-data\remove.ps1
+# Update to the latest mAIcro version
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\maicro-data\update.ps1"
+
+# Guided remove (asks for confirmation, optional data wipe)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\maicro-data\remove.ps1"
+```
+
+`-ExecutionPolicy Bypass` applies only to this PowerShell process, so Windows can run the downloaded maintenance scripts without changing your system-wide execution policy.
+
+Create the mAIcroverse learning instance later, after skipping it during installation:
+
+```powershell
+docker exec -it maicro bash -lc 'curl -fsSL https://raw.githubusercontent.com/bloxez/maicroverse/main/create-mv.sh | bash'
 ```
 
 ## Configuration
