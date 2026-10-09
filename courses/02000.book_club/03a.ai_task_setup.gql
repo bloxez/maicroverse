@@ -13,7 +13,7 @@
 #"
 # We start by removing these named tasks if they already exist.
 # That makes this task setup predictable and safe to run again.
-# "#
+#"
 mutation ResetDefaultAiTasks {
   removeAudioTranscriptionDocumentType: DocumentTypeDelete(key: "audio_transcription", failIfNotFound: false) {
     success
@@ -49,7 +49,7 @@ mutation ResetDefaultAiTasks {
 #"
 # This task turns an image into a clear written description.
 # It is a handy general-purpose example for accessibility and quick review.
-# "#
+#"
 mutation CreateDescribeImageTask {
   AiTaskAdd(
     key: "describe_image"
@@ -72,7 +72,7 @@ mutation CreateDescribeImageTask {
 #"
 # This task converts text into an embedding that captures its meaning.
 # The Book Club uses that capability to find similar book synopses.
-# "#
+#"
 mutation CreateEmbedTextTask {
   AiTaskAdd(
     key: "embed_text"
@@ -95,7 +95,7 @@ mutation CreateEmbedTextTask {
 #"
 # This task extracts structured fields directly from an image.
 # It shows how a vision task can return data for a known JSON shape.
-# "#
+#"
 mutation CreateJsonExtractionTask {
   AiTaskAdd(
     key: "json_extraction"
@@ -118,7 +118,7 @@ mutation CreateJsonExtractionTask {
 #"
 # Here we define OCR for images and PDFs, preserving the document as Markdown.
 # That text can then flow into other analysis and extraction tasks.
-# "#
+#"
 mutation CreateOcrMarkdownTask {
   AiTaskAdd(
     key: "ocr_markdown"
@@ -141,7 +141,7 @@ mutation CreateOcrMarkdownTask {
 #"
 # This task maps readable text into a structured JSON result.
 # It is useful after OCR when you want to turn document content into fields.
-# "#
+#"
 mutation CreateTextJsonTask {
   AiTaskAdd(
     key: "text_json"
@@ -164,7 +164,7 @@ mutation CreateTextJsonTask {
 #"
 # This task turns spoken audio into text and prepares the result in chunks.
 # It gives the project a reusable foundation for audio workflows.
-# "#
+#"
 mutation CreateTranscribeAudioTask {
   AiTaskAdd(
     key: "transcribe_audio"
@@ -191,7 +191,7 @@ mutation CreateTranscribeAudioTask {
 #"
 # Finally, we connect the audio document type to the transcription task.
 # Now the platform has a clear route for handling audio files.
-# "#
+#"
 mutation CreateAudioTranscriptionDocumentType {
   DocumentTypeAdd(
     key: "audio_transcription"

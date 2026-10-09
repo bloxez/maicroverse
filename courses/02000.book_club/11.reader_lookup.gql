@@ -14,7 +14,7 @@
 #"
 # Let's start with the compact reader options a dropdown can use.
 # Each choice has a stable id and a friendly label for the interface.
-# "#
+#"
 #{
 # Purpose:
 # Return compact {id, label} options for UI controls (for example dashboard reader dropdowns).
@@ -36,7 +36,7 @@ query ReaderLookup {
 #"
 # Next we put those labels beside reader and book data.
 # Nested author labels show how connected records can be presented together.
-# "#
+#"
 #{
 # Purpose:
 # Show how lookup labels align with core relational data.
@@ -68,7 +68,7 @@ query RelationshipPreview {
 #"
 # We finish by checking that the lookup, reader list, and author link all returned data.
 # If any important part is missing, the assertions will make that visible.
-# "#
+#"
 #{
 # Purpose:
 # Confirm this script returned both lookup and relational payloads.

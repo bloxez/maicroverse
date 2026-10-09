@@ -14,7 +14,7 @@
 #"
 # We begin by checking the active project, enabled features, and available tables.
 # This gives us a quick overview of the environment the course has prepared.
-# "#
+#"
 #{
 # ## Core State
 # Reads project id, active schema context, enabled features, and table list.
@@ -47,7 +47,7 @@ query DbState {
 #"
 # Now we inspect the database schema itself and how many tables it contains.
 # This confirms we're looking at the expected project schema.
-# "#
+#"
 #{
 # ## Schema Info
 # Returns schema owner, table count, and system-schema flags.
@@ -65,7 +65,7 @@ query DatabaseSchema {
 #"
 # This query checks whether any SQL wrappers are registered.
 # They aren't central to the Book Club, but they're part of the wider platform picture.
-# "#
+#"
 #{
 # ## SQL Wraps
 # Lists registered SQL wrappers and their contract details.
@@ -86,7 +86,7 @@ query SqlWraps {
 #"
 # Here we inspect configured API wrappers and their request and response mappings.
 # It's another small check of the platform's integration layer.
-# "#
+#"
 #{
 # ## API Wraps
 # Lists registered API wrappers and their HTTP mapping metadata.
@@ -109,7 +109,7 @@ query ApiWraps {
 #"
 # We look at a few book synopses alongside their generated vectors.
 # Seeing those values confirms the embedding pipeline ran as the books were seeded.
-# "#
+#"
 #{
 # ## Vector Verification
 # Confirms synopsis_vector values were generated during seed inserts.
@@ -127,7 +127,7 @@ query VerifyVectorEmbeddings {
 #"
 # Let's search for a concept and see which book summaries are closest in meaning.
 # The matching words don't need to be identical for a book to be relevant.
-# "#
+#"
 #{
 # ## Semantic Search
 # Compares query embedding to stored vectors to return conceptually similar books.
@@ -148,7 +148,7 @@ query SemanticBookSearch {
 #"
 # This final search adds a maximum distance to narrow the matches.
 # Lower distances mean the returned book is closer to the idea we're searching for.
-# "#
+#"
 #{
 # ## Distance Filtering
 # Adds a maximum vector distance; lower values are closer semantic matches.

@@ -13,7 +13,7 @@
 #"
 # Switch to the Team B demo user before running this query.
 # Their smaller operations queue should be visible, while Team A's notes stay hidden.
-# "#
+#"
 #{
 # Purpose:
 # Demonstrate row-level isolation for Team B in an interactive user session.
@@ -57,7 +57,7 @@ query TeamB_View {
 #"
 # We assert Team B sees exactly one note and no notes from Team A.
 # If either expectation fails, the script makes the isolation issue explicit.
-# "#
+#"
 #{
 # Purpose:
 # Fail fast if Team B visibility is incorrect.

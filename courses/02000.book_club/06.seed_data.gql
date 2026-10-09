@@ -13,7 +13,7 @@
 #"
 # Let's start with the members of our book club.
 # Their separate first, middle, and last names give later examples useful data to query and format.
-# "#
+#"
 mutation CreateReaders {
    patty: readerAdd(
     data: {
@@ -80,7 +80,7 @@ mutation CreateReaders {
 #"
 # Now we add authors with a little biographical and demographic detail.
 # The next step will connect some of these authors to books in the catalog.
-# "#
+#"
 mutation CreateAuthors {
   margaret: authorAdd(
     data: {
@@ -114,7 +114,7 @@ mutation CreateAuthors {
 #"
 # Here we build a small catalog and connect each book to its author.
 # The synopsis text is especially useful later when we try semantic search.
-# "#
+#"
 mutation CreateBooks {
   handmaids_tale: bookAdd(
     data: {
@@ -151,7 +151,7 @@ mutation CreateBooks {
 #"
 # Finally, readers leave ratings and short reviews for the books they read.
 # Those relationships give us something to analyze in the dashboard.
-# "#
+#"
 mutation CreateReviews {
   review1: reviewAdd(
     data: {

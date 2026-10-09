@@ -15,7 +15,7 @@
 #"
 # First the setup creates our two teams, demo users, and their permissions.
 # These administrative steps prepare the identities used in the isolation exercise.
-# "#
+#"
 #{
 # Purpose:
 # Provision Team A / Team B identities for the demo.
@@ -42,7 +42,7 @@ mutation CreateTeamsAndUsers {
 #"
 # Now we seed notes for both teams and apply the team labels.
 # That gives us records whose visibility we can compare while switching users.
-# "#
+#"
 #{
 # Purpose:
 # Seed private notes/tasks for each team so isolation can be tested interactively.
@@ -68,7 +68,7 @@ mutation CreateNotes {
 #"
 # Before handing off to the learner, we inspect the teams and all notes as admin.
 # This confirms both groups are present before we test what each user can see.
-# "#
+#"
 #{
 # Purpose:
 # Provide admin-visible confirmation that setup completed correctly.
