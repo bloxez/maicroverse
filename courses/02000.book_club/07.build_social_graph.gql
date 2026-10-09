@@ -11,6 +11,10 @@
 #---
 
 ###> ENABLE Graph (IDEMPOTENT)
+#"
+# First we make sure graph support is switched on.
+# Running this more than once is okay; it prepares the graph features we need.
+# "#
 #{
 # ## Enable Apache AGE
 # Ensures Graph support is active before graph operations run.
@@ -23,6 +27,10 @@ mutation EnableGraph {
 }
 
 ###> CREATE THE SOCIAL GRAPH (IDEMPOTENT)
+#"
+# Now we create the named graph that will hold our literary connections.
+# If it is already there, we keep using it rather than creating a duplicate.
+# "#
 #{
 # ## Graph Container
 # Creates book_club_social if it does not exist.
@@ -32,6 +40,10 @@ mutation CreateGraph {
 }
 
 ###> CONNECT AUTHORS TO THEIR BOOKS
+#"
+# Here we link authors to their books with WROTE relationships.
+# These edges connect the graph nodes that were synchronized from our SQL tables.
+# "#
 #{
 # ## WROTE Relationships
 # Links SQL-backed author Person nodes to SQL-backed Book nodes.
@@ -50,6 +62,10 @@ mutation CreateWroteRelationships {
 }
 
 ###> CREATE HISTORICAL INFLUENCE NODES (GRAPH-ONLY)
+#"
+# We add a few influential writers directly to the graph, not to SQL tables.
+# This shows how graph-only context can enrich database-backed records.
+# "#
 #{
 # ## Graph-Only People
 # Adds historical writers that exist only in graph space, not SQL tables.
@@ -62,6 +78,10 @@ mutation CreateLiteraryInfluences {
 }
 
 ###> CONNECT INFLUENCE EDGES
+#"
+# Next we connect our course authors to those historical influences.
+# These edges add context that would be awkward to represent as simple table fields.
+# "#
 #{
 # ## INFLUENCED_BY Relationships
 # Crosses from SQL-backed authors to graph-only historical figures.
@@ -74,6 +94,10 @@ mutation CreateInfluenceEdges {
 }
 
 ###> CREATE PUBLISHERS (GRAPH-ONLY)
+#"
+# Let's add publishers as graph-only nodes, including places with shared book connections.
+# That shared structure will make the later traversal examples more interesting.
+# "#
 #{
 # ## Publisher Nodes
 # Expanded to cover all 9 books. Bantam Books publishes two titles,
@@ -90,6 +114,10 @@ mutation CreatePublishers {
 }
 
 ###> CONNECT BOOKS TO PUBLISHERS
+#"
+# Now each book gets a PUBLISHED_BY connection with a publication year.
+# We can follow those links to compare books and publishers in the graph.
+# "#
 #{
 # ## PUBLISHED_BY Relationships
 # All 9 books connected. Year property enables timeline traversals.
@@ -107,6 +135,10 @@ mutation ConnectPublishers {
 }
 
 ###> CREATE LITERARY AWARDS (GRAPH-ONLY)
+#"
+# We add several literary awards as graph-only nodes.
+# Some books will connect to more than one award, giving us useful multi-hop paths.
+# "#
 #{
 # ## Award Nodes
 # Expanded with World Fantasy Award and Nebula Award. American Gods won
@@ -121,6 +153,10 @@ mutation CreateAwards {
 }
 
 ###> CONNECT BOOKS TO AWARDS
+#"
+# Here we record which books won which awards and when.
+# Notice that one title has several wins, creating a richer discovery path.
+# "#
 #{
 # ## WON Relationships
 # American Gods triple-wins Hugo, Nebula, and World Fantasy in 2002.
@@ -136,6 +172,10 @@ mutation ConnectAwards {
 }
 
 ###> CREATE GENRES (GRAPH-ONLY)
+#"
+# Next we create genre nodes to represent themes shared across different books.
+# Because a book can span several genres, readers can discover related titles through them.
+# "#
 #{
 # ## Genre Taxonomy
 # Genre nodes form the thematic backbone of the graph. Multiple books share
@@ -153,6 +193,10 @@ mutation CreateGenres {
 }
 
 ###> CONNECT BOOKS TO GENRES
+#"
+# We connect each catalog title to one or more genre nodes.
+# Those shared links become the backbone for genre-based recommendations.
+# "#
 #{
 # ## BELONGS_TO Relationships
 # Books belong to multiple genres. The Handmaid's Tale spans three,
@@ -178,6 +222,10 @@ mutation ConnectGenres {
 }
 
 ###> CREATE BOOK SERIES (GRAPH-ONLY)
+#"
+# We add series as another graph-only concept.
+# It lets us explore book groupings without changing the relational catalog schema.
+# "#
 #{
 # ## Series Nodes
 # Groups multi-volume books. The complete flag filters series by whether
@@ -190,6 +238,10 @@ mutation CreateSeries {
 }
 
 ###> CONNECT BOOKS TO SERIES
+#"
+# Now we connect the relevant books to their series.
+# Following these edges makes it easy to explore a reading sequence as a graph.
+# "#
 #{
 # ## PART_OF Relationships
 # The position property enables ordered series traversals.
@@ -203,6 +255,10 @@ mutation ConnectBookSeries {
 }
 
 ###> CONNECT READERS TO BOOKS
+#"
+# We model what readers have read, along with ratings and years.
+# This adds reader activity to the same graph as books, authors, and genres.
+# "#
 #{
 # ## READ Relationships
 # SQL-backed reader Person nodes connect to SQL-backed Book nodes.
@@ -232,6 +288,10 @@ mutation ConnectReadersToBooks {
 }
 
 ###> CONNECT READERS SOCIALLY
+#"
+# Here we create two-way friendships between selected readers.
+# A social layer gives us paths for exploring books through people we know.
+# "#
 #{
 # ## FRIENDS_WITH Relationships
 # Creates the person-to-person social layer. Both directions MERGE'd so
@@ -247,6 +307,10 @@ mutation ConnectReaderFriendships {
 }
 
 ###> CONNECT AUTHORS AS LITERARY PEERS
+#"
+# Finally among our relationship-building steps, we connect authors as literary peers.
+# Shared genre and era details make those links meaningful to explore.
+# "#
 #{
 # ## PEER_OF Relationships
 # Lateral connections between SQL-backed authors sharing the same genre
@@ -260,6 +324,10 @@ mutation ConnectAuthorPeers {
 }
 
 ###> QUERY NODE TYPES
+#"
+# Let's pause and take inventory of the different kinds of nodes in the graph.
+# You'll see which records came from SQL and which were added only to the graph.
+# "#
 #{
 # ## Graph Audit
 # Lists all node categories across SQL-backed and graph-only entities.
@@ -275,6 +343,10 @@ query AllNodeTypes {
 }
 
 ###> QUERY POWER TRAVERSALS
+#"
+# Now we combine several relationships into longer discovery journeys.
+# These traversals show how graph questions can cross authors, books, awards, and genres.
+# "#
 #{
 # ## Combined SQL + Graph Traversals
 # Author-level traversals crossing SQL nodes, graph-only nodes, and edges.
@@ -307,6 +379,10 @@ query PowerTraversals {
 }
 
 ###> QUERY READER TRAVERSALS
+#"
+# This section starts with a reader and follows their reading and social connections.
+# It's a simple way to see how graph data can support personalized discovery.
+# "#
 #{
 # ## Reader Social Graph Queries
 # Reveals the human layer: who reads what, shared books between friends,
@@ -335,6 +411,10 @@ query ReaderTraversals {
 }
 
 ###> QUERY GENRE TRAVERSALS
+#"
+# We finish by starting from a genre and exploring the books and people around it.
+# Together, these paths show the extra context the graph adds to our catalog.
+# "#
 #{
 # ## Genre Discovery Queries
 # Genre nodes enable recommendation-style traversals across the full graph.

@@ -11,6 +11,10 @@
 #---
 
 ###> FETCH AUTHOR NAMES WITH VIRTUAL LOGIN DATE
+#"
+# This example cleans inconsistent author names as the query reads them.
+# It also adds a virtual login date, without changing any stored author records.
+# "#
 #{
 # ## Query authors and reformat their names as title case with no erroneous spaces.
 # Fetch the formatted names of the authors and also add a virtual field with a login date for demonstration purposes.

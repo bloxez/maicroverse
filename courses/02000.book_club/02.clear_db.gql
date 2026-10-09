@@ -16,6 +16,10 @@
 # `DbFullReset` drops **every** user table, associated indexes, and Apache AGE
 # graphs (if Cypher is enabled). System tables are recreated on next `DbReload`.
 #}
+#"
+# This step resets the project's tables and graph so the setup can begin cleanly.
+# It is destructive, so run it only in a disposable learning database.
+# "#
 mutation ClearDatabase {
   DbFullReset(clearFileStorage: false)
 }

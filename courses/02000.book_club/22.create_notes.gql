@@ -11,6 +11,10 @@
 #---
 
 ###> RESET - RESET TEAM NOTES
+#"
+# We clear existing demo notes so each setup run starts from a known state.
+# Only the team-notes records are reset here, not the rest of the course database.
+# "#
 #{
 # Purpose:
 # Ensure deterministic demo data on every setup run.
@@ -28,6 +32,10 @@ mutation Reset_ClearTeamNotes {
 }
 
 ###> CREATE TEAM A NOTES
+#"
+# Team A gets a larger set of editorial and reviewer tasks.
+# We capture each new note id so the next step can assign its team label.
+# "#
 #{
 # Purpose:
 # Insert a larger Team A backlog (editorial/reviewer workflow).
@@ -78,6 +86,10 @@ mutation CreateTeamANotes {
 }
 
 ###> ASSIGN TEAM A LABEL
+#"
+# Now we label Team A's four notes explicitly.
+# That team_label is the value the row-level filter will check for this user.
+# "#
 #{
 # Purpose:
 # Explicitly mark Team A rows with the proper team label.
@@ -96,6 +108,10 @@ mutation AssignTeamALabel {
 }
 
 ###> CREATE TEAM B NOTES
+#"
+# Team B gets one operational checkpoint note.
+# We'll label it separately next, keeping this group's example intentionally smaller.
+# "#
 #{
 # Purpose:
 # Insert a smaller Team B operations note set.
@@ -119,6 +135,10 @@ mutation CreateTeamBNotes {
 }
 
 ###> ASSIGN TEAM B LABEL
+#"
+# We mark the operational note as belonging to Team B.
+# With both labels in place, the two users can test isolation against the same table.
+# "#
 #{
 # Purpose:
 # Explicitly mark Team B rows with the proper team label.
@@ -136,6 +156,10 @@ mutation AssignTeamBLabel {
 }
 
 ###> VERIFY NOTES
+#"
+# As admin, we can see the full set and confirm the team labels side by side.
+# Then the user-specific scripts will show how those same rows are filtered.
+# "#
 #{
 # Purpose:
 # Return an admin-visible snapshot of seeded notes.

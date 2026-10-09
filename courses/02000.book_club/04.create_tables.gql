@@ -10,6 +10,10 @@
 #---
 
 ###> CREATE TABLES
+#"
+# We define the reader, author, book, review, and team-note records here.
+# The final schema reload makes their generated APIs available immediately.
+# "#
 mutation CreateTables {
   readers: DbTableAdd(
     name: "readers"

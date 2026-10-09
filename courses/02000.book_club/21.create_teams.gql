@@ -11,6 +11,10 @@
 #---
 
 ###> CREATE ROLES
+#"
+# First we define a regular member role and a moderator role.
+# These permission sets let the demo show how access can differ by responsibility.
+# "#
 #{
 # Purpose:
 # Create demo-specific roles used by book club team members.
@@ -64,6 +68,10 @@ mutation CreateRoles {
 }
 
 ###> CREATE TEAMS
+#"
+# Now we create Team A and Team B as separate groups.
+# The users and notes added in the following steps will belong to one of them.
+# "#
 #{
 # Purpose:
 # Create the two demo teams used for row-level isolation.
@@ -95,6 +103,10 @@ mutation CreateTeams {
 }
 
 ###> CREATE USERS
+#"
+# We create one predictable demo account for each team.
+# These accounts make it easy to switch identities and compare row visibility.
+# "#
 #{
 # Purpose:
 # Provision fixed demo users aligned with IDE account switching.
@@ -130,6 +142,10 @@ mutation CreateUsers {
 }
 
 ###> ASSIGN USERS TO TEAMS
+#"
+# Here we attach each user to exactly one team.
+# That membership is what the isolation filter will use when notes are queried.
+# "#
 #{
 # Purpose:
 # Bind each demo user to exactly one team.
@@ -160,6 +176,10 @@ mutation AssignTeams {
 }
 
 ###> ASSIGN ROLES TO USERS
+#"
+# Next we assign the roles we created a moment ago.
+# Team A gets moderator permissions as well as member access; Team B stays a member.
+# "#
 #{
 # Purpose:
 # Attach RBAC roles for realistic team operation.
@@ -196,6 +216,10 @@ mutation AssignRoles {
 }
 
 ###> VERIFY USERS AND MEMBERSHIPS
+#"
+# We finish with a quick lookup of both users and their roles.
+# This confirms the accounts are ready before we create and test their notes.
+# "#
 #{
 # Purpose:
 # Return a final identity snapshot that setup consumers can trust.

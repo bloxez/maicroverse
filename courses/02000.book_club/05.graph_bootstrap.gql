@@ -25,6 +25,10 @@
 # The triggers use `graphLabel: "Person"` for readers/authors and `"Book"` for books,
 # so they appear as distinct labels in Cypher queries and in the IDE graph view.
 #}
+#"
+# Before inserting any sample records, we prepare the graph and its sync triggers.
+# Installing them now means new SQL rows can be mirrored into graph nodes automatically.
+# "#
 mutation GraphBootstrap {
   EnableGraphs {
     age_extension

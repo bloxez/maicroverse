@@ -20,6 +20,10 @@
 #
 # Each feature creates its own system tables when enabled.
 #}
+#"
+# First we turn on file storage, search, and background jobs.
+# These platform features give later examples somewhere to store, find, and process work.
+# "#
 mutation EnableFeatures {
   FileStorageEnable {
     files_table
@@ -53,6 +57,10 @@ mutation EnableFeatures {
 #     Filter -->|WHERE team_label = X| Database
 # ```
 #}
+#"
+# Here we create a reusable rule that keeps each team's notes private.
+# The filter uses a row's team label to decide what the current user can see.
+# "#
 mutation CreateFilterTemplates {
   TeamFilter: FilterTemplateAdd(input: {
     name: "TeamIsolation"

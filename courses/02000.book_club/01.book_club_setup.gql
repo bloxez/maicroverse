@@ -27,6 +27,10 @@
 # Wipes the database clean: terminates async jobs, drops all tables, and removes any Apache AGE graphs.
 # This makes the script safe to re-run at any time.
 #}
+#"
+# We begin with a clean slate so the later examples have predictable data.
+# This removes project tables and graph data, so please use a learning instance.
+# "#
 mutation Clear {
   DbExecute(path: "./02.clear_db.gql") {
     success message result
@@ -39,6 +43,10 @@ mutation Clear {
 # Enables File Storage, Full-Text Search, and Async Jobs — then creates the
 # `TeamIsolation` filter template for row-level security.
 #}
+#"
+# Now we turn on files, search, and background jobs for later parts of the course.
+# We also define the team boundary used to protect private notes.
+# "#
 mutation PlatformSetup {
   DbExecute(path: "./03.platform_setup.gql") {
     success message result
@@ -52,6 +60,10 @@ mutation PlatformSetup {
 # These AI tasks are broadly useful for supporting things like vector embedding and extracting information from documents and images.
 # We must run this for the Book Club, as we use vector embeddings to search for books where the synopsis matches user interests.
 #}
+#"
+# Before creating the catalog, we set up the AI tasks the project can reuse.
+# In particular, the embedding task lets us search book summaries by their meaning.
+# "#
 mutation AiTaskSetup {
   DbExecute(path: "./03a.ai_task_setup.gql") {
     success message result
@@ -65,6 +77,10 @@ mutation AiTaskSetup {
 # mAIcro auto-generates a full GraphQL API for each table, then `DbReload`
 # makes the new types immediately available.
 #}
+#"
+# Here we define the five tables that make up our sample book club.
+# Reloading the schema exposes their generated GraphQL APIs for the next steps.
+# "#
 mutation CreateTables {
   DbExecute(path: "./04.create_tables.gql") {
     success message result
@@ -80,6 +96,10 @@ mutation CreateTables {
 # **Order matters:** this must run before seeding data so every inserted row
 # automatically creates a matching graph node.
 #}
+#"
+# We create the graph and install row-sync triggers before adding sample records.
+# That ordering lets each new reader, author, and book show up in graph queries.
+# "#
 mutation GraphBootstrap {
   DbExecute(path: "./05.graph_bootstrap.gql") {
     success message result
@@ -93,6 +113,10 @@ mutation GraphBootstrap {
 # Because the graph triggers are already installed, each insert also creates
 # a SQL-backed graph node automatically — no extra code required.
 #}
+#"
+# With the tables and triggers ready, let's add the sample readers, authors,
+# books, and reviews that bring the Book Club to life.
+# "#
 mutation SeedData {
   DbExecute(path: "./06.seed_data.gql") {
     success message result
@@ -109,6 +133,10 @@ mutation SeedData {
 # - 6 literary awards (graph-only) with WON edges to books
 # - Power traversal queries demonstrating SQL + Cypher integration
 #}
+#"
+# Next we add graph-only literary connections on top of the SQL-backed records.
+# This gives us publishers, influences, and awards to explore with traversals.
+# "#
 mutation BuildSocialGraph {
   DbExecute(path: "./07.build_social_graph.gql") {
     success message result
@@ -121,6 +149,10 @@ mutation BuildSocialGraph {
 # Creates Team A / Team B users, assigns memberships and roles, then seeds
 # team-scoped notes so row-level isolation is ready to test immediately in IDE.
 #}
+#"
+# Now we set up two demo teams and users, then add private notes for each one.
+# That gives us a concrete way to test team-based visibility.
+# "#
 mutation TeamDemoSetup {
   DbExecute(path: "./20.teams_setup.gql") {
     success message result
@@ -133,6 +165,10 @@ mutation TeamDemoSetup {
 # Checks all platform features, tables, and graph nodes are in place.
 # Tests vector embeddings and semantic search.
 #}
+#"
+# At the end, we take a quick tour of the pieces we created.
+# We'll check the schema, graph, embeddings, and a couple of meaning-based searches.
+# "#
 mutation Verify {
   DbExecute(path: "./08.verify.gql") {
     success message result

@@ -11,6 +11,10 @@
 #---
 
 ###> DASHBOARD PAYLOAD + DATA
+#"
+# Here we describe a dashboard layout and return all of its data in one response.
+# The named datasets are ready for charts, and the reader lookup can fill a control.
+# "#
 #{
 # Returns one unified JSON payload block plus all chart datasets.
 # Uses `readersLookup { id label }` so UI dropdowns can directly consume clean options.
@@ -132,6 +136,10 @@ query BookClubDashboard {
 }
 
 ###> QUICK VALIDATION
+#"
+# We finish by checking that the dashboard, chart data, reader choices,
+# and expected chart definition all made it into the response.
+# "#
 #{
 # Confirms this script returns dashboard + at least one chart dataset.
 #}
