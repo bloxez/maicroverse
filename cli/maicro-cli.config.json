@@ -3,11 +3,11 @@
   "baseUrl": "http://localhost:4321",
   "repoBaseUrl": "https://github.com/bloxez/maicroverse/tree/main/project",
   "defaultInstance": "maicro",
-  "defaultInstanceKey": "your_default_instance_key",
-  "projects": {
+  "instance_keys": {
+    "default": "",
     "maicro": ""
   },
-  "defaultInstanceConfig": {
+  "defaultConfig": {
     "apiKeys": [
       {
         "key": "OPENROUTER_API_KEY",
